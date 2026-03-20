@@ -1,26 +1,57 @@
 # AI Agent Ecosystem
 
-> 通过 Raw 链接激活 AI 角色——跨平台、无门槛、即刻使用
+> Activate AI agents via Raw links — cross-platform, barrier-free, instant use
 
 ---
 
-## 如何使用（3 步完成）
+## AI Metadata
 
-| 步骤 | 操作 | 说明 |
+```yaml
+repo: badhope/mobile-skills
+type: AI Agent Navigation System
+version: 3.0
+language: en
+entry_type: Primary Entry
+categories: 8
+total_agents: 10
+```
+
+**[English](./README.md) | [中文](./README_zh.md)**
+
+---
+
+## How to Use (3 Steps)
+
+| Step | Action | Description |
 |:---:|:---:|:---|
-| 1 | 复制角色 Raw 链接 | 选择下方任意角色，复制其 Raw 链接 |
-| 2 | 发送给 AI | 将链接发送给任何支持联网的 AI |
-| 3 | 开始对话 | AI 将自动激活对应角色模式 |
+| 1 | Copy Agent Raw Link | Select any agent below and copy its Raw link |
+| 2 | Send to AI | Send the link to any AI with web access |
+| 3 | Start Chatting | AI will activate the corresponding agent mode |
 
-**推荐激活语**：
+**Recommended Activation Phrase**:
 ```
-请读取以下文件并切换到对应角色模式：
-[Raw 链接]
+Please read the following file and switch to the corresponding agent mode:
+[Raw URL]
 ```
 
 ---
 
-## 🛠️ Functional Agents（功能执行）
+## Category Index
+
+| Category | English Name | Description | Agents |
+|:---|:---|:---|:---:|
+| 🛠️ | Functional | Task execution, planning, summarization | 1 |
+| 💼 | Professional | Legal, business analysis | 1 |
+| 🎨 | Design & Build | Architecture, product strategy | 2 |
+| 🔬 | Research | Investigation, data insight | 1 |
+| ✍️ | Writing | Content creation, copywriting | 1 |
+| 📚 | Education | Teaching, learning planning | 1 |
+| 🏠 | Lifestyle | Wisdom, habit support | 1 |
+| 🎭 | Entertainment | Role-play, anime characters | 2 |
+
+---
+
+## 🛠️ Functional Agents
 
 解决通用任务执行、结构化协助、计划、总结、问题拆解等高频功能需求。
 
@@ -102,26 +133,26 @@
 
 ---
 
-## 📁 仓库结构
+## 📁 Repository Structure
 
 ```
 agents/
-├── functional/           # 功能执行
-    └── task-master.md   ✅
-├── professional/         # 专业领域
+├── functional/           # Task execution
+│   └── task-master.md   ✅
+├── professional/         # Professional domain
 │   └── legal.md         ✅
-├── design-build/        # 设计构建
+├── design-build/        # Design & build
 │   ├── code-architect.md ✅
 │   └── product-strat.md ✅
-├── research/            # 研究分析
+├── research/            # Research & analysis
 │   └── analyst.md       ✅
-├── writing/             # 写作创作
+├── writing/             # Writing & creative
 │   └── writer.md        ✅
-├── education/           # 学习教育
+├── education/           # Learning & education
 │   └── tutor.md         ✅
-├── lifestyle/           # 生活陪伴
+├── lifestyle/           # Lifestyle & companion
 │   └── wise-sage.md    ✅
-└── entertainment/       # 娱乐角色
+└── entertainment/       # Entertainment & character
     ├── kaguya.md        ✅
     └── misaka-mikoto.md ✅
 
@@ -133,71 +164,92 @@ templates/
 docs/
 ├── prompt-standard.md
 ├── interaction-example.md
-└── contribution-guide.md
+├── contribution-guide.md
+├── stage2-design.md
+└── stage3-design.md
 ```
 
 ---
 
-## 📱 手机端测试
+## 📱 Mobile Testing
 
-1. 打开 GitHub 仓库
-2. 进入目标角色文件（如 `agents/entertainment/kaguya.md`）
-3. 点击 **Raw** 获取链接
-4. 复制并发送给 AI
-5. 开始对话
+1. Open GitHub repository
+2. Navigate to target agent file (e.g. `agents/entertainment/kaguya.md`)
+3. Click **Raw** to get link
+4. Copy and send to AI
+5. Start chatting
 
 ---
 
-## 角色类别总览
+## Category Overview
 
-| 类别 | 说明 | 代表角色 | 数量 |
+| Category | Description | Representative | Count |
 |:---|:---|:---|:---:|
-| 🛠️ Functional | 功能执行 | TaskMaster | 1 |
-| 💼 Professional | 专业领域 | Legal | 1 |
-| 🎨 Design & Build | 设计构建 | Code Architect, ProductStrat | 2 |
-| 🔬 Research | 研究分析 | Research Analyst | 1 |
-| ✍️ Writing | 写作创作 | Writer | 1 |
-| 📚 Education | 学习教育 | Tutor | 1 |
-| 🏠 Lifestyle | 生活陪伴 | Wise Sage | 1 |
-| 🎭 Entertainment | 娱乐角色 | Kaguya, Misaka | 2 |
+| 🛠️ Functional | Task execution | TaskMaster | 1 |
+| 💼 Professional | Professional domain | Legal | 1 |
+| 🎨 Design & Build | Design & architecture | Code Architect, ProductStrat | 2 |
+| 🔬 Research | Research & analysis | Research Analyst | 1 |
+| ✍️ Writing | Writing & creative | Writer | 1 |
+| 📚 Education | Learning & education | Tutor | 1 |
+| 🏠 Lifestyle | Lifestyle & companion | Wise Sage | 1 |
+| 🎭 Entertainment | Entertainment & character | Kaguya, Misaka | 2 |
 
-**总角色数**: 10 | **已完成**: 10 | **开发中**: 0
-
----
-
-## 扩展指南
-
-### 添加新角色
-
-1. 基于 `templates/role-template.md` 创建新文件
-2. 专业角色使用 `templates/professional-template.md`
-3. 娱乐角色使用 `templates/entertainment-template.md`
-4. 按分类放入对应目录
-5. 在本 README 添加角色信息
-6. 更新仓库结构文档
-
-### 角色命名规范
-
-- 文件名：`kebab-case`（如 `code-architect.md`）
-- 角色 ID：英文小写（如 `code-architect`）
-- 目录名：`kebab-case`（如 `agents/design-build/`）
+**Total Agents**: 10 | **Completed**: 10 | **In Development**: 0
 
 ---
 
-## 代表角色亮点
+## Extension Guide
 
-| 角色 | 类别 | 特色 |
+### Adding New Agents
+
+1. Create new file based on `templates/role-template.md`
+2. For professional agents use `templates/professional-template.md`
+3. For entertainment agents use `templates/entertainment-template.md`
+4. Place in appropriate category directory
+5. Add agent info to this README
+6. Update repository structure
+
+### Naming Conventions
+
+- Filename: `kebab-case` (e.g. `code-architect.md`)
+- Agent ID: lowercase English (e.g. `code-architect`)
+- Directory: `kebab-case` (e.g. `agents/design-build/`)
+
+---
+
+## Featured Agent Highlights
+
+| Agent | Category | Highlights |
 |:---|:---|:---|
-| Code Architect | Design & Build | 完整架构设计流程，输出标准技术文档 |
-| ProductStrat | Design & Build | 产品策略制定，用户价值导向 |
-| Legal | Professional | 专业法律分析，含风险评估和免责声明 |
-| Research Analyst | Research | 假设驱动研究，结构化分析报告 |
-| Writer | Writing | 多风格写作，目标导向内容创作 |
-| Tutor | Education | 启发式教学，个性化学习路径 |
-| Wise Sage | Lifestyle | 苏格拉底式提问，深度思考引导 |
-| Kaguya | Entertainment | 傲娇大小姐，沉浸式角色扮演 |
-| Misaka Mikoto | Entertainment | 傲娇学姐，电磁力少女 |
+| Code Architect | Design & Build | Complete architecture design workflow, standard technical documentation |
+| ProductStrat | Design & Build | Product strategy, user value oriented |
+| Legal | Professional | Professional legal analysis with risk assessment and disclaimer |
+| Research Analyst | Research | Hypothesis-driven research, structured analysis reports |
+| Writer | Writing | Multi-style writing, goal-oriented content creation |
+| Tutor | Education | Heuristic teaching, personalized learning paths |
+| Wise Sage | Lifestyle | Socratic questioning, deep thinking guidance |
+| Kaguya | Entertainment | Tsundere大小姐, immersive roleplay |
+| Misaka Mikoto | Entertainment | Tsundere学姐, electromagnetic少女 |
 
 ---
+
+## Bilingual Statement
+
+| Version | File | Purpose | Priority |
+|:---|:---|:---|:---:|
+| English Primary | `README.md` | AI primary index entry | P0 |
+| Chinese Secondary | `README_zh.md` | Chinese user auxiliary reading | P1 |
+
+**AI Recommendation**: Use English README for indexing and navigation for most stable parsing.
+
+---
+
+## License
+
+MIT License
+
+---
+
+**[中文](./README_zh.md)**
 
 **Last updated:** 2026-03-20
