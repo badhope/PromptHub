@@ -3,12 +3,12 @@
 <!-- 徽章行 -->
 <p align="center">
 
-![Agents](https://img.shields.io/badge/Agents-57+-blue?style=for-the-badge&labelColor=2d333b)
+![Agents](https://img.shields.io/badge/Agents-77+-blue?style=for-the-badge&labelColor=2d333b)
 ![Categories](https://img.shields.io/badge/Categories-15-green?style=for-the-badge&labelColor=2d333b)
 ![Platform](https://img.shields.io/badge/Platform-Cross--platform-orange?style=for-the-badge&labelColor=2d333b)
 ![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge&labelColor=2d333b)
 ![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-brightgreen?style=for-the-badge&labelColor=2d333b)
-![Last Update](https://img.shields.io/badge/Last_Update-2026--03--23-red?style=for-the-badge&labelColor=2d333b)
+![Last Update](https://img.shields.io/badge/Last_Update-2026--03--24-red?style=for-the-badge&labelColor=2d333b)
 
 </p>
 
@@ -173,13 +173,13 @@ https://raw.githubusercontent.com/badhope/mobile-skills/main/agents/[category]/[
 │                           📊 AGENT 生态系统统计                               │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                             │
-│   Agent 总数:   ████████████████████████████████  57                      │
+│   Agent 总数:   ████████████████████████████████████████  77                 │
 │   分类数:       ████████████████                   15                     │
 │   支持语言:     ████                               2+ (EN, ZH, JP)         │
-│   代码行数:     ~50,000+                                                    │
+│   代码行数:     ~60,000+                                                    │
 │                                                                             │
 │   最丰富的分类:                                                          │
-│   🎭 娱乐角色      ████████████████████████  15                            │
+│   🎭 娱乐角色      ████████████████████████████████████████  35              │
 │   🛠️ 功能型        ████████████                   6                       │
 │   📖 学科辅导      ████████████                   5                       │
 │                                                                             │
@@ -201,7 +201,7 @@ https://raw.githubusercontent.com/badhope/mobile-skills/main/agents/[category]/[
 | 📚 | [学习教育](#-学习教育-agent) | `learning-education` | 教学、辅导 | 1 | Socratic Tutor |
 | 📖 | [学科辅导](#-学科辅导-agent) | `subject-tutoring` | 数学、语言、科学 | 5 | Math Tutor |
 | 🏠 | [生活陪伴](#-生活陪伴-agent) | `lifestyle-companion` | 生活智慧、习惯 | 4 | Wise Sage |
-| 🎭 | [娱乐角色](#-娱乐角色-agent) | `entertainment-character` | 角色扮演、角色 | 15 | Kaguya, Mikoto |
+| 🎭 | [娱乐角色](#-娱乐角色-agent) | `entertainment-character` | 角色扮演、角色 | 35 | Kaguya, Goku |
 | 🎲 | [游戏与TRPG](#-游戏与trpg-agent) | `gaming` | 游戏主持、TRPG | 2 | Game Master |
 | 🏛️ | [历史与文化](#-历史与文化-agent) | `historical-culture` | 历史人物 | 3 | Philosopher King |
 | 👔 | [社会职业](#-社会职业-agent) | `social-vocation` | 职业角色 | 5 | Chef, Detective |
@@ -384,6 +384,35 @@ https://raw.githubusercontent.com/badhope/mobile-skills/main/agents/[category]/[
 | 💻 | **Cyberpunk Hacker** | 赛博朋克黑客 | 网络空间、反抗企业、黑客文化 | [Raw](https://raw.githubusercontent.com/badhope/mobile-skills/main/agents/entertainment-character/cyberpunk-hacker.md) | ✅ |
 | ⚓ | **Pirate Captain** | 海盗船长 | 海洋冒险、宝藏探寻、自由精神 | [Raw](https://raw.githubusercontent.com/badhope/mobile-skills/main/agents/entertainment-character/pirate-captain.md) | ✅ |
 | 💔 | **Yandere Girl** | 病娇少女 | 极致占有、深情恋人、悬疑恋爱 | [Raw](https://raw.githubusercontent.com/badhope/mobile-skills/main/agents/entertainment-character/yandere-girl.md) | ✅ |
+
+---
+
+### 🏆 人气动漫角色
+
+> *龙珠、火影、海贼、死神、巨人等热门动漫角色*
+
+| Tag | Agent | 角色 | 简介 | Raw Link | Status |
+|:---:|:------|:-----|:-----|:---------|:------:|
+| 🐉 | **Goku** | 孙悟空 | 赛亚人卡卡罗特、超级赛亚人、守护地球 | [Raw](https://raw.githubusercontent.com/badhope/mobile-skills/main/agents/entertainment-character/goku.md) | ✅ |
+| 🍥 | **Naruto** | 漩涡鸣人 | 九尾人柱力、火影之梦、说到做到 | [Raw](https://raw.githubusercontent.com/badhope/mobile-skills/main/agents/entertainment-character/naruto.md) | ✅ |
+| 🎩 | **Luffy** | 草帽路飞 | 橡胶果实、海贼王、自由梦想 | [Raw](https://raw.githubusercontent.com/badhope/mobile-skills/main/agents/entertainment-character/luffy.md) | ✅ |
+| ⚔️ | **Levi** | 利威尔 | 人类最强、调查兵团、兵长 | [Raw](https://raw.githubusercontent.com/badhope/mobile-skills/main/agents/entertainment-character/levi.md) | ✅ |
+| 🕶️ | **Gojo Satoru** | 五条悟 | 六眼持有者、最强咒术师、傲娇老师 | [Raw](https://raw.githubusercontent.com/badhope/mobile-skills/main/agents/entertainment-character/gojo-satoru.md) | ✅ |
+| 🦅 | **Itachi** | 宇智波鼬 | 写轮眼天才、木叶英雄、悲剧兄弟 | [Raw](https://raw.githubusercontent.com/badhope/mobile-skills/main/agents/entertainment-character/itachi.md) | ✅ |
+| 🔥 | **Tanjiro** | 炭治郎 | 水之呼吸、灭鬼剑士、祢豆子守护 | [Raw](https://raw.githubusercontent.com/badhope/mobile-skills/main/agents/entertainment-character/tanjiro.md) | ✅ |
+| 💚 | **Rimuru** | 利姆鲁 | 史莱姆魔王、异世界转生、大贤者 | [Raw](https://raw.githubusercontent.com/badhope/mobile-skills/main/agents/entertainment-character/rimuru.md) | ✅ |
+| 👁️ | **Anya** | 阿尼亚 | 读心术、间谍过家家、花生米控 | [Raw](https://raw.githubusercontent.com/badhope/mobile-skills/main/agents/entertainment-character/anya.md) | ✅ |
+| 💥 | **Bakugo** | 爆豪胜己 | 爆破个性、傲娇强者、最强候补 | [Raw](https://raw.githubusercontent.com/badhope/mobile-skills/main/agents/entertainment-character/bakugo.md) | ✅ |
+| 🌸 | **Mikasa** | 三笠·阿卡曼 | 阿卡曼最强、艾伦守护者、深情剑士 | [Raw](https://raw.githubusercontent.com/badhope/mobile-skills/main/agents/entertainment-character/mikasa.md) | ✅ |
+| 🤍 | **Zero Two** | 002(Zero Two) | 叫龙公主、Darling追求者、虐心草莓 | [Raw](https://raw.githubusercontent.com/badhope/mobile-skills/main/agents/entertainment-character/zero-two.md) | ✅ |
+| 💙 | **Rem** | 蕾姆 | 鬼族双胞胎、蓝发天使、温柔忠诚 | [Raw](https://raw.githubusercontent.com/badhope/mobile-skills/main/agents/entertainment-character/rem.md) | ✅ |
+| ⚡ | **Asuna** | 亚丝娜 | 闪光剑士、SAO女神、坚强恋人 | [Raw](https://raw.githubusercontent.com/badhope/mobile-skills/main/agents/entertainment-character/asuna.md) | ✅ |
+| 🌹 | **Echidna** | 艾姬多娜 | 强欲魔女、茶会主人、求知若渴 | [Raw](https://raw.githubusercontent.com/badhope/mobile-skills/main/agents/entertainment-character/echidna.md) | ✅ |
+| ⚜️ | **Kallen** | 卡尔娜 | 黑骑士团、战场玫瑰、身份挣扎 | [Raw](https://raw.githubusercontent.com/badhope/mobile-skills/main/agents/entertainment-character/kallen.md) | ✅ |
+| 🌕 | **Makima** | 玛奇玛 | 控制恶魔、谜之魅力、扭曲的爱 | [Raw](https://raw.githubusercontent.com/badhope/mobile-skills/main/agents/entertainment-character/makima.md) | ✅ |
+| 🥷 | **Yor** | Yor Forger | 黄昏之矛、杀手伪装、纯情可爱 | [Raw](https://raw.githubusercontent.com/badhope/mobile-skills/main/agents/entertainment-character/yor.md) | ✅ |
+| ❄️ | **Emilia** | 艾米莉亚 | 半精灵、冰之魔术、王位候选 | [Raw](https://raw.githubusercontent.com/badhope/mobile-skills/main/agents/entertainment-character/emilia.md) | ✅ |
+| 🦋 | **Shinobu** | 蝴蝶忍 | 虫柱传人、微笑复仇、毒之剑士 | [Raw](https://raw.githubusercontent.com/badhope/mobile-skills/main/agents/entertainment-character/shinobu.md) | ✅ |
 
 ---
 
