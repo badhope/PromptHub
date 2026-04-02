@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://badhope.github.io/mobile-skills/sitemap.xml

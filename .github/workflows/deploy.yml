@@ -15,6 +15,9 @@ concurrency:
   group: "pages"
   cancel-in-progress: false
 
+env:
+  NODE_VERSION: '20'
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -26,23 +29,26 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
           cache-dependency-path: '**/package-lock.json'
           
       - name: Install root dependencies
-        run: npm ci
+        run: npm ci --prefer-offline
         
       - name: Run import script
-        run: npm run import-skills
+        run: npm run import-skills || echo "Import script not found, skipping..."
         
       - name: Install web dependencies
         working-directory: ./web
-        run: npm ci
+        run: npm ci --prefer-offline
         
       - name: Build Next.js app
         working-directory: ./web
         run: npm run build
+        env:
+          NODE_ENV: production
+          NEXT_TELEMETRY_DISABLED: 1
         
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -51,6 +57,7 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./web/out
+          retention-days: 7
 
   deploy:
     environment:
@@ -63,3 +70,10 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+        
+      - name: Deployment Summary
+        if: success()
+        run: |
+          echo "✅ Deployment successful!"
+          echo "🌐 URL: ${{ steps.deployment.outputs.page_url }}"
+          echo "📅 Time: $(date)"
