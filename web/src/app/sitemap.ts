@@ -4,7 +4,7 @@ import skillsData from '@/skills-data.json'
 export const dynamic = 'force-static'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://badhope.github.io'
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://badhope.github.io/mobile-skills'
   
   const { skills } = skillsData as any
 
