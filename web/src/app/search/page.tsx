@@ -156,6 +156,9 @@ export default function AdvancedSearchPage() {
           comparison = a.name.localeCompare(b.name, 'zh');
           break;
       }
+      if (comparison === 0) {
+        return a.id.localeCompare(b.id);
+      }
       return filters.sortOrder === 'desc' ? -comparison : comparison;
     });
 

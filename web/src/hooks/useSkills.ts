@@ -62,15 +62,22 @@ export function useSkills(options: UseSkillsOptions = {}): UseSkillsResult {
 
     switch (sortBy) {
       case 'popular':
-        result.sort((a, b) => b.stats.use_count - a.stats.use_count);
+        result.sort((a, b) => {
+          const diff = b.stats.use_count - a.stats.use_count;
+          return diff !== 0 ? diff : a.id.localeCompare(b.id);
+        });
         break;
       case 'newest':
-        result.sort((a, b) => 
-          new Date(b.metadata.updated_at).getTime() - new Date(a.metadata.updated_at).getTime()
-        );
+        result.sort((a, b) => {
+          const diff = new Date(b.metadata.updated_at).getTime() - new Date(a.metadata.updated_at).getTime();
+          return diff !== 0 ? diff : a.id.localeCompare(b.id);
+        });
         break;
       case 'rating':
-        result.sort((a, b) => b.stats.rating - a.stats.rating);
+        result.sort((a, b) => {
+          const diff = b.stats.rating - a.stats.rating;
+          return diff !== 0 ? diff : a.id.localeCompare(b.id);
+        });
         break;
       case 'name':
         result.sort((a, b) => a.name.localeCompare(b.name, 'zh-CN'));
@@ -166,13 +173,17 @@ export function useSkillStats(): SkillStats {
 
     const topCategories = Object.entries(categoryCount)
       .map(([name, count]) => ({ name, count }))
-      .sort((a, b) => b.count - a.count)
+      .sort((a, b) => {
+        const diff = b.count - a.count;
+        return diff !== 0 ? diff : a.name.localeCompare(b.name);
+      })
       .slice(0, 5);
 
     const recentUpdates = [...skills]
-      .sort((a, b) => 
-        new Date(b.metadata.updated_at).getTime() - new Date(a.metadata.updated_at).getTime()
-      )
+      .sort((a, b) => {
+        const diff = new Date(b.metadata.updated_at).getTime() - new Date(a.metadata.updated_at).getTime();
+        return diff !== 0 ? diff : a.id.localeCompare(b.id);
+      })
       .slice(0, 5)
       .map(skill => ({
         name: skill.name,

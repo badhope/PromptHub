@@ -27,12 +27,16 @@ export default function Home() {
   }, []);
 
   const { hotSkills, newSkills, stats } = useMemo(() => {
-    const sortedByPopular = [...skills].sort((a, b) => b.stats.use_count - a.stats.use_count);
+    const sortedByPopular = [...skills].sort((a, b) => {
+      const diff = b.stats.use_count - a.stats.use_count;
+      return diff !== 0 ? diff : a.id.localeCompare(b.id);
+    });
     const hot = sortedByPopular.slice(0, 8);
 
-    const sortedByNew = [...skills].sort((a, b) => 
-      new Date(b.metadata.updated_at).getTime() - new Date(a.metadata.updated_at).getTime()
-    );
+    const sortedByNew = [...skills].sort((a, b) => {
+      const diff = new Date(b.metadata.updated_at).getTime() - new Date(a.metadata.updated_at).getTime();
+      return diff !== 0 ? diff : a.id.localeCompare(b.id);
+    });
     const newest = sortedByNew.slice(0, 8);
 
     const totalUseCount = skills.reduce((sum, s) => sum + s.stats.use_count, 0);

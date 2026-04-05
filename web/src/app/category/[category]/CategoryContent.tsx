@@ -61,7 +61,10 @@ export default function CategoryContent({ params }: { params: Promise<{ category
     );
   }
 
-  const sortedSkills = [...categorySkills].sort((a, b) => b.stats.use_count - a.stats.use_count);
+  const sortedSkills = [...categorySkills].sort((a, b) => {
+    const diff = b.stats.use_count - a.stats.use_count;
+    return diff !== 0 ? diff : a.id.localeCompare(b.id);
+  });
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">

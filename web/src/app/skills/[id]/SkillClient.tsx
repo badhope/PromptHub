@@ -50,7 +50,10 @@ export default function SkillClient({ skill }: { skill: Skill }) {
     ).values()];
     
     return combined
-      .sort((a, b) => b.stats.use_count - a.stats.use_count)
+      .sort((a, b) => {
+        const diff = b.stats.use_count - a.stats.use_count;
+        return diff !== 0 ? diff : a.id.localeCompare(b.id);
+      })
       .slice(0, 6);
   }, [skills, skill.id, category, skillTags]);
 

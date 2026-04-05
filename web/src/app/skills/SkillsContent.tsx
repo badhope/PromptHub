@@ -79,15 +79,22 @@ export default function SkillsContent() {
 
     switch (sortBy) {
       case 'popular':
-        result.sort((a, b) => b.stats.use_count - a.stats.use_count);
+        result.sort((a, b) => {
+          const diff = b.stats.use_count - a.stats.use_count;
+          return diff !== 0 ? diff : a.id.localeCompare(b.id);
+        });
         break;
       case 'newest':
-        result.sort((a, b) =>
-          new Date(b.metadata.updated_at).getTime() - new Date(a.metadata.updated_at).getTime()
-        );
+        result.sort((a, b) => {
+          const diff = new Date(b.metadata.updated_at).getTime() - new Date(a.metadata.updated_at).getTime();
+          return diff !== 0 ? diff : a.id.localeCompare(b.id);
+        });
         break;
       case 'rating':
-        result.sort((a, b) => b.stats.rating - a.stats.rating);
+        result.sort((a, b) => {
+          const diff = b.stats.rating - a.stats.rating;
+          return diff !== 0 ? diff : a.id.localeCompare(b.id);
+        });
         break;
       case 'name':
         result.sort((a, b) => a.name.localeCompare(b.name, 'zh'));
