@@ -145,7 +145,7 @@ export default function Home() {
                     <div className={`w-12 h-12 sm:w-16 sm:h-16 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 bg-gradient-to-br ${info.gradient} group-hover:scale-110 transition-transform duration-300`}>
                       <span className="text-2xl sm:text-3xl">{info.icon}</span>
                     </div>
-                    <h3 className="font-semibold text-gray-900 dark:text-white mb-1 text-sm sm:text-base">{categoryNames[key] || category.name}</h3>
+                    <h3 className="font-semibold text-gray-900 dark:text-white mb-1 text-sm sm:text-base">{categoryNames[key] || key}</h3>
                     <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">{categorySkills.length} {t('home.skillsCount')}</p>
                   </Link>
                 );

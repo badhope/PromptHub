@@ -3,13 +3,12 @@
 <!-- バッジ行 -->
 <p align="center">
 
-![Skills](https://img.shields.io/badge/Skills-15+-blue?style=for-the-badge&labelColor=2d333b)
-![Agents](https://img.shields.io/badge/Agents-77+-green?style=for-the-badge&labelColor=2d333b)
+![Skills](https://img.shields.io/badge/Skills-158+-blue?style=for-the-badge&labelColor=2d333b)
 ![Categories](https://img.shields.io/badge/Categories-5-orange?style=for-the-badge&labelColor=2d333b)
 ![Platform](https://img.shields.io/badge/Platform-Cross--platform-orange?style=for-the-badge&labelColor=2d333b)
 ![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge&labelColor=2d333b)
 ![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-brightgreen?style=for-the-badge&labelColor=2d333b)
-![Last Update](https://img.shields.io/badge/Last_Update-2026--03--28-red?style=for-the-badge&labelColor=2d333b)
+![Last Update](https://img.shields.io/badge/Last_Update-2026--04--06-red?style=for-the-badge&labelColor=2d333b)
 
 </p>
 

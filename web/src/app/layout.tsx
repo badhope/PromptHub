@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -8,14 +7,6 @@ import BackToTop from "@/components/BackToTop";
 import { I18nProvider } from "@/components/I18nProvider";
 import { ToastProvider } from "@/components/Toast";
 import { APP_CONFIG } from "@/lib/constants";
-
-const inter = Inter({
-  subsets: ["latin"],
-  display: 'swap',
-  preload: true,
-  variable: '--font-inter',
-  fallback: ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
-});
 
 export const metadata: Metadata = {
   title: {
@@ -65,7 +56,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="zh-CN" className={`${inter.variable} h-full antialiased`} data-scroll-behavior="smooth" suppressHydrationWarning>
+    <html lang="zh-CN" className="h-full antialiased" data-scroll-behavior="smooth" suppressHydrationWarning>
       <head>
         <meta name="theme-color" content="#4f46e5" />
         <meta name="color-scheme" content="light dark" />

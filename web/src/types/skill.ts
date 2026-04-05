@@ -60,6 +60,11 @@ export interface Skill {
   };
 }
 
+export interface CategoryInfo {
+  count: number;
+  skills: string[];
+}
+
 export interface Category {
   id: string;
   name: string;
@@ -74,5 +79,5 @@ export interface SkillsData {
   schema_version: string;
   generated_at: string;
   skills: Skill[];
-  categories: Record<string, Category>;
+  categories: Record<string, CategoryInfo>;
 }

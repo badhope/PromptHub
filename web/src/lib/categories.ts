@@ -55,3 +55,42 @@ export function isValidCategory(category: string): boolean {
 export function getCategoryConfig(category: string) {
   return CATEGORY_CONFIG[category as keyof typeof CATEGORY_CONFIG] || null;
 }
+
+export function getSubcategories(category: string): Record<string, { icon: string; name: { 'zh-CN': string; 'en-US': string } }> | null {
+  const config = CATEGORY_CONFIG[category as keyof typeof CATEGORY_CONFIG];
+  if (config && 'subcategories' in config) {
+    return config.subcategories as Record<string, { icon: string; name: { 'zh-CN': string; 'en-US': string } }>;
+  }
+  return null;
+}
+
+export function getSubcategoryIcon(category: string, subcategory: string): string {
+  const subcategories = getSubcategories(category);
+  if (subcategories && subcategories[subcategory]) {
+    return subcategories[subcategory].icon;
+  }
+  return '📌';
+}
+
+export function getSubcategoryName(category: string, subcategory: string, language: string = 'zh-CN'): string {
+  const subcategories = getSubcategories(category);
+  if (subcategories && subcategories[subcategory]) {
+    return subcategories[subcategory].name[language as 'zh-CN' | 'en-US'] || subcategories[subcategory].name['zh-CN'];
+  }
+  return subcategory;
+}
+
+export function getAllSubcategories(): Record<string, string[]> {
+  const result: Record<string, string[]> = {};
+  for (const [category, config] of Object.entries(CATEGORY_CONFIG)) {
+    if ('subcategories' in config && config.subcategories) {
+      result[category] = Object.keys(config.subcategories);
+    }
+  }
+  return result;
+}
+
+export function getSubcategoryCount(category: string): number {
+  const subcategories = getSubcategories(category);
+  return subcategories ? Object.keys(subcategories).length : 0;
+}

@@ -6,6 +6,7 @@ dist/
 build/
 .next/
 out/
+.turbo/
 
 # Environment files
 .env
@@ -29,3 +30,20 @@ Thumbs.db
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Cache
+.cache/
+*.tsbuildinfo
+
+# Temporary files
+*.tmp
+*.temp
+.temp/
+.tmp/
+
+# Test coverage
+coverage/
+
+# Debug
+.npm/
+.eslintcache
