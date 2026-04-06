@@ -10,15 +10,13 @@ interface CategoryNavigationProps {
   selectedCategory?: string;
   selectedSubcategory?: string;
   onCategorySelect?: (categoryId: string) => void;
-  onSubcategorySelect?: (categoryId: string, subcategoryId: string) => void;
 }
 
 export default function CategoryNavigation({
   skills,
   selectedCategory,
   selectedSubcategory,
-  onCategorySelect,
-  onSubcategorySelect
+  onCategorySelect
 }: CategoryNavigationProps) {
   const [expandedCategory, setExpandedCategory] = useState<string | null>(selectedCategory || null);
 
@@ -30,12 +28,6 @@ export default function CategoryNavigation({
     }
     if (onCategorySelect) {
       onCategorySelect(categoryId);
-    }
-  };
-
-  const handleSubcategoryClick = (categoryId: string, subcategoryId: string) => {
-    if (onSubcategorySelect) {
-      onSubcategorySelect(categoryId, subcategoryId);
     }
   };
 

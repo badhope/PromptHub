@@ -1,4 +1,4 @@
-import type { CategorySystem } from '@/types/skill';
+import type { CategorySystem, Skill } from '@/types/skill';
 
 export const MULTI_LEVEL_CATEGORY_SYSTEM: CategorySystem = {
   functional: {
@@ -320,7 +320,7 @@ export const MULTI_LEVEL_CATEGORY_SYSTEM: CategorySystem = {
   }
 };
 
-export const getSubcategorySkills = (categoryId: string, subcategoryId: string, allSkills: any[]) => {
+export const getSubcategorySkills = (categoryId: string, subcategoryId: string, allSkills: Skill[]) => {
   const category = MULTI_LEVEL_CATEGORY_SYSTEM[categoryId];
   if (!category) return [];
   
@@ -348,6 +348,6 @@ export const getSubcategorySkills = (categoryId: string, subcategoryId: string, 
   );
 };
 
-export const getCategorySkills = (categoryId: string, allSkills: any[]) => {
+export const getCategorySkills = (categoryId: string, allSkills: Skill[]) => {
   return allSkills.filter(skill => skill.categorization.primary_category === categoryId);
 };
