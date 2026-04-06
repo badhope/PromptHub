@@ -3,8 +3,8 @@
 <!-- バッジ行 -->
 <p align="center">
 
-![Skills](https://img.shields.io/badge/Skills-267+-blue?style=for-the-badge&labelColor=2d333b)
-![Categories](https://img.shields.io/badge/Categories-5-orange?style=for-the-badge&labelColor=2d333b)
+![Skills](https://img.shields.io/badge/Skills-601+-blue?style=for-the-badge&labelColor=2d333b)
+![Categories](https://img.shields.io/badge/Categories-7-orange?style=for-the-badge&labelColor=2d333b)
 ![Platform](https://img.shields.io/badge/Platform-Cross--platform-orange?style=for-the-badge&labelColor=2d333b)
 ![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge&labelColor=2d333b)
 ![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-brightgreen?style=for-the-badge&labelColor=2d333b)

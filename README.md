@@ -3,9 +3,9 @@
 <p align="center">
 
 ![Platform](https://img.shields.io/badge/Platform-AI_Skill_Ecosystem-blue?style=for-the-badge&labelColor=2d333b)
-![Skills](https://img.shields.io/badge/Skills-267+-green?style=for-the-badge&labelColor=2d333b)
-![Categories](https://img.shields.io/badge/Categories-5-orange?style=for-the-badge&labelColor=2d333b)
-![Version](https://img.shields.io/badge/Version-2.3.0-purple?style=for-the-badge&labelColor=2d333b)
+![Skills](https://img.shields.io/badge/Skills-601+-green?style=for-the-badge&labelColor=2d333b)
+![Categories](https://img.shields.io/badge/Categories-7-orange?style=for-the-badge&labelColor=2d333b)
+![Version](https://img.shields.io/badge/Version-5.1.0-purple?style=for-the-badge&labelColor=2d333b)
 ![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge&labelColor=2d333b)
 
 [![Website](https://img.shields.io/badge/🌐_Website-Online-brightgreen?style=for-the-badge&labelColor=2d333b)](https://badhope.github.io/mobile-skills/)
