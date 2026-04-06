@@ -65,6 +65,15 @@ export interface CategoryInfo {
   skills?: string[];
 }
 
+export interface Subcategory {
+  id: string;
+  name: string;
+  name_en: string;
+  icon: string;
+  description: string;
+  skills: string[];
+}
+
 export interface Category {
   id: string;
   name: string;
@@ -72,7 +81,12 @@ export interface Category {
   description: string;
   icon: string;
   color: string;
-  subcategories: { id: string; name: string; skills: string[] }[];
+  gradient: string;
+  subcategories: Subcategory[];
+}
+
+export interface CategorySystem {
+  [key: string]: Category;
 }
 
 export interface SkillsData {
@@ -80,4 +94,5 @@ export interface SkillsData {
   generated_at: string;
   skills: Skill[];
   categories: Record<string, CategoryInfo>;
+  category_system?: CategorySystem;
 }

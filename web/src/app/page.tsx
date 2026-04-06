@@ -6,18 +6,9 @@ import SkillCard from '@/components/SkillCard';
 import { CategoryGridSkeleton, StatCardSkeleton } from '@/components/Skeleton';
 import { OrganizationJsonLd, WebSiteJsonLd, ItemListJsonLd } from '@/components/JsonLd';
 import { useI18nContext } from '@/components/I18nProvider';
+import { MULTI_LEVEL_CATEGORY_SYSTEM } from '@/lib/category-system';
 import type { SkillsData } from '@/types/skill';
 import skillsData from '@/skills-data.json';
-
-const CATEGORY_INFO: Record<string, { icon: string; color: string; gradient: string }> = {
-  functional: { icon: '🛠️', color: 'bg-indigo-500', gradient: 'from-indigo-500 to-purple-500' },
-  professional: { icon: '💼', color: 'bg-pink-500', gradient: 'from-pink-500 to-rose-500' },
-  creative: { icon: '🎨', color: 'bg-cyan-500', gradient: 'from-cyan-500 to-blue-500' },
-  character: { icon: '🎭', color: 'bg-pink-400', gradient: 'from-pink-400 to-purple-400' },
-  fiction: { icon: '📖', color: 'bg-green-500', gradient: 'from-green-500 to-emerald-500' },
-  tool: { icon: '🔧', color: 'bg-violet-500', gradient: 'from-violet-400 to-purple-500' },
-  game: { icon: '🎮', color: 'bg-rose-500', gradient: 'from-rose-400 to-pink-500' }
-};
 
 export default function Home() {
   const { t, language } = useI18nContext();
@@ -133,11 +124,10 @@ export default function Home() {
             {t('home.categories')}
           </h2>
           {!isLoaded ? (
-            <CategoryGridSkeleton count={5} />
+            <CategoryGridSkeleton count={7} />
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 sm:gap-4">
-              {Object.entries(categories).map(([key, cat], index) => {
-                const info = CATEGORY_INFO[key] || { icon: '🧩', color: 'bg-gray-500', gradient: 'from-gray-500 to-gray-600' };
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3 sm:gap-4">
+              {Object.entries(MULTI_LEVEL_CATEGORY_SYSTEM).map(([key, category], index) => {
                 const categorySkills = skills.filter(s => s.categorization.primary_category === key);
                 return (
                   <Link
@@ -146,11 +136,12 @@ export default function Home() {
                     className="text-center p-4 sm:p-6 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-indigo-300 dark:hover:border-indigo-600 hover:shadow-lg transition-all duration-300 bg-white dark:bg-gray-800 group animate-scale-in"
                     style={{ animationDelay: `${index * 0.05}s` }}
                   >
-                    <div className={`w-12 h-12 sm:w-16 sm:h-16 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 bg-gradient-to-br ${info.gradient} group-hover:scale-110 transition-transform duration-300`}>
-                      <span className="text-2xl sm:text-3xl">{info.icon}</span>
+                    <div className={`w-12 h-12 sm:w-16 sm:h-16 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 bg-gradient-to-br ${category.gradient} group-hover:scale-110 transition-transform duration-300`}>
+                      <span className="text-2xl sm:text-3xl">{category.icon}</span>
                     </div>
                     <h3 className="font-semibold text-gray-900 dark:text-white mb-1 text-sm sm:text-base">{categoryNames[key]}</h3>
                     <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">{categorySkills.length} {t('home.skillsCount')}</p>
+                    <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">{category.subcategories.length} 子类</p>
                   </Link>
                 );
               })}
