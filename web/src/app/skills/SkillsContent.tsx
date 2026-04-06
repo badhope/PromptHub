@@ -33,7 +33,9 @@ export default function SkillsContent() {
     professional: t('skills.professional'),
     creative: t('skills.creative'),
     character: t('skills.character'),
-    fiction: t('skills.fiction')
+    fiction: t('skills.fiction'),
+    tool: t('skills.tool'),
+    game: t('skills.game')
   };
 
   const SORT_OPTIONS = [

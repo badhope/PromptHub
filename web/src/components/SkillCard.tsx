@@ -26,7 +26,9 @@ const SkillCardComponent = function SkillCard({ skill }: SkillCardProps) {
     professional: t('skills.professional'),
     creative: t('skills.creative'),
     character: t('skills.character'),
-    fiction: t('skills.fiction')
+    fiction: t('skills.fiction'),
+    tool: t('skills.tool'),
+    game: t('skills.game')
   };
   
   const categoryName = categoryNames[category] || category;

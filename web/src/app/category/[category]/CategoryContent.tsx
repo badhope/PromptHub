@@ -37,6 +37,18 @@ const CATEGORY_INFO: Record<string, { name: string; icon: string; color: string;
     icon: '📖', 
     color: 'from-green-500 to-emerald-500',
     description: '虚构世界构建技能，创造独特的幻想世界'
+  },
+  tool: { 
+    name: '工具类', 
+    icon: '🔧', 
+    color: 'from-violet-400 to-purple-500',
+    description: '实用工具与辅助技能，提升工作效率'
+  },
+  game: { 
+    name: '游戏互动', 
+    icon: '🎮', 
+    color: 'from-rose-400 to-pink-500',
+    description: 'AI驱动的互动游戏，享受游戏乐趣'
   }
 };
 
