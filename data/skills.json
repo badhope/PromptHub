@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "generated_at": "2026-04-05T16:28:46.248Z",
+  "generated_at": "2026-04-06T16:38:22.710Z",
   "skills": [
     {
       "id": "data-analyst",
@@ -23,8 +23,8 @@
         "author": "mobile-skills-team",
         "contributors": [],
         "license": "MIT",
-        "created_at": "2026-04-05T16:28:38.945Z",
-        "updated_at": "2026-04-05T16:28:38.945Z",
+        "created_at": "2026-04-06T16:38:17.066Z",
+        "updated_at": "2026-04-06T16:38:17.066Z",
         "language": "zh-CN",
         "languages_supported": [
           "zh-CN",
@@ -53,11 +53,11 @@
       },
       "stats": {
         "rating": 4.5,
-        "rating_count": 72,
-        "use_count": 8216,
-        "favorite_count": 964,
-        "share_count": 376,
-        "view_count": 17411
+        "rating_count": 93,
+        "use_count": 3840,
+        "favorite_count": 160,
+        "share_count": 385,
+        "view_count": 34012
       },
       "activation": {
         "prompt_template": "请读取以下技能定义并激活对应模式：\n{RAW_URL}\n\n{USER_REQUEST}",
@@ -96,8 +96,8 @@
         "author": "mobile-skills-team",
         "contributors": [],
         "license": "MIT",
-        "created_at": "2026-04-05T16:28:38.945Z",
-        "updated_at": "2026-04-05T16:28:38.946Z",
+        "created_at": "2026-04-06T16:38:17.066Z",
+        "updated_at": "2026-04-06T16:38:17.066Z",
         "language": "zh-CN",
         "languages_supported": [
           "zh-CN",
@@ -126,11 +126,11 @@
       },
       "stats": {
         "rating": 4.5,
-        "rating_count": 16,
-        "use_count": 332,
-        "favorite_count": 905,
-        "share_count": 480,
-        "view_count": 33252
+        "rating_count": 76,
+        "use_count": 2547,
+        "favorite_count": 798,
+        "share_count": 222,
+        "view_count": 24590
       },
       "activation": {
         "prompt_template": "请读取以下技能定义并激活对应模式：\n{RAW_URL}\n\n{USER_REQUEST}",
@@ -169,8 +169,8 @@
         "author": "mobile-skills-team",
         "contributors": [],
         "license": "MIT",
-        "created_at": "2026-04-05T16:28:38.946Z",
-        "updated_at": "2026-04-05T16:28:38.947Z",
+        "created_at": "2026-04-06T16:38:17.066Z",
+        "updated_at": "2026-04-06T16:38:17.066Z",
         "language": "zh-CN",
         "languages_supported": [
           "zh-CN",
@@ -199,11 +199,11 @@
       },
       "stats": {
         "rating": 4.5,
-        "rating_count": 66,
-        "use_count": 1727,
-        "favorite_count": 183,
-        "share_count": 251,
-        "view_count": 30523
+        "rating_count": 62,
+        "use_count": 3240,
+        "favorite_count": 788,
+        "share_count": 478,
+        "view_count": 49523
       },
       "activation": {
         "prompt_template": "请读取以下技能定义并激活对应模式：\n{RAW_URL}\n\n{USER_REQUEST}",
@@ -242,8 +242,8 @@
         "author": "mobile-skills-team",
         "contributors": [],
         "license": "MIT",
-        "created_at": "2026-04-05T16:28:38.948Z",
-        "updated_at": "2026-04-05T16:28:38.948Z",
+        "created_at": "2026-04-06T16:38:17.066Z",
+        "updated_at": "2026-04-06T16:38:17.066Z",
         "language": "zh-CN",
         "languages_supported": [
           "zh-CN",
@@ -272,11 +272,11 @@
       },
       "stats": {
         "rating": 4.5,
-        "rating_count": 103,
-        "use_count": 7683,
-        "favorite_count": 325,
-        "share_count": 341,
-        "view_count": 39381
+        "rating_count": 29,
+        "use_count": 5055,
+        "favorite_count": 414,
+        "share_count": 454,
+        "view_count": 28661
       },
       "activation": {
         "prompt_template": "请读取以下技能定义并激活对应模式：\n{RAW_URL}\n\n{USER_REQUEST}",
@@ -315,8 +315,8 @@
         "author": "mobile-skills-team",
         "contributors": [],
         "license": "MIT",
-        "created_at": "2026-04-05T16:28:38.948Z",
-        "updated_at": "2026-04-05T16:28:38.948Z",
+        "created_at": "2026-04-06T16:38:17.066Z",
+        "updated_at": "2026-04-06T16:38:17.066Z",
         "language": "zh-CN",
         "languages_supported": [
           "zh-CN",
@@ -345,11 +345,11 @@
       },
       "stats": {
         "rating": 4.5,
-        "rating_count": 46,
-        "use_count": 7308,
-        "favorite_count": 609,
-        "share_count": 279,
-        "view_count": 33760
+        "rating_count": 49,
+        "use_count": 5498,
+        "favorite_count": 950,
+        "share_count": 509,
+        "view_count": 33186
       },
       "activation": {
         "prompt_template": "请读取以下技能定义并激活对应模式：\n{RAW_URL}\n\n{USER_REQUEST}",
@@ -388,8 +388,8 @@
         "author": "mobile-skills-team",
         "contributors": [],
         "license": "MIT",
-        "created_at": "2026-04-05T16:28:38.948Z",
-        "updated_at": "2026-04-05T16:28:38.948Z",
+        "created_at": "2026-04-06T16:38:17.066Z",
+        "updated_at": "2026-04-06T16:38:17.066Z",
         "language": "zh-CN",
         "languages_supported": [
           "zh-CN",
@@ -418,11 +418,11 @@
       },
       "stats": {
         "rating": 4.5,
-        "rating_count": 27,
-        "use_count": 3752,
-        "favorite_count": 1017,
-        "share_count": 235,
-        "view_count": 43622
+        "rating_count": 70,
+        "use_count": 3060,
+        "favorite_count": 606,
+        "share_count": 274,
+        "view_count": 49876
       },
       "activation": {
         "prompt_template": "请读取以下技能定义并激活对应模式：\n{RAW_URL}\n\n{USER_REQUEST}",
@@ -461,8 +461,8 @@
         "author": "mobile-skills-team",
         "contributors": [],
         "license": "MIT",
-        "created_at": "2026-04-05T16:28:38.948Z",
-        "updated_at": "2026-04-05T16:28:38.948Z",
+        "created_at": "2026-04-06T16:38:17.067Z",
+        "updated_at": "2026-04-06T16:38:17.067Z",
         "language": "zh-CN",
         "languages_supported": [
           "zh-CN",
@@ -491,11 +491,11 @@
       },
       "stats": {
         "rating": 4.5,
-        "rating_count": 34,
-        "use_count": 7660,
-        "favorite_count": 756,
-        "share_count": 465,
-        "view_count": 8799
+        "rating_count": 76,
+        "use_count": 5292,
+        "favorite_count": 909,
+        "share_count": 155,
+        "view_count": 21527
       },
       "activation": {
         "prompt_template": "请读取以下技能定义并激活对应模式：\n{RAW_URL}\n\n{USER_REQUEST}",
@@ -534,8 +534,8 @@
         "author": "mobile-skills-team",
         "contributors": [],
         "license": "MIT",
-        "created_at": "2026-04-05T16:28:38.948Z",
-        "updated_at": "2026-04-05T16:28:38.948Z",
+        "created_at": "2026-04-06T16:38:17.067Z",
+        "updated_at": "2026-04-06T16:38:17.067Z",
         "language": "zh-CN",
         "languages_supported": [
           "zh-CN",
@@ -564,11 +564,11 @@
       },
       "stats": {
         "rating": 4.5,
-        "rating_count": 99,
-        "use_count": 1285,
-        "favorite_count": 397,
-        "share_count": 269,
-        "view_count": 34708
+        "rating_count": 28,
+        "use_count": 2158,
+        "favorite_count": 954,
+        "share_count": 77,
+        "view_count": 18080
       },
       "activation": {
         "prompt_template": "请读取以下技能定义并激活对应模式：\n{RAW_URL}\n\n{USER_REQUEST}",
@@ -607,8 +607,8 @@
         "author": "mobile-skills-team",
         "contributors": [],
         "license": "MIT",
-        "created_at": "2026-04-05T16:28:38.948Z",
-        "updated_at": "2026-04-05T16:28:38.948Z",
+        "created_at": "2026-04-06T16:38:17.067Z",
+        "updated_at": "2026-04-06T16:38:17.067Z",
         "language": "zh-CN",
         "languages_supported": [
           "zh-CN",
@@ -637,11 +637,11 @@
       },
       "stats": {
         "rating": 4.5,
-        "rating_count": 71,
-        "use_count": 9336,
-        "favorite_count": 753,
-        "share_count": 166,
-        "view_count": 9443
+        "rating_count": 79,
+        "use_count": 1180,
+        "favorite_count": 608,
+        "share_count": 302,
+        "view_count": 4673
       },
       "activation": {
         "prompt_template": "请读取以下技能定义并激活对应模式：\n{RAW_URL}\n\n{USER_REQUEST}",
@@ -680,8 +680,8 @@
         "author": "mobile-skills-team",
         "contributors": [],
         "license": "MIT",
-        "created_at": "2026-04-05T16:28:38.948Z",
-        "updated_at": "2026-04-05T16:28:38.948Z",
+        "created_at": "2026-04-06T16:38:17.067Z",
+        "updated_at": "2026-04-06T16:38:17.067Z",
         "language": "zh-CN",
         "languages_supported": [
           "zh-CN",
@@ -710,11 +710,11 @@
       },
       "stats": {
         "rating": 4.5,
-        "rating_count": 85,
-        "use_count": 9693,
-        "favorite_count": 474,
-        "share_count": 272,
-        "view_count": 5631
+        "rating_count": 15,
+        "use_count": 9889,
+        "favorite_count": 486,
+        "share_count": 208,
+        "view_count": 48446
       },
       "activation": {
         "prompt_template": "请读取以下技能定义并激活对应模式：\n{RAW_URL}\n\n{USER_REQUEST}",
@@ -753,8 +753,8 @@
         "author": "mobile-skills-team",
         "contributors": [],
         "license": "MIT",
-        "created_at": "2026-04-05T16:28:38.943Z",
-        "updated_at": "2026-04-05T16:28:38.943Z",
+        "created_at": "2026-04-06T16:38:17.064Z",
+        "updated_at": "2026-04-06T16:38:17.064Z",
         "language": "zh-CN",
         "languages_supported": [
           "zh-CN",
@@ -783,11 +783,11 @@
       },
       "stats": {
         "rating": 4.5,
-        "rating_count": 60,
-        "use_count": 5053,
-        "favorite_count": 551,
-        "share_count": 70,
-        "view_count": 23451
+        "rating_count": 21,
+        "use_count": 7863,
+        "favorite_count": 270,
+        "share_count": 353,
+        "view_count": 41362
       },
       "activation": {
         "prompt_template": "请读取以下技能定义并激活对应模式：\n{RAW_URL}\n\n{USER_REQUEST}",
@@ -826,8 +826,8 @@
         "author": "mobile-skills-team",
         "contributors": [],
         "license": "MIT",
-        "created_at": "2026-04-05T16:28:38.943Z",
-        "updated_at": "2026-04-05T16:28:38.943Z",
+        "created_at": "2026-04-06T16:38:17.064Z",
+        "updated_at": "2026-04-06T16:38:17.064Z",
         "language": "zh-CN",
         "languages_supported": [
           "zh-CN",
@@ -856,11 +856,11 @@
       },
       "stats": {
         "rating": 4.5,
-        "rating_count": 37,
-        "use_count": 9324,
-        "favorite_count": 371,
-        "share_count": 124,
-        "view_count": 38191
+        "rating_count": 94,
+        "use_count": 2881,
+        "favorite_count": 402,
+        "share_count": 178,
+        "view_count": 40443
       },
       "activation": {
         "prompt_template": "请读取以下技能定义并激活对应模式：\n{RAW_URL}\n\n{USER_REQUEST}",
@@ -899,8 +899,8 @@
         "author": "mobile-skills-team",
         "contributors": [],
         "license": "MIT",
-        "created_at": "2026-04-05T16:28:38.942Z",
-        "updated_at": "2026-04-05T16:28:38.942Z",
+        "created_at": "2026-04-06T16:38:17.063Z",
+        "updated_at": "2026-04-06T16:38:17.063Z",
         "language": "zh-CN",
         "languages_supported": [
           "zh-CN",
@@ -929,11 +929,11 @@
       },
       "stats": {
         "rating": 4.5,
-        "rating_count": 103,
-        "use_count": 3740,
-        "favorite_count": 92,
-        "share_count": 406,
-        "view_count": 42144
+        "rating_count": 53,
+        "use_count": 3797,
+        "favorite_count": 620,
+        "share_count": 476,
+        "view_count": 18050
       },
       "activation": {
         "prompt_template": "请读取以下技能定义并激活对应模式：\n{RAW_URL}\n\n{USER_REQUEST}",
@@ -972,8 +972,8 @@
         "author": "mobile-skills-team",
         "contributors": [],
         "license": "MIT",
-        "created_at": "2026-04-05T16:28:38.942Z",
-        "updated_at": "2026-04-05T16:28:38.942Z",
+        "created_at": "2026-04-06T16:38:17.063Z",
+        "updated_at": "2026-04-06T16:38:17.063Z",
         "language": "zh-CN",
         "languages_supported": [
           "zh-CN",
@@ -1002,11 +1002,11 @@
       },
       "stats": {
         "rating": 4.5,
-        "rating_count": 28,
-        "use_count": 7115,
-        "favorite_count": 402,
-        "share_count": 179,
-        "view_count": 21358
+        "rating_count": 77,
+        "use_count": 6902,
+        "favorite_count": 631,
+        "share_count": 41,
+        "view_count": 46976
       },
       "activation": {
         "prompt_template": "请读取以下技能定义并激活对应模式：\n{RAW_URL}\n\n{USER_REQUEST}",
@@ -1045,8 +1045,8 @@
         "author": "mobile-skills-team",
         "contributors": [],
         "license": "MIT",
-        "created_at": "2026-04-05T16:28:38.942Z",
-        "updated_at": "2026-04-05T16:28:38.942Z",
+        "created_at": "2026-04-06T16:38:17.063Z",
+        "updated_at": "2026-04-06T16:38:17.063Z",
         "language": "zh-CN",
         "languages_supported": [
           "zh-CN",
@@ -1075,11 +1075,11 @@
       },
       "stats": {
         "rating": 4.5,
-        "rating_count": 82,
-        "use_count": 4534,
-        "favorite_count": 72,
-        "share_count": 434,
-        "view_count": 30767
+        "rating_count": 46,
+        "use_count": 2936,
+        "favorite_count": 615,
+        "share_count": 407,
+        "view_count": 33039
       },
       "activation": {
         "prompt_template": "请读取以下技能定义并激活对应模式：\n{RAW_URL}\n\n{USER_REQUEST}",
@@ -1118,8 +1118,8 @@
         "author": "mobile-skills-team",
         "contributors": [],
         "license": "MIT",
-        "created_at": "2026-04-05T16:28:38.942Z",
-        "updated_at": "2026-04-05T16:28:38.942Z",
+        "created_at": "2026-04-06T16:38:17.063Z",
+        "updated_at": "2026-04-06T16:38:17.063Z",
         "language": "zh-CN",
         "languages_supported": [
           "zh-CN",
@@ -1148,11 +1148,11 @@
       },
       "stats": {
         "rating": 4.5,
-        "rating_count": 65,
-        "use_count": 1741,
-        "favorite_count": 684,
-        "share_count": 263,
-        "view_count": 13297
+        "rating_count": 38,
+        "use_count": 7682,
+        "favorite_count": 145,
+        "share_count": 327,
+        "view_count": 47021
       },
       "activation": {
         "prompt_template": "请读取以下技能定义并激活对应模式：\n{RAW_URL}\n\n{USER_REQUEST}",
@@ -1191,8 +1191,8 @@
         "author": "mobile-skills-team",
         "contributors": [],
         "license": "MIT",
-        "created_at": "2026-04-05T16:28:38.942Z",
-        "updated_at": "2026-04-05T16:28:38.942Z",
+        "created_at": "2026-04-06T16:38:17.063Z",
+        "updated_at": "2026-04-06T16:38:17.063Z",
         "language": "zh-CN",
         "languages_supported": [
           "zh-CN",
@@ -1221,11 +1221,11 @@
       },
       "stats": {
         "rating": 4.5,
-        "rating_count": 37,
-        "use_count": 1163,
-        "favorite_count": 385,
-        "share_count": 402,
-        "view_count": 2059
+        "rating_count": 16,
+        "use_count": 3407,
+        "favorite_count": 652,
+        "share_count": 496,
+        "view_count": 18909
       },
       "activation": {
         "prompt_template": "请读取以下技能定义并激活对应模式：\n{RAW_URL}\n\n{USER_REQUEST}",
@@ -1264,8 +1264,8 @@
         "author": "mobile-skills-team",
         "contributors": [],
         "license": "MIT",
-        "created_at": "2026-04-05T16:28:38.942Z",
-        "updated_at": "2026-04-05T16:28:38.942Z",
+        "created_at": "2026-04-06T16:38:17.063Z",
+        "updated_at": "2026-04-06T16:38:17.063Z",
         "language": "zh-CN",
         "languages_supported": [
           "zh-CN",
@@ -1294,11 +1294,11 @@
       },
       "stats": {
         "rating": 4.5,
-        "rating_count": 95,
-        "use_count": 6842,
-        "favorite_count": 845,
-        "share_count": 12,
-        "view_count": 2903
+        "rating_count": 71,
+        "use_count": 2222,
+        "favorite_count": 878,
+        "share_count": 180,
+        "view_count": 31064
       },
       "activation": {
         "prompt_template": "请读取以下技能定义并激活对应模式：\n{RAW_URL}\n\n{USER_REQUEST}",
@@ -1337,8 +1337,8 @@
         "author": "mobile-skills-team",
         "contributors": [],
         "license": "MIT",
-        "created_at": "2026-04-05T16:28:38.942Z",
-        "updated_at": "2026-04-05T16:28:38.942Z",
+        "created_at": "2026-04-06T16:38:17.063Z",
+        "updated_at": "2026-04-06T16:38:17.063Z",
         "language": "zh-CN",
         "languages_supported": [
           "zh-CN",
@@ -1367,11 +1367,11 @@
       },
       "stats": {
         "rating": 4.5,
-        "rating_count": 83,
-        "use_count": 2473,
-        "favorite_count": 730,
-        "share_count": 97,
-        "view_count": 26594
+        "rating_count": 54,
+        "use_count": 1672,
+        "favorite_count": 75,
+        "share_count": 452,
+        "view_count": 45911
       },
       "activation": {
         "prompt_template": "请读取以下技能定义并激活对应模式：\n{RAW_URL}\n\n{USER_REQUEST}",
@@ -1410,8 +1410,8 @@
         "author": "mobile-skills-team",
         "contributors": [],
         "license": "MIT",
-        "created_at": "2026-04-05T16:28:38.943Z",
-        "updated_at": "2026-04-05T16:28:38.943Z",
+        "created_at": "2026-04-06T16:38:17.064Z",
+        "updated_at": "2026-04-06T16:38:17.064Z",
         "language": "zh-CN",
         "languages_supported": [
           "zh-CN",
@@ -1440,11 +1440,11 @@
       },
       "stats": {
         "rating": 4.5,
-        "rating_count": 92,
-        "use_count": 7068,
-        "favorite_count": 190,
-        "share_count": 128,
-        "view_count": 50468
+        "rating_count": 15,
+        "use_count": 4551,
+        "favorite_count": 153,
+        "share_count": 358,
+        "view_count": 13431
       },
       "activation": {
         "prompt_template": "请读取以下技能定义并激活对应模式：\n{RAW_URL}\n\n{USER_REQUEST}",
@@ -1483,8 +1483,8 @@
         "author": "mobile-skills-team",
         "contributors": [],
         "license": "MIT",
-        "created_at": "2026-04-05T16:28:38.943Z",
-        "updated_at": "2026-04-05T16:28:38.943Z",
+        "created_at": "2026-04-06T16:38:17.064Z",
+        "updated_at": "2026-04-06T16:38:17.064Z",
         "language": "zh-CN",
         "languages_supported": [
           "zh-CN",
@@ -1513,11 +1513,11 @@
       },
       "stats": {
         "rating": 4.5,
-        "rating_count": 35,
-        "use_count": 9290,
-        "favorite_count": 935,
-        "share_count": 385,
-        "view_count": 46659
+        "rating_count": 26,
+        "use_count": 5163,
+        "favorite_count": 492,
+        "share_count": 41,
+        "view_count": 17262
       },
       "activation": {
         "prompt_template": "请读取以下技能定义并激活对应模式：\n{RAW_URL}\n\n{USER_REQUEST}",
@@ -1556,8 +1556,8 @@
         "author": "mobile-skills-team",
         "contributors": [],
         "license": "MIT",
-        "created_at": "2026-04-05T16:28:38.943Z",
-        "updated_at": "2026-04-05T16:28:38.943Z",
+        "created_at": "2026-04-06T16:38:17.064Z",
+        "updated_at": "2026-04-06T16:38:17.064Z",
         "language": "zh-CN",
         "languages_supported": [
           "zh-CN",
@@ -1586,11 +1586,11 @@
       },
       "stats": {
         "rating": 4.5,
-        "rating_count": 31,
-        "use_count": 3921,
-        "favorite_count": 821,
-        "share_count": 156,
-        "view_count": 4516
+        "rating_count": 59,
+        "use_count": 7106,
+        "favorite_count": 764,
+        "share_count": 54,
+        "view_count": 30231
       },
       "activation": {
         "prompt_template": "请读取以下技能定义并激活对应模式：\n{RAW_URL}\n\n{USER_REQUEST}",
@@ -1629,8 +1629,8 @@
         "author": "mobile-skills-team",
         "contributors": [],
         "license": "MIT",
-        "created_at": "2026-04-05T16:28:38.943Z",
-        "updated_at": "2026-04-05T16:28:38.943Z",
+        "created_at": "2026-04-06T16:38:17.064Z",
+        "updated_at": "2026-04-06T16:38:17.064Z",
         "language": "zh-CN",
         "languages_supported": [
           "zh-CN",
@@ -1659,11 +1659,11 @@
       },
       "stats": {
         "rating": 4.5,
-        "rating_count": 61,
-        "use_count": 9305,
-        "favorite_count": 542,
-        "share_count": 143,
-        "view_count": 23289
+        "rating_count": 78,
+        "use_count": 7953,
+        "favorite_count": 117,
+        "share_count": 147,
+        "view_count": 20213
       },
       "activation": {
         "prompt_template": "请读取以下技能定义并激活对应模式：\n{RAW_URL}\n\n{USER_REQUEST}",
@@ -1702,8 +1702,8 @@
         "author": "mobile-skills-team",
         "contributors": [],
         "license": "MIT",
-        "created_at": "2026-04-05T16:28:38.943Z",
-        "updated_at": "2026-04-05T16:28:38.943Z",
+        "created_at": "2026-04-06T16:38:17.064Z",
+        "updated_at": "2026-04-06T16:38:17.064Z",
         "language": "zh-CN",
         "languages_supported": [
           "zh-CN",
@@ -1732,11 +1732,11 @@
       },
       "stats": {
         "rating": 4.5,
-        "rating_count": 53,
-        "use_count": 5004,
-        "favorite_count": 56,
-        "share_count": 67,
-        "view_count": 45112
+        "rating_count": 47,
+        "use_count": 8429,
+        "favorite_count": 518,
+        "share_count": 21,
+        "view_count": 30629
       },
       "activation": {
         "prompt_template": "请读取以下技能定义并激活对应模式：\n{RAW_URL}\n\n{USER_REQUEST}",
@@ -1775,8 +1775,8 @@
         "author": "mobile-skills-team",
         "contributors": [],
         "license": "MIT",
-        "created_at": "2026-04-05T16:28:38.944Z",
-        "updated_at": "2026-04-05T16:28:38.944Z",
+        "created_at": "2026-04-06T16:38:17.064Z",
+        "updated_at": "2026-04-06T16:38:17.064Z",
         "language": "zh-CN",
         "languages_supported": [
           "zh-CN",
@@ -1805,11 +1805,11 @@
       },
       "stats": {
         "rating": 4.5,
-        "rating_count": 34,
-        "use_count": 7837,
-        "favorite_count": 957,
-        "share_count": 503,
-        "view_count": 29618
+        "rating_count": 108,
+        "use_count": 5306,
+        "favorite_count": 584,
+        "share_count": 415,
+        "view_count": 45968
       },
       "activation": {
         "prompt_template": "请读取以下技能定义并激活对应模式：\n{RAW_URL}\n\n{USER_REQUEST}",
@@ -1848,8 +1848,8 @@
         "author": "mobile-skills-team",
         "contributors": [],
         "license": "MIT",
-        "created_at": "2026-04-05T16:28:38.944Z",
-        "updated_at": "2026-04-05T16:28:38.944Z",
+        "created_at": "2026-04-06T16:38:17.064Z",
+        "updated_at": "2026-04-06T16:38:17.065Z",
         "language": "zh-CN",
         "languages_supported": [
           "zh-CN",
@@ -1878,11 +1878,11 @@
       },
       "stats": {
         "rating": 4.5,
-        "rating_count": 49,
-        "use_count": 1877,
-        "favorite_count": 210,
-        "share_count": 498,
-        "view_count": 44566
+        "rating_count": 82,
+        "use_count": 5507,
+        "favorite_count": 417,
+        "share_count": 466,
+        "view_count": 22386
       },
       "activation": {
         "prompt_template": "请读取以下技能定义并激活对应模式：\n{RAW_URL}\n\n{USER_REQUEST}",
@@ -1921,8 +1921,8 @@
         "author": "mobile-skills-team",
         "contributors": [],
         "license": "MIT",
-        "created_at": "2026-04-05T16:28:38.944Z",
-        "updated_at": "2026-04-05T16:28:38.944Z",
+        "created_at": "2026-04-06T16:38:17.065Z",
+        "updated_at": "2026-04-06T16:38:17.065Z",
         "language": "zh-CN",
         "languages_supported": [
           "zh-CN",
@@ -1951,11 +1951,11 @@
       },
       "stats": {
         "rating": 4.5,
-        "rating_count": 22,
-        "use_count": 4497,
-        "favorite_count": 1005,
-        "share_count": 15,
-        "view_count": 27476
+        "rating_count": 51,
+        "use_count": 5180,
+        "favorite_count": 408,
+        "share_count": 242,
+        "view_count": 16668
       },
       "activation": {
         "prompt_template": "请读取以下技能定义并激活对应模式：\n{RAW_URL}\n\n{USER_REQUEST}",
@@ -1994,8 +1994,8 @@
         "author": "mobile-skills-team",
         "contributors": [],
         "license": "MIT",
-        "created_at": "2026-04-05T16:28:38.944Z",
-        "updated_at": "2026-04-05T16:28:38.944Z",
+        "created_at": "2026-04-06T16:38:17.065Z",
+        "updated_at": "2026-04-06T16:38:17.065Z",
         "language": "zh-CN",
         "languages_supported": [
           "zh-CN",
@@ -2024,11 +2024,11 @@
       },
       "stats": {
         "rating": 4.5,
-        "rating_count": 78,
-        "use_count": 6338,
-        "favorite_count": 782,
-        "share_count": 244,
-        "view_count": 11142
+        "rating_count": 104,
+        "use_count": 5252,
+        "favorite_count": 173,
+        "share_count": 15,
+        "view_count": 4526
       },
       "activation": {
         "prompt_template": "请读取以下技能定义并激活对应模式：\n{RAW_URL}\n\n{USER_REQUEST}",
@@ -2067,8 +2067,8 @@
         "author": "mobile-skills-team",
         "contributors": [],
         "license": "MIT",
-        "created_at": "2026-04-05T16:28:38.944Z",
-        "updated_at": "2026-04-05T16:28:38.944Z",
+        "created_at": "2026-04-06T16:38:17.065Z",
+        "updated_at": "2026-04-06T16:38:17.065Z",
         "language": "zh-CN",
         "languages_supported": [
           "zh-CN",
@@ -2097,11 +2097,11 @@
       },
       "stats": {
         "rating": 4.5,
-        "rating_count": 21,
-        "use_count": 8155,
-        "favorite_count": 426,
-        "share_count": 197,
-        "view_count": 49854
+        "rating_count": 28,
+        "use_count": 308,
+        "favorite_count": 63,
+        "share_count": 481,
+        "view_count": 26510
       },
       "activation": {
         "prompt_template": "请读取以下技能定义并激活对应模式：\n{RAW_URL}\n\n{USER_REQUEST}",
@@ -2140,8 +2140,8 @@
         "author": "mobile-skills-team",
         "contributors": [],
         "license": "MIT",
-        "created_at": "2026-04-05T16:28:38.944Z",
-        "updated_at": "2026-04-05T16:28:38.944Z",
+        "created_at": "2026-04-06T16:38:17.065Z",
+        "updated_at": "2026-04-06T16:38:17.065Z",
         "language": "zh-CN",
         "languages_supported": [
           "zh-CN",
@@ -2170,11 +2170,11 @@
       },
       "stats": {
         "rating": 4.5,
-        "rating_count": 92,
-        "use_count": 7027,
-        "favorite_count": 353,
-        "share_count": 193,
-        "view_count": 24093
+        "rating_count": 42,
+        "use_count": 8578,
+        "favorite_count": 1001,
+        "share_count": 266,
+        "view_count": 16036
       },
       "activation": {
         "prompt_template": "请读取以下技能定义并激活对应模式：\n{RAW_URL}\n\n{USER_REQUEST}",
@@ -2213,8 +2213,8 @@
         "author": "mobile-skills-team",
         "contributors": [],
         "license": "MIT",
-        "created_at": "2026-04-05T16:28:38.944Z",
-        "updated_at": "2026-04-05T16:28:38.944Z",
+        "created_at": "2026-04-06T16:38:17.065Z",
+        "updated_at": "2026-04-06T16:38:17.065Z",
         "language": "zh-CN",
         "languages_supported": [
           "zh-CN",
@@ -2243,11 +2243,11 @@
       },
       "stats": {
         "rating": 4.5,
-        "rating_count": 100,
-        "use_count": 8710,
-        "favorite_count": 900,
-        "share_count": 479,
-        "view_count": 39086
+        "rating_count": 78,
+        "use_count": 6031,
+        "favorite_count": 428,
+        "share_count": 283,
+        "view_count": 40440
       },
       "activation": {
         "prompt_template": "请读取以下技能定义并激活对应模式：\n{RAW_URL}\n\n{USER_REQUEST}",
