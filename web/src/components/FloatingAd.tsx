@@ -27,9 +27,9 @@ export default function FloatingAd() {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed left-[15px] bottom-[40px] z-[998]">
+    <div className="fixed left-[15px] bottom-[40px] z-[998] md:left-[15px] md:bottom-[40px] max-md:left-[10px] max-md:bottom-[25px]">
       <div
-        className="w-[50px] h-[50px] bg-white rounded-full flex items-center justify-center cursor-pointer border border-gray-200 shadow-lg hover:scale-105 transition-transform"
+        className="w-[50px] h-[50px] bg-white rounded-full flex items-center justify-center cursor-pointer border border-gray-200 shadow-lg hover:scale-105 transition-transform duration-300"
         onMouseEnter={() => setIsExpanded(true)}
       >
         <span className="text-[13px] text-gray-600 font-medium">广告</span>
@@ -37,12 +37,16 @@ export default function FloatingAd() {
 
       {isExpanded && (
         <div 
-          className="absolute left-[60px] bottom-0 w-[260px] bg-white rounded-[14px] border border-gray-100 shadow-xl p-[22px_18px] animate-fadeIn"
+          className="absolute left-[60px] bottom-0 w-[260px] max-md:w-[220px] max-md:left-[55px] bg-white rounded-[14px] border border-gray-100 shadow-xl p-[22px_18px] transition-all duration-400 ease-out"
+          style={{
+            animation: 'fadeIn 0.4s ease-out'
+          }}
           onMouseLeave={() => setIsExpanded(false)}
         >
           <button
             onClick={handleClose}
-            className="absolute top-[12px] right-[12px] w-[20px] h-[20px] bg-gray-100 rounded-full border-none text-gray-400 text-[14px] cursor-pointer hover:bg-gray-200 transition-colors"
+            className="absolute top-[12px] right-[12px] w-[20px] h-[20px] bg-gray-100 rounded-full border-none text-gray-400 text-[14px] cursor-pointer hover:bg-gray-200 transition-colors duration-200 flex items-center justify-center"
+            aria-label="关闭广告"
           >
             ×
           </button>
@@ -63,7 +67,7 @@ export default function FloatingAd() {
           
           <a
             href="tel:18825407105"
-            className="block text-center py-[8px] bg-gray-100 text-gray-700 no-underline rounded-[8px] text-[14px] border border-gray-200 hover:bg-gray-200 transition-colors"
+            className="block text-center py-[8px] bg-gray-100 text-gray-700 no-underline rounded-[8px] text-[14px] border border-gray-200 hover:bg-gray-200 transition-colors duration-200"
           >
             点击咨询合作
           </a>
@@ -74,7 +78,7 @@ export default function FloatingAd() {
         </div>
       )}
 
-      <style jsx>{`
+      <style jsx global>{`
         @keyframes fadeIn {
           from {
             opacity: 0;
@@ -83,22 +87,6 @@ export default function FloatingAd() {
           to {
             opacity: 1;
             transform: translateX(0);
-          }
-        }
-        
-        .animate-fadeIn {
-          animation: fadeIn 0.4s ease;
-        }
-        
-        @media (max-width: 768px) {
-          div:first-child {
-            left: 10px;
-            bottom: 25px;
-          }
-          
-          div:nth-child(2) {
-            width: 220px;
-            left: 55px;
           }
         }
       `}</style>
