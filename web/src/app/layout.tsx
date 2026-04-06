@@ -4,6 +4,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import MobileBottomNav from "@/components/MobileBottomNav";
 import BackToTop from "@/components/BackToTop";
+import FloatingAd from "@/components/FloatingAd";
 import { I18nProvider } from "@/components/I18nProvider";
 import { ToastProvider } from "@/components/Toast";
 import { APP_CONFIG } from "@/lib/constants";
@@ -85,6 +86,7 @@ export default function RootLayout({
             <Footer />
             <MobileBottomNav />
             <BackToTop />
+            <FloatingAd />
           </ToastProvider>
         </I18nProvider>
       </body>
