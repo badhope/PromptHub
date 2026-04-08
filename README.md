@@ -1,73 +1,75 @@
-# 🤖 Mobile Skills - AI Skill Ecosystem Platform
+# 🤖 AI Skill - AI技能生态系统平台
 
 <p align="center">
 
 ![Platform](https://img.shields.io/badge/Platform-AI_Skill_Ecosystem-blue?style=for-the-badge&labelColor=2d333b)
-![Skills](https://img.shields.io/badge/Skills-601+-green?style=for-the-badge&labelColor=2d333b)
+![Skills](https://img.shields.io/badge/Skills-867-green?style=for-the-badge&labelColor=2d333b)
 ![Categories](https://img.shields.io/badge/Categories-7-orange?style=for-the-badge&labelColor=2d333b)
-![Version](https://img.shields.io/badge/Version-5.1.0-purple?style=for-the-badge&labelColor=2d333b)
+![Version](https://img.shields.io/badge/Version-6.0.0-purple?style=for-the-badge&labelColor=2d333b)
 ![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge&labelColor=2d333b)
 
-[![Website](https://img.shields.io/badge/🌐_Website-Online-brightgreen?style=for-the-badge&labelColor=2d333b)](https://badhope.github.io/mobile-skills/)
+[![Website](https://img.shields.io/badge/🌐_Website-Online-brightgreen?style=for-the-badge&labelColor=2d333b)](https://aiskill.qzz.io/)
 [![GitHub Stars](https://img.shields.io/github/stars/badhope/mobile-skills?style=social)](https://github.com/badhope/mobile-skills)
 
 </p>
 
 ---
 
-## 🎯 Project Overview
+## 🎯 项目概述
 
-**Mobile Skills** is a comprehensive AI Skill Ecosystem Platform that provides a rich collection of AI skills, agents, and capabilities. The platform enables users to discover, browse, and activate various AI skills through an intuitive web interface.
+**AI Skill** 是一个全面的AI技能生态系统平台，提供丰富的AI技能、角色和能力集合。平台通过直观的Web界面让用户能够发现、浏览和激活各种AI技能。
 
-### 🌟 Core Features
+### 🌟 核心特性
 
-| Feature | Description |
+| 特性 | 描述 |
 |:--------|:------------|
-| 🎨 **Modern Web Interface** | Beautiful, responsive UI built with Next.js 16 and Tailwind CSS |
-| 🔍 **Intelligent Search** | Fuzzy search powered by Fuse.js for quick skill discovery |
-| 📱 **Cross-Platform** | Works seamlessly on desktop, tablet, and mobile devices |
-| 🌍 **Multi-Language** | Support for Chinese and English interfaces |
-| 🎭 **Theme System** | Light, dark, and system-following theme modes |
-| ❤️ **Favorites System** | Save and manage your favorite skills |
-| 📊 **Statistics Dashboard** | View skill usage and platform metrics |
-| 🔄 **Auto-Sync** | Automatic content synchronization with repository |
+| 🎨 **现代化Web界面** | 使用 Next.js 16 和 Tailwind CSS 构建的精美响应式UI |
+| 🔍 **智能搜索** | 基于 Fuse.js 的模糊搜索，快速发现技能 |
+| 📱 **跨平台** | 在桌面、平板和移动设备上无缝运行 |
+| 🌍 **多语言** | 支持中文和英文界面 |
+| 🎭 **主题系统** | 亮色、暗色和跟随系统三种主题模式 |
+| ❤️ **收藏系统** | 保存和管理您喜爱的技能 |
+| 📊 **统计仪表板** | 查看技能使用情况和平台指标 |
+| 🔄 **自动同步** | 自动与仓库内容同步 |
+| ⚡ **性能优化** | 首屏加载 < 1秒，完全加载 < 3秒 |
+| 🔒 **安全增强** | XSS防护、输入验证、CSP策略 |
 
 ---
 
-## 🏗️ Platform Architecture
+## 🏗️ 平台架构
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                    🤖 Mobile Skills Platform Architecture                    │
+│                    🤖 AI Skill 平台架构                                      │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                             │
 │   ┌─────────────────────────────────────────────────────────────────────┐   │
-│   │                      🎨 Presentation Layer                           │   │
+│   │                      🎨 表现层                                       │   │
 │   │         Next.js 16 · React 19 · Tailwind CSS 4 · TypeScript         │   │
 │   └─────────────────────────────────────────────────────────────────────┘   │
 │                                    │                                        │
 │                                    ▼                                        │
 │   ┌─────────────────────────────────────────────────────────────────────┐   │
-│   │                      🔧 Application Layer                            │   │
+│   │                      🔧 应用层                                       │   │
 │   │    Custom Hooks · State Management · i18n · Theme System · Routing  │   │
 │   └─────────────────────────────────────────────────────────────────────┘   │
 │                                    │                                        │
 │                                    ▼                                        │
 │   ┌─────────────────────────────────────────────────────────────────────┐   │
-│   │                      📊 Data Layer                                   │   │
+│   │                      📊 数据层                                       │   │
 │   │         Static JSON · LocalStorage · LRU Cache · Search Index       │   │
 │   └─────────────────────────────────────────────────────────────────────┘   │
 │                                    │                                        │
 │                                    ▼                                        │
 │   ┌─────────────────────────────────────────────────────────────────────┐   │
-│   │                      🔒 Security Layer                               │   │
+│   │                      🔒 安全层                                       │   │
 │   │      XSS Protection · Input Sanitization · CSP · URL Validation     │   │
 │   └─────────────────────────────────────────────────────────────────────┘   │
 │                                    │                                        │
 │                                    ▼                                        │
 │   ┌─────────────────────────────────────────────────────────────────────┐   │
-│   │                      🚀 Deployment Layer                             │   │
-│   │       GitHub Pages · GitHub Actions · Static Export · CDN           │   │
+│   │                      🚀 部署层                                       │   │
+│   │       Custom Domain · GitHub Actions · Static Export · PWA          │   │
 │   └─────────────────────────────────────────────────────────────────────┘   │
 │                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘

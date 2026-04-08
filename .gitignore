@@ -47,3 +47,40 @@ coverage/
 # Debug
 .npm/
 .eslintcache
+
+# Backup files
+*.backup
+*.backup-*
+web/src/skills-data.json.backup*
+web/package.json.new
+
+# Data files (generated)
+data/*.json
+!data/.gitkeep
+
+# Scripts (development only)
+scripts/*.js
+
+# Skills directory (if not needed in repo)
+skills/
+
+# Templates
+templates/
+
+# Review system
+web/review-system/
+
+# Test files
+web/src/**/__tests__/
+web/jest.config.ts
+web/jest.setup.ts
+
+# Public skills directory
+web/public/skills/
+
+# Lite data
+web/src/skills-data-lite.json
+web/src/skills-index.json
+
+# Development tools
+web/scripts/
