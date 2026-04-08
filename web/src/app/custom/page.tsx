@@ -45,13 +45,17 @@ function getInitialCategories(): CustomCategory[] {
 
 export default function CustomSkillsPage() {
   const { language } = useI18nContext();
-  const [mounted] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const [categories, setCategories] = useState<CustomCategory[]>(getInitialCategories);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [showAddCategory, setShowAddCategory] = useState(false);
   const [showAddSkill, setShowAddSkill] = useState(false);
   const [newCategory, setNewCategory] = useState({ name: '', icon: '📁', color: 'blue' });
   const [newSkill, setNewSkill] = useState({ name: '', description: '', category: '' });
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (categories.length > 0 && typeof window !== 'undefined') {

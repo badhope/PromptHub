@@ -71,7 +71,6 @@ export default function SkillsContent() {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>(defaultView);
   const [searchQuery, setSearchQuery] = useState(urlState.q);
   const [currentPage, setCurrentPage] = useState(1);
-  const [mounted] = useState(false);
 
   const filteredSkills = useMemo(() => {
     let result = [...summaries];
@@ -187,11 +186,7 @@ export default function SkillsContent() {
 
         <main id="main-content" className="relative z-10 py-8 sm:py-12">
           <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-            <header 
-              className={`mb-6 sm:mb-8 transition-all duration-1000 ${
-                mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-              }`}
-            >
+            <header className="mb-6 sm:mb-8">
               <nav className="mb-4" aria-label="Breadcrumb">
                 <Link
                   href="/"
@@ -212,10 +207,7 @@ export default function SkillsContent() {
             </header>
 
             <section 
-              className={`bg-white/15 backdrop-blur-xl border border-white/30 rounded-3xl p-4 sm:p-6 mb-6 sm:mb-8 transition-all duration-1000 ${
-                mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-              }`}
-              style={{ transitionDelay: '100ms' }}
+              className="bg-white/15 backdrop-blur-xl border border-white/30 rounded-3xl p-4 sm:p-6 mb-6 sm:mb-8"
               aria-label="Search and filter controls"
             >
               <div className="flex flex-col gap-4">
@@ -315,12 +307,7 @@ export default function SkillsContent() {
             </section>
 
             {filteredSkills.length === 0 ? (
-              <div 
-                className={`text-center py-12 sm:py-16 animate-fade-in transition-all duration-1000 ${
-                  mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-                }`}
-                style={{ transitionDelay: '200ms' }}
-              >
+              <div className="text-center py-12 sm:py-16 animate-fade-in">
                 <div className="text-6xl sm:text-7xl mb-6">🔍</div>
                 <h3 className="text-xl sm:text-2xl font-bold text-white mb-3 drop-shadow-lg">{t('skills.noResults')}</h3>
                 <p className="text-white/90 text-base sm:text-lg font-medium">{t('skills.tryDifferent')}</p>
@@ -329,10 +316,7 @@ export default function SkillsContent() {
               <>
                 {viewMode === 'grid' ? (
                   <div 
-                    className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 transition-all duration-1000 ${
-                      mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-                    }`}
-                    style={{ transitionDelay: '200ms' }}
+                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6"
                     role="list"
                     aria-label="Skills grid"
                   >
@@ -342,10 +326,7 @@ export default function SkillsContent() {
                   </div>
                 ) : (
                   <div 
-                    className={`space-y-3 sm:space-y-4 transition-all duration-1000 ${
-                      mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-                    }`}
-                    style={{ transitionDelay: '200ms' }}
+                    className="space-y-3 sm:space-y-4"
                     role="list"
                     aria-label="Skills list"
                   >
@@ -389,10 +370,7 @@ export default function SkillsContent() {
 
                 {totalPages > 1 && (
                   <nav 
-                    className={`mt-6 sm:mt-8 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-2 transition-all duration-1000 ${
-                      mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-                    }`}
-                    style={{ transitionDelay: '300ms' }}
+                    className="mt-6 sm:mt-8 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-2"
                     aria-label="Pagination"
                   >
                     <button

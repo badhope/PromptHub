@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 
@@ -21,7 +21,11 @@ const NAV_ITEMS: NavItem[] = [
 export default function MobileBottomNav() {
   const pathname = usePathname();
   const [isExpanded, setIsExpanded] = useState(false);
-  const [mounted] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const isActive = (href: string) => {
     if (href === '/') {

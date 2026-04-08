@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { useI18nContext } from '@/components/I18nProvider';
@@ -122,8 +122,13 @@ function SubcategoryCard({ subcategory, categoryId, language }: SubcategoryCardP
 
 export default function CategoriesPage() {
   const { language } = useI18nContext();
+  const [mounted, setMounted] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const categories = Object.values(MULTI_LEVEL_CATEGORY_SYSTEM);
   

@@ -1,7 +1,5 @@
 'use client';
 
-import { useState } from 'react';
-
 interface SkeletonProps {
   className?: string;
   variant?: 'text' | 'circular' | 'rectangular';
@@ -17,12 +15,6 @@ export function Skeleton({
   height,
   animation = 'pulse'
 }: SkeletonProps) {
-  const [mounted] = useState(false);
-
-  if (typeof window === 'undefined' && !mounted) {
-    return null;
-  }
-
   const baseClasses = 'bg-gray-200';
   
   const variantClasses = {

@@ -9,6 +9,8 @@
 export interface Skill {
   id: string;
   name: string;
+  number?: string;
+  index?: number;
   metadata: SkillMetadata;
   categorization: SkillCategorization;
   content?: SkillContent;
@@ -66,6 +68,8 @@ export interface SkillThumbnails {
 export interface SkillSummary {
   id: string;
   name: string;
+  number?: string;
+  index?: number;
   metadata: {
     title: string;
     short_description?: string;
