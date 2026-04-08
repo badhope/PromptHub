@@ -16,7 +16,7 @@ export default function AboutPage() {
             { label: '关于我们' }
           ]} />
           <div className="flex items-center gap-4 mt-4">
-            <span className="text-5xl">🚀</span>
+            <span className="text-5xl" role="img" aria-label="火箭">🚀</span>
             <div>
               <h1 className="text-4xl font-bold">关于 Mobile Skills</h1>
               <p className="text-white/80 mt-2">AI Skill 生态系统的构建者</p>
@@ -27,18 +27,18 @@ export default function AboutPage() {
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">🎯 我们的使命</h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6"><span role="img" aria-label="目标">🎯</span> 我们的使命</h2>
           <p className="text-gray-600 dark:text-gray-400 text-lg leading-relaxed">
             Mobile Skills 致力于构建一个开放、易用的 AI Skill 生态系统。我们相信，通过标准化的技能定义和便捷的激活方式，每个人都能更好地利用 AI 的能力，让 AI 变得更有用、更有趣。
           </p>
         </div>
 
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">✨ 核心特性</h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6"><span role="img" aria-label="闪亮">✨</span> 核心特性</h2>
           <div className="grid md:grid-cols-2 gap-6">
             <div className="flex items-start gap-4">
               <div className="bg-indigo-100 dark:bg-indigo-900 rounded-lg p-3">
-                <span className="text-2xl">🔗</span>
+                <span className="text-2xl" role="img" aria-label="链接">🔗</span>
               </div>
               <div>
                 <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Raw 链接激活</h3>
@@ -49,7 +49,7 @@ export default function AboutPage() {
             </div>
             <div className="flex items-start gap-4">
               <div className="bg-pink-100 dark:bg-pink-900 rounded-lg p-3">
-                <span className="text-2xl">📱</span>
+                <span className="text-2xl" role="img" aria-label="手机">📱</span>
               </div>
               <div>
                 <h3 className="font-semibold text-gray-900 dark:text-white mb-2">跨平台支持</h3>
@@ -60,7 +60,7 @@ export default function AboutPage() {
             </div>
             <div className="flex items-start gap-4">
               <div className="bg-cyan-100 dark:bg-cyan-900 rounded-lg p-3">
-                <span className="text-2xl">🧩</span>
+                <span className="text-2xl" role="img" aria-label="拼图">🧩</span>
               </div>
               <div>
                 <h3 className="font-semibold text-gray-900 dark:text-white mb-2">丰富分类</h3>
@@ -71,7 +71,7 @@ export default function AboutPage() {
             </div>
             <div className="flex items-start gap-4">
               <div className="bg-green-100 dark:bg-green-900 rounded-lg p-3">
-                <span className="text-2xl">🌐</span>
+                <span className="text-2xl" role="img" aria-label="地球">🌐</span>
               </div>
               <div>
                 <h3 className="font-semibold text-gray-900 dark:text-white mb-2">开源免费</h3>
@@ -84,7 +84,7 @@ export default function AboutPage() {
         </div>
 
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">📊 项目统计</h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6"><span role="img" aria-label="图表">📊</span> 项目统计</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             <div className="text-center">
               <div className="text-3xl font-bold text-indigo-600 dark:text-indigo-400">131+</div>
@@ -106,7 +106,7 @@ export default function AboutPage() {
         </div>
 
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">🤝 参与贡献</h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6"><span role="img" aria-label="握手">🤝</span> 参与贡献</h2>
           <p className="text-gray-600 dark:text-gray-400 mb-6">
             我们欢迎所有形式的贡献！无论是提交新技能、改进现有技能、修复 Bug 还是完善文档，您的参与都将让这个项目变得更好。
           </p>

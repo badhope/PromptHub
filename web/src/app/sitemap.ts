@@ -1,13 +1,12 @@
 import type { MetadataRoute } from 'next'
-import skillsData from '@/skills-data.json'
-import type { SkillsData } from '@/types/skill'
+import { getSkillsData } from '@/lib/skills-data-server'
 
 export const dynamic = 'force-static'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://badhope.github.io/mobile-skills'
   
-  const { skills, categories } = skillsData as SkillsData
+  const { skills, categories } = getSkillsData()
 
   const staticPages = [
     {

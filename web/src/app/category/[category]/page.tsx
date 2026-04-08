@@ -1,10 +1,8 @@
 import CategoryPageClient from './CategoryPageClient';
-import type { SkillsData } from '@/types/skill';
-import skillsData from '@/skills-data.json';
+import { getAllCategories } from '@/lib/skills-data-server';
 
 export function generateStaticParams() {
-  const { skills } = skillsData as SkillsData;
-  const categories = [...new Set(skills.map(s => s.categorization.primary_category))];
+  const categories = getAllCategories();
   return categories.map(category => ({ category }));
 }
 

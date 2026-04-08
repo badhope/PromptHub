@@ -75,8 +75,8 @@ export const CATEGORY_CONFIG = {
   character: {
     icon: '🎭',
     name: { 'zh-CN': '角色型', 'en-US': 'Character' },
-    gradient: 'from-pink-400 to-yellow-300',
-    color: '#ec4899, #fbbf24',
+    gradient: 'from-violet-500 via-purple-500 to-fuchsia-500',
+    color: '#8b5cf6, #a855f7, #d946ef',
     description: { 'zh-CN': '角色扮演类技能', 'en-US': 'Role-playing skills' },
     subcategories: {
       'anime-shonen': { icon: '🔥', name: { 'zh-CN': '热血动漫', 'en-US': 'Shonen Anime' } },
@@ -90,7 +90,15 @@ export const CATEGORY_CONFIG = {
       'fantasy-hero': { icon: '🧙', name: { 'zh-CN': '奇幻英雄', 'en-US': 'Fantasy Hero' } },
       'scifi-cyber': { icon: '🤖', name: { 'zh-CN': '科幻赛博', 'en-US': 'Sci-Fi Cyber' } },
       'historical': { icon: '📜', name: { 'zh-CN': '历史人物', 'en-US': 'Historical' } },
-      'celebrity': { icon: '⭐', name: { 'zh-CN': '名人明星', 'en-US': 'Celebrity' } }
+      'celebrity': { icon: '⭐', name: { 'zh-CN': '名人明星', 'en-US': 'Celebrity' } },
+      'villain-antagonist': { icon: '😈', name: { 'zh-CN': '反派角色', 'en-US': 'Villain' } },
+      'comedy-funny': { icon: '😂', name: { 'zh-CN': '搞笑角色', 'en-US': 'Comedy' } },
+      'mystery-enigmatic': { icon: '🔮', name: { 'zh-CN': '神秘角色', 'en-US': 'Mystery' } },
+      'warrior-fighter': { icon: '🗡️', name: { 'zh-CN': '战士武者', 'en-US': 'Warrior' } },
+      'mage-sorcerer': { icon: '🌟', name: { 'zh-CN': '法师巫师', 'en-US': 'Mage' } },
+      'assassin-ninja': { icon: '🥷', name: { 'zh-CN': '刺客忍者', 'en-US': 'Assassin' } },
+      'princess-royal': { icon: '👑', name: { 'zh-CN': '公主皇室', 'en-US': 'Princess' } },
+      'demon-supernatural': { icon: '👹', name: { 'zh-CN': '恶魔超自然', 'en-US': 'Demon' } }
     }
   },
   fiction: {

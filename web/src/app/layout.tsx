@@ -1,13 +1,22 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import MobileBottomNav from "@/components/MobileBottomNav";
 import BackToTop from "@/components/BackToTop";
 import FloatingAd from "@/components/FloatingAd";
 import { I18nProvider } from "@/components/I18nProvider";
 import { ToastProvider } from "@/components/Toast";
 import { APP_CONFIG } from "@/lib/constants";
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#4f46e5' },
+    { media: '(prefers-color-scheme: dark)', color: '#4f46e5' },
+  ],
+};
 
 export const metadata: Metadata = {
   title: {
@@ -61,7 +70,6 @@ export default function RootLayout({
       <head>
         <meta name="theme-color" content="#4f46e5" />
         <meta name="color-scheme" content="light dark" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="manifest" href="/manifest.json" />
         <script
@@ -82,9 +90,8 @@ export default function RootLayout({
         <I18nProvider>
           <ToastProvider>
             <Navbar />
-            <main className="flex-1 pb-16 md:pb-0">{children}</main>
+            <main className="flex-1">{children}</main>
             <Footer />
-            <MobileBottomNav />
             <BackToTop />
             <FloatingAd />
           </ToastProvider>

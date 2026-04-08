@@ -1,10 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import Breadcrumb from '@/components/Breadcrumb';
 import { usePreferences } from '@/hooks/usePreferences';
 import { useNotifications } from '@/hooks/useNotifications';
 import { useI18nContext } from '@/components/I18nProvider';
+
+const ITEMS_PER_PAGE_OPTIONS = [12, 20, 32, 48] as const;
 
 export default function SettingsPage() {
   const { t, language, changeLanguage } = useI18nContext();
@@ -34,11 +36,34 @@ export default function SettingsPage() {
     }
   }, [toastMessage]);
 
-  const showToast = (type: 'success' | 'error', text: string) => {
+  const showToast = useCallback((type: 'success' | 'error', text: string) => {
     setToastMessage({ type, text });
-  };
+  }, []);
 
-  const handleExportSettings = () => {
+  const THEME_OPTIONS = useMemo(() => [
+    { value: 'light' as const, label: t('settings.lightMode'), icon: '☀️', description: t('settings.lightDesc') },
+    { value: 'dark' as const, label: t('settings.darkMode'), icon: '🌙', description: t('settings.darkDesc') },
+    { value: 'system' as const, label: t('settings.systemMode'), icon: '💻', description: t('settings.systemDesc') }
+  ], [t]);
+
+  const LANGUAGE_OPTIONS = useMemo(() => [
+    { value: 'zh-CN' as const, label: '简体中文', flag: '🇨🇳' },
+    { value: 'en-US' as const, label: 'English', flag: '🇺🇸' }
+  ], []);
+
+  const SORT_OPTIONS = useMemo(() => [
+    { value: 'popular' as const, label: t('settings.sortPopular'), icon: '🔥' },
+    { value: 'newest' as const, label: t('settings.sortNewest'), icon: '🆕' },
+    { value: 'rating' as const, label: t('settings.sortRating'), icon: '⭐' },
+    { value: 'name' as const, label: t('settings.sortName'), icon: '🔤' }
+  ], [t]);
+
+  const VIEW_OPTIONS = useMemo(() => [
+    { value: 'grid' as const, label: t('settings.gridView'), icon: '⊞' },
+    { value: 'list' as const, label: t('settings.listView'), icon: '☰' }
+  ], [t]);
+
+  const handleExportSettings = useCallback(() => {
     try {
       const data = exportPreferences();
       const blob = new Blob([data], { type: 'application/json' });
@@ -54,9 +79,9 @@ export default function SettingsPage() {
     } catch {
       showToast('error', language === 'zh-CN' ? '导出失败，请重试' : 'Export failed, please try again');
     }
-  };
+  }, [exportPreferences, showToast, t, language]);
 
-  const handleImportSettings = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImportSettings = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
@@ -81,15 +106,15 @@ export default function SettingsPage() {
       showToast('error', language === 'zh-CN' ? '读取文件失败，请重试' : 'Failed to read file, please try again');
     };
     reader.readAsText(file);
-  };
+  }, [importPreferences, showToast, t, language]);
 
-  const handleResetSettings = () => {
+  const handleResetSettings = useCallback(() => {
     resetPreferences();
     setIsResetConfirmOpen(false);
     showToast('success', language === 'zh-CN' ? '设置已重置为默认值' : 'Settings have been reset to default');
-  };
+  }, [resetPreferences, showToast, language]);
 
-  const handleToggleNotifications = (enabled: boolean) => {
+  const handleToggleNotifications = useCallback((enabled: boolean) => {
     toggleNotifications(enabled);
     updatePreference('showNotifications', enabled);
     
@@ -108,32 +133,16 @@ export default function SettingsPage() {
     } else if (!enabled) {
       showToast('success', language === 'zh-CN' ? '通知已关闭' : 'Notifications disabled');
     }
-  };
+  }, [toggleNotifications, updatePreference, notificationPermission, requestNotificationPermission, showToast, language]);
 
-  const THEME_OPTIONS = [
-    { value: 'light' as const, label: t('settings.lightMode'), icon: '☀️', description: t('settings.lightDesc') },
-    { value: 'dark' as const, label: t('settings.darkMode'), icon: '🌙', description: t('settings.darkDesc') },
-    { value: 'system' as const, label: t('settings.systemMode'), icon: '💻', description: t('settings.systemDesc') }
-  ];
-
-  const LANGUAGE_OPTIONS = [
-    { value: 'zh-CN' as const, label: '简体中文', flag: '🇨🇳' },
-    { value: 'en-US' as const, label: 'English', flag: '🇺🇸' }
-  ];
-
-  const SORT_OPTIONS = [
-    { value: 'popular' as const, label: t('settings.sortPopular'), icon: '🔥' },
-    { value: 'newest' as const, label: t('settings.sortNewest'), icon: '🆕' },
-    { value: 'rating' as const, label: t('settings.sortRating'), icon: '⭐' },
-    { value: 'name' as const, label: t('settings.sortName'), icon: '🔤' }
-  ];
-
-  const VIEW_OPTIONS = [
-    { value: 'grid' as const, label: t('settings.gridView'), icon: '⊞' },
-    { value: 'list' as const, label: t('settings.listView'), icon: '☰' }
-  ];
-
-  const ITEMS_PER_PAGE_OPTIONS = [12, 20, 32, 48];
+  const handleToggleAutoSave = useCallback(() => {
+    const newValue = !preferences.autoSaveSearch;
+    updatePreference('autoSaveSearch', newValue);
+    showToast('success', newValue 
+      ? (language === 'zh-CN' ? '自动保存已开启' : 'Auto-save enabled')
+      : (language === 'zh-CN' ? '自动保存已关闭' : 'Auto-save disabled')
+    );
+  }, [preferences.autoSaveSearch, updatePreference, showToast, language]);
 
   if (!isLoaded) {
     return (
@@ -389,10 +398,7 @@ export default function SettingsPage() {
                   </div>
                 </div>
                 <button
-                  onClick={() => {
-                    updatePreference('autoSaveSearch', !preferences.autoSaveSearch);
-                    showToast('success', preferences.autoSaveSearch ? (language === 'zh-CN' ? '自动保存已关闭' : 'Auto-save disabled') : (language === 'zh-CN' ? '自动保存已开启' : 'Auto-save enabled'));
-                  }}
+                  onClick={handleToggleAutoSave}
                   className={`relative w-12 sm:w-14 h-6 sm:h-7 rounded-full transition-colors cursor-pointer flex-shrink-0 ml-3 ${
                     preferences.autoSaveSearch ? 'bg-emerald-500' : 'bg-gray-300 dark:bg-gray-600'
                   }`}

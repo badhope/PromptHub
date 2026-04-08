@@ -1,4 +1,4 @@
-import type { CategorySystem, Skill } from '@/types/skill';
+import type { CategorySystem, Skill, SkillSummary } from '@/types/skill';
 
 export const MULTI_LEVEL_CATEGORY_SYSTEM: CategorySystem = {
   functional: {
@@ -320,18 +320,21 @@ export const MULTI_LEVEL_CATEGORY_SYSTEM: CategorySystem = {
   }
 };
 
-export const getSubcategorySkills = (categoryId: string, subcategoryId: string, allSkills: Skill[]) => {
+export const getSubcategorySkills = (categoryId: string, subcategoryId: string, allSkills: Skill[] | SkillSummary[]) => {
   const category = MULTI_LEVEL_CATEGORY_SYSTEM[categoryId];
-  if (!category) return [];
+  if (!category || !category.subcategories) return [];
   
-  const subcategory = category.subcategories.find(s => s.id === subcategoryId);
+  const subcategory = category.subcategories.find((s: { id: string }) => s.id === subcategoryId);
   if (!subcategory) return [];
   
-  if (subcategory.skills.length === 0) {
+  if (!subcategory.skills || subcategory.skills.length === 0) {
     return allSkills.filter(skill => {
-      const tags = skill.categorization.tags || [];
-      const secondaryCategories = skill.categorization.secondary_categories || [];
-      return tags.some((tag: string) => 
+      const tags = 'tags' in skill ? skill.tags : (skill as Skill).categorization?.tags || [];
+      const skillCategorization = (skill as Skill).categorization;
+      const secondaryCategories = skillCategorization && 'secondary_categories' in skillCategorization 
+        ? (skillCategorization.secondary_categories || []) 
+        : [];
+      return (Array.isArray(tags) ? tags : []).some((tag: string) => 
         tag.toLowerCase().includes(subcategoryId) || 
         subcategory.name.includes(tag)
       ) || secondaryCategories.some((cat: string) => 
@@ -340,14 +343,20 @@ export const getSubcategorySkills = (categoryId: string, subcategoryId: string, 
     });
   }
   
-  return allSkills.filter(skill => 
-    subcategory.skills.some(skillName => 
+  return allSkills.filter(skill => {
+    const tags = 'tags' in skill ? skill.tags : (skill as Skill).categorization?.tags || [];
+    return subcategory.skills!.some((skillName: string) => 
       skill.name.includes(skillName) || 
-      skill.categorization.tags.some((tag: string) => skillName.includes(tag))
-    )
-  );
+      (Array.isArray(tags) ? tags : []).some((tag: string) => skillName.includes(tag))
+    );
+  });
 };
 
-export const getCategorySkills = (categoryId: string, allSkills: Skill[]) => {
-  return allSkills.filter(skill => skill.categorization.primary_category === categoryId);
+export const getCategorySkills = (categoryId: string, allSkills: Skill[] | SkillSummary[]) => {
+  return allSkills.filter(skill => {
+    if ('category' in skill) {
+      return skill.category === categoryId;
+    }
+    return (skill as Skill).categorization?.primary_category === categoryId;
+  });
 };

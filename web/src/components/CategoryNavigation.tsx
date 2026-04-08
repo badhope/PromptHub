@@ -3,10 +3,10 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { MULTI_LEVEL_CATEGORY_SYSTEM, getCategorySkills, getSubcategorySkills } from '@/lib/category-system';
-import type { Skill } from '@/types/skill';
+import type { Skill, SkillSummary } from '@/types/skill';
 
 interface CategoryNavigationProps {
-  skills: Skill[];
+  skills: Skill[] | SkillSummary[];
   selectedCategory?: string;
   selectedSubcategory?: string;
   onCategorySelect?: (categoryId: string) => void;

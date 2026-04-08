@@ -1,18 +1,14 @@
 import SkillClient from './SkillClient';
-import type { SkillsData } from '@/types/skill';
-import skillsData from '@/skills-data.json';
+import { getAllSkillIds, getSkillById, getRelatedSkills } from '@/lib/skills-data-server';
 
 export function generateStaticParams() {
-  const { skills } = skillsData as SkillsData;
-  return skills.map((skill) => ({
-    id: skill.id,
-  }));
+  const skillIds = getAllSkillIds();
+  return skillIds.map((id) => ({ id }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
-  const { skills } = skillsData as SkillsData;
   const { id } = await params;
-  const skill = skills.find(s => s.id === id);
+  const skill = getSkillById(id);
   
   if (!skill) {
     return {
@@ -27,9 +23,8 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 }
 
 export default async function SkillDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const { skills } = skillsData as SkillsData;
   const { id } = await params;
-  const skill = skills.find(s => s.id === id);
+  const skill = getSkillById(id);
   
   if (!skill) {
     return (
@@ -42,5 +37,7 @@ export default async function SkillDetailPage({ params }: { params: Promise<{ id
     );
   }
   
-  return <SkillClient skill={skill} />;
+  const relatedSkills = getRelatedSkills(id);
+  
+  return <SkillClient skill={skill} relatedSkills={relatedSkills} />;
 }

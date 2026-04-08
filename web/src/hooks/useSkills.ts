@@ -1,16 +1,23 @@
 'use client';
 
-import { useState, useMemo, useCallback } from 'react';
+import { useMemo } from 'react';
 import type { Skill, SkillsData } from '@/types/skill';
 import skillsData from '@/skills-data.json';
-import { LRUCache, debounce, formatRelativeTime } from '@/lib/performance';
-
-const searchCache = new LRUCache<string, Skill[]>(100);
+import { skillSearchCache } from '@/lib/cache-manager';
+import {
+  sortSkills,
+  filterSkillsByCategory,
+  searchSkills,
+  calculateSkillStats,
+  getRecentUpdates,
+  getRelatedSkills,
+  type SortBy
+} from '@/lib/skill-utils';
 
 export interface UseSkillsOptions {
   category?: string;
   searchQuery?: string;
-  sortBy?: 'popular' | 'newest' | 'rating' | 'name';
+  sortBy?: SortBy;
   limit?: number;
 }
 
@@ -32,55 +39,22 @@ export function useSkills(options: UseSkillsOptions = {}): UseSkillsResult {
   const categories = data.categories;
 
   const filteredAndSortedSkills = useMemo(() => {
-    let result = [...allSkills];
-
-    if (category) {
-      result = result.filter(skill => skill.categorization.primary_category === category);
-    }
+    let result = filterSkillsByCategory(allSkills, category);
 
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase().trim();
       const cacheKey = `${query}-${category || 'all'}`;
       
-      const cached = searchCache.get(cacheKey);
+      const cached = skillSearchCache.get(cacheKey);
       if (cached) {
         result = cached;
       } else {
-        result = result.filter(skill => {
-          const nameMatch = skill.name.toLowerCase().includes(query);
-          const descMatch = skill.metadata.description.toLowerCase().includes(query);
-          const tagsMatch = skill.categorization.tags.some(tag => 
-            tag.toLowerCase().includes(query)
-          );
-          return nameMatch || descMatch || tagsMatch;
-        });
-        searchCache.set(cacheKey, result);
+        result = searchSkills(result, query);
+        skillSearchCache.set(cacheKey, result);
       }
     }
 
-    switch (sortBy) {
-      case 'popular':
-        result.sort((a, b) => {
-          const diff = b.stats.use_count - a.stats.use_count;
-          return diff !== 0 ? diff : a.id.localeCompare(b.id);
-        });
-        break;
-      case 'newest':
-        result.sort((a, b) => {
-          const diff = new Date(b.metadata.updated_at).getTime() - new Date(a.metadata.updated_at).getTime();
-          return diff !== 0 ? diff : a.id.localeCompare(b.id);
-        });
-        break;
-      case 'rating':
-        result.sort((a, b) => {
-          const diff = b.stats.rating - a.stats.rating;
-          return diff !== 0 ? diff : a.id.localeCompare(b.id);
-        });
-        break;
-      case 'name':
-        result.sort((a, b) => a.name.localeCompare(b.name, 'zh-CN'));
-        break;
-    }
+    result = sortSkills(result, sortBy);
 
     if (limit && limit > 0) {
       result = result.slice(0, limit);
@@ -115,14 +89,8 @@ export function useSkill(skillId: string): UseSkillResult {
   }, [data.skills, skillId]);
 
   const relatedSkills = useMemo(() => {
-    if (!skill) return [];
-
-    const sameCategory = data.skills.filter(
-      s => s.categorization.primary_category === skill.categorization.primary_category && s.id !== skill.id
-    );
-
-    return sameCategory.slice(0, 4);
-  }, [skill, data.skills]);
+    return getRelatedSkills(data.skills, skillId, 4);
+  }, [skillId, data.skills]);
 
   const error = useMemo(() => {
     return skillId && !skill ? 'Skill not found' : null;
@@ -150,66 +118,12 @@ export function useSkillStats(): SkillStats {
   const skills = data.skills;
 
   return useMemo(() => {
-    const totalSkills = skills.length;
-    const totalCategories = Object.keys(data.categories).length;
-    const totalUses = skills.reduce((sum, s) => sum + s.stats.use_count, 0);
-    const averageRating = skills.reduce((sum, s) => sum + s.stats.rating, 0) / totalSkills;
-
-    const categoryCount: Record<string, number> = {};
-    skills.forEach(skill => {
-      const cat = skill.categorization.primary_category;
-      categoryCount[cat] = (categoryCount[cat] || 0) + 1;
-    });
-
-    const topCategories = Object.entries(categoryCount)
-      .map(([name, count]) => ({ name, count }))
-      .sort((a, b) => {
-        const diff = b.count - a.count;
-        return diff !== 0 ? diff : a.name.localeCompare(b.name);
-      })
-      .slice(0, 5);
-
-    const recentUpdates = [...skills]
-      .sort((a, b) => {
-        const diff = new Date(b.metadata.updated_at).getTime() - new Date(a.metadata.updated_at).getTime();
-        return diff !== 0 ? diff : a.id.localeCompare(b.id);
-      })
-      .slice(0, 5)
-      .map(skill => ({
-        name: skill.name,
-        date: skill.metadata.updated_at,
-        relativeTime: formatRelativeTime(skill.metadata.updated_at),
-      }));
+    const baseStats = calculateSkillStats(skills, Object.keys(data.categories).length);
+    const recentUpdates = getRecentUpdates(skills, 5);
 
     return {
-      totalSkills,
-      totalCategories,
-      totalUses,
-      averageRating: Math.round(averageRating * 10) / 10,
-      topCategories,
+      ...baseStats,
       recentUpdates,
     };
   }, [skills, data.categories]);
-}
-
-export function useDebouncedSearch(
-  initialValue: string = '',
-  delay: number = 300
-): [string, string, (value: string) => void] {
-  const [value, setValue] = useState(initialValue);
-  const [debouncedValue, setDebouncedValue] = useState(initialValue);
-
-  const debouncedSetSearch = useMemo(
-    () => debounce((newValue: string) => {
-      setDebouncedValue(newValue);
-    }, delay),
-    [delay]
-  );
-
-  const handleChange = useCallback((newValue: string) => {
-    setValue(newValue);
-    debouncedSetSearch(newValue);
-  }, [debouncedSetSearch]);
-
-  return [value, debouncedValue, handleChange];
 }

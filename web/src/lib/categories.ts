@@ -28,6 +28,16 @@ export function getCategoryName(category: string, language: string = 'zh-CN'): s
   return category;
 }
 
+export const CATEGORY_I18N_KEYS: Record<string, string> = {
+  functional: 'skills.functional',
+  professional: 'skills.professional',
+  creative: 'skills.creative',
+  character: 'skills.character',
+  fiction: 'skills.fiction',
+  tool: 'skills.tool',
+  game: 'skills.game'
+};
+
 export function getCategoryGradient(category: string): string {
   return CATEGORY_GRADIENTS[category] || 'from-gray-500 to-gray-600';
 }
