@@ -69,6 +69,7 @@ export default function Navbar() {
 
   const navItems = [
     { href: '/', label: t('nav.home'), icon: '🏠' },
+    { href: '/ai-tools', label: 'AI工具库', icon: '🛠️' },
     { href: '/skills', label: t('nav.skills'), icon: '📚' },
     { href: '/search', label: t('nav.search'), icon: '🔍' },
     { href: '/favorites', label: t('nav.favorites'), icon: '❤️' },

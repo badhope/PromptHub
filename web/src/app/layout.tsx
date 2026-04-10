@@ -5,7 +5,7 @@ import Footer from "@/components/Footer";
 import BackToTop from "@/components/BackToTop";
 import FloatingAd from "@/components/FloatingAd";
 import { I18nProvider } from "@/components/I18nProvider";
-import { ToastProvider } from "@/components/Toast";
+import ToastProvider from "@/components/ToastProvider";
 import { APP_CONFIG } from "@/lib/constants";
 
 export const viewport: Viewport = {

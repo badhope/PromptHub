@@ -10,7 +10,7 @@ const withPWA = withPWAInit({
 });
 
 const nextConfig: NextConfig = {
-  output: 'export',
+  output: isDev ? undefined : 'export',
   images: {
     unoptimized: true,
   },

@@ -151,6 +151,7 @@ export interface CategorySystem {
 
 export interface SkillsSummaryData {
   skills: SkillSummary[];
+  summaries: SkillSummary[];
   categories: Record<string, CategoryInfo>;
 }
 

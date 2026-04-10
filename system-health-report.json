@@ -1,0 +1,243 @@
+{
+  "timestamp": "2026-04-10T11:56:30.179Z",
+  "summary": {
+    "total": 33,
+    "passed": 31,
+    "failed": 0,
+    "warnings": 2
+  },
+  "checks": [
+    {
+      "category": "数据文件",
+      "name": "web/public/ai-tools.json",
+      "status": "PASS",
+      "message": "文件正常，大小: 11.38KB，条目数: 6",
+      "details": null
+    },
+    {
+      "category": "数据文件",
+      "name": "web/public/skills-data.json",
+      "status": "PASS",
+      "message": "文件正常，大小: 0.16KB，条目数: 0",
+      "details": null
+    },
+    {
+      "category": "数据文件",
+      "name": "web/public/skills-summary.json",
+      "status": "PASS",
+      "message": "文件正常，大小: 0.06KB，条目数: 0",
+      "details": null
+    },
+    {
+      "category": "数据文件",
+      "name": "activation-templates.json",
+      "status": "PASS",
+      "message": "文件正常，大小: 13.91KB，条目数: 11",
+      "details": null
+    },
+    {
+      "category": "数据文件",
+      "name": "prompts-optimized.json",
+      "status": "PASS",
+      "message": "文件正常，大小: 17.43KB，条目数: 12",
+      "details": null
+    },
+    {
+      "category": "数据文件",
+      "name": "remaining-templates.json",
+      "status": "PASS",
+      "message": "文件正常，大小: 21.63KB，条目数: 18",
+      "details": null
+    },
+    {
+      "category": "激活指令",
+      "name": "41个AI工具指令",
+      "status": "PASS",
+      "message": "所有激活指令格式规范完整",
+      "details": null
+    },
+    {
+      "category": "依赖项",
+      "name": "framer-motion",
+      "status": "PASS",
+      "message": "版本 ^12.38.0",
+      "details": null
+    },
+    {
+      "category": "依赖项",
+      "name": "lucide-react",
+      "status": "PASS",
+      "message": "版本 ^1.8.0",
+      "details": null
+    },
+    {
+      "category": "依赖项",
+      "name": "react-markdown",
+      "status": "PASS",
+      "message": "版本 ^10.1.0",
+      "details": null
+    },
+    {
+      "category": "依赖项",
+      "name": "react-syntax-highlighter",
+      "status": "PASS",
+      "message": "版本 ^16.1.1",
+      "details": null
+    },
+    {
+      "category": "依赖项",
+      "name": "clsx",
+      "status": "PASS",
+      "message": "版本 ^2.1.1",
+      "details": null
+    },
+    {
+      "category": "依赖项",
+      "name": "tailwind-merge",
+      "status": "PASS",
+      "message": "版本 ^3.5.0",
+      "details": null
+    },
+    {
+      "category": "组件文件",
+      "name": "AIToolCard.tsx",
+      "status": "PASS",
+      "message": "160 行代码",
+      "details": null
+    },
+    {
+      "category": "组件文件",
+      "name": "ToastProvider.tsx",
+      "status": "PASS",
+      "message": "115 行代码",
+      "details": null
+    },
+    {
+      "category": "组件文件",
+      "name": "SkillCard.tsx",
+      "status": "PASS",
+      "message": "171 行代码",
+      "details": null
+    },
+    {
+      "category": "组件文件",
+      "name": "page.tsx",
+      "status": "PASS",
+      "message": "317 行代码",
+      "details": null
+    },
+    {
+      "category": "组件文件",
+      "name": "page.tsx",
+      "status": "PASS",
+      "message": "263 行代码",
+      "details": null
+    },
+    {
+      "category": "组件文件",
+      "name": "page.tsx",
+      "status": "PASS",
+      "message": "148 行代码",
+      "details": null
+    },
+    {
+      "category": "脚本工具",
+      "name": "apply-activation-templates.js",
+      "status": "PASS",
+      "message": "存在",
+      "details": null
+    },
+    {
+      "category": "脚本工具",
+      "name": "verify-activation-commands.js",
+      "status": "PASS",
+      "message": "存在",
+      "details": null
+    },
+    {
+      "category": "脚本工具",
+      "name": "quality-check.js",
+      "status": "PASS",
+      "message": "存在",
+      "details": null
+    },
+    {
+      "category": "脚本工具",
+      "name": "fix-quality-issues.js",
+      "status": "PASS",
+      "message": "存在",
+      "details": null
+    },
+    {
+      "category": "脚本工具",
+      "name": "category-expansion.js",
+      "status": "PASS",
+      "message": "存在",
+      "details": null
+    },
+    {
+      "category": "构建环境",
+      "name": ".next",
+      "status": "PASS",
+      "message": "构建目录存在",
+      "details": null
+    },
+    {
+      "category": "构建环境",
+      "name": "node_modules",
+      "status": "PASS",
+      "message": "依赖已安装",
+      "details": null
+    },
+    {
+      "category": "功能特性",
+      "name": "搜索功能",
+      "status": "PASS",
+      "message": "已实现",
+      "details": null
+    },
+    {
+      "category": "功能特性",
+      "name": "收藏功能",
+      "status": "PASS",
+      "message": "已实现",
+      "details": null
+    },
+    {
+      "category": "功能特性",
+      "name": "Toast通知",
+      "status": "PASS",
+      "message": "已实现",
+      "details": null
+    },
+    {
+      "category": "功能特性",
+      "name": "复制功能",
+      "status": "PASS",
+      "message": "已实现",
+      "details": null
+    },
+    {
+      "category": "功能特性",
+      "name": "移动端适配",
+      "status": "WARN",
+      "message": "可能未完全实现",
+      "details": null
+    },
+    {
+      "category": "功能特性",
+      "name": "分类筛选",
+      "status": "PASS",
+      "message": "已实现",
+      "details": null
+    },
+    {
+      "category": "功能特性",
+      "name": "数据统计",
+      "status": "WARN",
+      "message": "可能未完全实现",
+      "details": null
+    }
+  ],
+  "recommendations": []
+}

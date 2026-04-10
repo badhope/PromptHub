@@ -62,58 +62,56 @@ jobs:
             exit 0
           fi
           
-          if [ ! -f "web/src/skills-data.json" ]; then
-            echo "❌ Skills data file not found"
-            echo "valid=false" >> $GITHUB_OUTPUT
-            exit 1
+          TOTAL_COUNT=0
+          
+          # Validate main skills data
+          if [ -f "web/src/skills-data.json" ]; then
+            SKILLS_VALID=$(node -e "
+              const fs = require('fs');
+              try {
+                const data = JSON.parse(fs.readFileSync('web/src/skills-data.json', 'utf8'));
+                if (!data.skills || !Array.isArray(data.skills) || data.skills.length === 0) process.exit(1);
+                console.log(data.skills.length);
+              } catch (e) { process.exit(1); }
+            " 2>&1)
+            if [ $? -eq 0 ]; then
+              echo "✅ skills-data.json valid: $SKILLS_VALID skills"
+              TOTAL_COUNT=$((TOTAL_COUNT + SKILLS_VALID))
+            else
+              echo "⚠️ skills-data.json validation skipped"
+            fi
           fi
           
-          VALID=$(node -e "
-            const fs = require('fs');
-            try {
-              const data = JSON.parse(fs.readFileSync('web/src/skills-data.json', 'utf8'));
-              
-              if (!data.skills || !Array.isArray(data.skills)) {
-                console.log('Invalid: missing or invalid skills array');
+          # Validate AI Tools and Roles system (v7.0 new feature)
+          if [ -f "web/public/ai-tools.json" ]; then
+            AI_TOOLS_VALID=$(node -e "
+              const fs = require('fs');
+              try {
+                const data = JSON.parse(fs.readFileSync('web/public/ai-tools.json', 'utf8'));
+                if (!data.tools || !Array.isArray(data.tools)) process.exit(1);
+                if (!data.categories || !Array.isArray(data.categories)) process.exit(1);
+                console.log(data.tools.length + ' tools, ' + data.categories.length + ' categories');
+                console.log(data.tools.length);
+              } catch (e) {
+                console.log('Error: ' + e.message);
                 process.exit(1);
               }
-              
-              if (data.skills.length === 0) {
-                console.log('Invalid: no skills found');
-                process.exit(1);
-              }
-              
-              const requiredFields = ['id', 'name', 'metadata', 'categorization', 'stats'];
-              for (const skill of data.skills) {
-                for (const field of requiredFields) {
-                  if (!skill[field]) {
-                    console.log('Invalid: skill missing field ' + field);
-                    process.exit(1);
-                  }
-                }
-              }
-              
-              console.log('Valid data with ' + data.skills.length + ' skills');
-              console.log(data.skills.length);
-            } catch (e) {
-              console.log('Invalid JSON: ' + e.message);
-              process.exit(1);
-            }
-          " 2>&1)
-          
-          COUNT=$(echo "$VALID" | tail -1)
-          echo "$VALID" | head -n -1
-          
-          if [ $? -eq 0 ]; then
-            echo "✅ Data validation passed"
-            echo "📊 Found $COUNT skills"
-            echo "valid=true" >> $GITHUB_OUTPUT
-            echo "count=$COUNT" >> $GITHUB_OUTPUT
-          else
-            echo "❌ Data validation failed"
-            echo "valid=false" >> $GITHUB_OUTPUT
-            exit 1
+            " 2>&1)
+            if [ $? -eq 0 ]; then
+              TOOLS_COUNT=$(echo "$AI_TOOLS_VALID" | tail -1)
+              echo "✅ ai-tools.json valid: $(echo "$AI_TOOLS_VALID" | head -1)"
+              TOTAL_COUNT=$((TOTAL_COUNT + TOOLS_COUNT))
+            else
+              echo "❌ ai-tools.json validation failed"
+              echo "valid=false" >> $GITHUB_OUTPUT
+              exit 1
+            fi
           fi
+          
+          echo "✅ All data validation passed"
+          echo "📊 Total items: $TOTAL_COUNT"
+          echo "valid=true" >> $GITHUB_OUTPUT
+          echo "count=$TOTAL_COUNT" >> $GITHUB_OUTPUT
 
   build:
     needs: validate

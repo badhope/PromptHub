@@ -1,0 +1,254 @@
+{
+  "versionNumbers": [],
+  "templateDescriptions": [
+    {
+      "id": "skill-1775448288189-606",
+      "name": "大纲生成",
+      "number": "FU-03-010",
+      "description": "大纲生成是一个 functional 类技能，具有独特的功能和应用场景。这个技能在相关领域扮演重要角色，拥有丰富的实用价值和互动能力。\n\n**主要特征**：\n- 技能类型：functional 类技能\n- 具体分类：assistant\n- 适用场景：多样化应用场景\n\n**使用提示**：可以根据具体需求进行互动，获得专业的建议和服务。"
+    },
+    {
+      "id": "skill-1775448288189-610",
+      "name": "任务规划",
+      "number": "FU-02-002",
+      "description": "任务规划是一个 functional 类技能，具有独特的功能和应用场景。这个技能在相关领域扮演重要角色，拥有丰富的实用价值和互动能力。\n\n**主要特征**：\n- 技能类型：functional 类技能\n- 具体分类：productivity\n- 适用场景：多样化应用场景\n\n**使用提示**：可以根据具体需求进行互动，获得专业的建议和服务。"
+    },
+    {
+      "id": "skill-1775448288189-612",
+      "name": "目标设定",
+      "number": "FI-02-006",
+      "description": "目标设定是一个 fiction 类技能，具有独特的功能和应用场景。这个技能在相关领域扮演重要角色，拥有丰富的实用价值和互动能力。\n\n**主要特征**：\n- 技能类型：fiction 类技能\n- 具体分类：novel\n- 适用场景：多样化应用场景\n\n**使用提示**：可以根据具体需求进行互动，获得专业的建议和服务。"
+    },
+    {
+      "id": "skill-1775448288189-616",
+      "name": "图表生成",
+      "number": "FU-03-011",
+      "description": "图表生成是一个 functional 类技能，具有独特的功能和应用场景。这个技能在相关领域扮演重要角色，拥有丰富的实用价值和互动能力。\n\n**主要特征**：\n- 技能类型：functional 类技能\n- 具体分类：assistant\n- 适用场景：多样化应用场景\n\n**使用提示**：可以根据具体需求进行互动，获得专业的建议和服务。"
+    },
+    {
+      "id": "skill-1775448288189-631",
+      "name": "工作流自动化",
+      "number": "FU-03-012",
+      "description": "工作流自动化是一个 functional 类技能，具有独特的功能和应用场景。这个技能在相关领域扮演重要角色，拥有丰富的实用价值和互动能力。\n\n**主要特征**：\n- 技能类型：functional 类技能\n- 具体分类：assistant\n- 适用场景：多样化应用场景\n\n**使用提示**：可以根据具体需求进行互动，获得专业的建议和服务。"
+    }
+  ],
+  "missingActivation": [
+    {
+      "id": "anya",
+      "name": "Anya Forger - 阿尼亚·福杰",
+      "number": "CH-01-001"
+    },
+    {
+      "id": "asuna",
+      "name": "Yuuki Asuna - 结城明日奈",
+      "number": "CH-01-002"
+    },
+    {
+      "id": "gojo-2",
+      "name": "Gojo Satoru - 五条悟",
+      "number": "CH-01-004"
+    },
+    {
+      "id": "itachi",
+      "name": "Uchiha Itachi - 宇智波鼬",
+      "number": "CH-01-007"
+    },
+    {
+      "id": "levi",
+      "name": "Levi Ackerman - 利威尔·阿克曼",
+      "number": "CH-01-010"
+    },
+    {
+      "id": "luffy",
+      "name": "Monkey D. Luffy - 蒙奇·D·路飞",
+      "number": "CH-01-011"
+    },
+    {
+      "id": "mikasa",
+      "name": "Mikasa Ackerman - 三笠·阿克曼",
+      "number": "CH-01-013"
+    },
+    {
+      "id": "programmer",
+      "name": "CodeMaster - 全栈工程师",
+      "number": "PR-01-003"
+    },
+    {
+      "id": "tanjiro",
+      "name": "Kamado Tanjiro - 灶门炭治郎",
+      "number": "CH-01-017"
+    },
+    {
+      "id": "skill-1775448288189-606",
+      "name": "大纲生成",
+      "number": "FU-03-010"
+    },
+    {
+      "id": "skill-1775448288189-610",
+      "name": "任务规划",
+      "number": "FU-02-002"
+    },
+    {
+      "id": "skill-1775448288189-612",
+      "name": "目标设定",
+      "number": "FI-02-006"
+    },
+    {
+      "id": "skill-1775448288189-614",
+      "name": "效率分析",
+      "number": "FU-02-003"
+    },
+    {
+      "id": "skill-1775448288189-615",
+      "name": "数据分析",
+      "number": "FU-02-004"
+    },
+    {
+      "id": "skill-1775448288189-616",
+      "name": "图表生成",
+      "number": "FU-03-011"
+    },
+    {
+      "id": "skill-1775448288189-619",
+      "name": "统计分析",
+      "number": "FU-02-005"
+    },
+    {
+      "id": "skill-1775448288189-631",
+      "name": "工作流自动化",
+      "number": "FU-03-012"
+    },
+    {
+      "id": "skill-1775448288189-770",
+      "name": "虚拟助手",
+      "number": "FU-03-013"
+    },
+    {
+      "id": "skill-1775448288189-790",
+      "name": "症状分析助手",
+      "number": "FU-02-006"
+    },
+    {
+      "id": "skill-1775448288189-799",
+      "name": "案例分析助手",
+      "number": "FU-02-007"
+    },
+    {
+      "id": "skill-1775448288189-802",
+      "name": "投资分析助手",
+      "number": "FU-04-001"
+    },
+    {
+      "id": "skill-1775448288189-803",
+      "name": "财务规划助手",
+      "number": "FU-02-008"
+    },
+    {
+      "id": "skill-1775448288189-807",
+      "name": "课程设计助手",
+      "number": "FU-05-001"
+    },
+    {
+      "id": "skill-1775448288189-808",
+      "name": "学习计划助手",
+      "number": "FU-05-002"
+    },
+    {
+      "id": "skill-1775448288189-810",
+      "name": "职业规划助手",
+      "number": "FU-02-009"
+    },
+    {
+      "id": "frontendengineer",
+      "name": "FrontendEngineer - 前端工程师",
+      "number": "PR-01-004"
+    },
+    {
+      "id": "backendengineer",
+      "name": "BackendEngineer - 后端工程师",
+      "number": "PR-01-005"
+    },
+    {
+      "id": "fullstackengineer",
+      "name": "FullStackEngineer - 全栈工程师",
+      "number": "PR-01-006"
+    }
+  ],
+  "missingMarkdown": [
+    {
+      "id": "makise-kurisu-v5",
+      "name": "牧濑红莉栖 - Makise Kurisu",
+      "number": "FU-03-003"
+    },
+    {
+      "id": "violet-evergarden-v5",
+      "name": "薇尔莉特·伊芙加登 - Violet Evergarden",
+      "number": "FI-02-004"
+    },
+    {
+      "id": "sinon-ggo-v5",
+      "name": "诗乃(朝田诗乃) - Sinon (GGO)",
+      "number": "FI-01-002"
+    },
+    {
+      "id": "naofumi-iwatani-v5",
+      "name": "岩谷尚文 - Naofumi Iwatani",
+      "number": "FI-02-005"
+    },
+    {
+      "id": "leonardo-da-vinci-v5",
+      "name": "列奥纳多·达·芬奇 - Leonardo da Vinci",
+      "number": "CR-01-010"
+    },
+    {
+      "id": "william-shakespeare-v5",
+      "name": "威廉·莎士比亚 - William Shakespeare",
+      "number": "CR-01-011"
+    },
+    {
+      "id": "vincent-van-gogh-v5",
+      "name": "文森特·梵高 - Vincent van Gogh",
+      "number": "CR-01-012"
+    },
+    {
+      "id": "wolfgang-amadeus-mozart-v5",
+      "name": "沃尔夫冈·阿马德乌斯·莫扎特 - Wolfgang Amadeus Mozart",
+      "number": "CR-01-013"
+    },
+    {
+      "id": "yae-miko-genshin-v5",
+      "name": "八重神子 - Yae Miko (Genshin)",
+      "number": "FI-03-001"
+    },
+    {
+      "id": "code-assistant-pro-v5",
+      "name": "高级编程助手",
+      "number": "FU-03-004"
+    },
+    {
+      "id": "novel-writing-coach-v5",
+      "name": "小说写作教练",
+      "number": "CR-02-007"
+    },
+    {
+      "id": "academic-paper-helper-v5",
+      "name": "学术论文助手",
+      "number": "FU-03-005"
+    },
+    {
+      "id": "startup-consultant-v5",
+      "name": "创业顾问",
+      "number": "PR-02-010"
+    },
+    {
+      "id": "marketing-strategist-v5",
+      "name": "营销策略师",
+      "number": "PR-02-011"
+    },
+    {
+      "id": "among-us-ai-v5",
+      "name": "太空狼人杀 AI",
+      "number": "GM-01-001"
+    }
+  ]
+}

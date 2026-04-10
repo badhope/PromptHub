@@ -9,10 +9,13 @@
     "web:start": "cd web && npm start"
   },
   "devDependencies": {
-    "@types/node": "^20.11.0",
     "@types/js-yaml": "^4.0.9",
+    "@types/node": "^20.11.0",
+    "js-yaml": "^4.1.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.3.3",
-    "js-yaml": "^4.1.0"
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "json5": "^2.2.3"
   }
 }

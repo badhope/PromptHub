@@ -3,9 +3,10 @@
 <p align="center">
 
 ![Platform](https://img.shields.io/badge/Platform-AI_Skill_Ecosystem-blue?style=for-the-badge&labelColor=2d333b)
-![Skills](https://img.shields.io/badge/Skills-867-green?style=for-the-badge&labelColor=2d333b)
-![Categories](https://img.shields.io/badge/Categories-7-orange?style=for-the-badge&labelColor=2d333b)
-![Version](https://img.shields.io/badge/Version-6.0.0-purple?style=for-the-badge&labelColor=2d333b)
+![Skills](https://img.shields.io/badge/Skills_900+-green?style=for-the-badge&labelColor=2d333b)
+![Roles](https://img.shields.io/badge/Roles-56-blue?style=for-the-badge&labelColor=2d333b)
+![Categories](https://img.shields.io/badge/Categories-19-orange?style=for-the-badge&labelColor=2d333b)
+![Version](https://img.shields.io/badge/Version-7.0.0-purple?style=for-the-badge&labelColor=2d333b)
 ![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge&labelColor=2d333b)
 
 [![Website](https://img.shields.io/badge/🌐_Website-Online-brightgreen?style=for-the-badge&labelColor=2d333b)](https://aiskill.qzz.io/)
@@ -23,16 +24,62 @@
 
 | 特性 | 描述 |
 |:--------|:------------|
+| 🎭 **56个职业角色系统** | 基于2025招聘市场数据，覆盖功能型+专业型14大领域 |
 | 🎨 **现代化Web界面** | 使用 Next.js 16 和 Tailwind CSS 构建的精美响应式UI |
-| 🔍 **智能搜索** | 基于 Fuse.js 的模糊搜索，快速发现技能 |
+| 🔍 **智能搜索** | 基于 Fuse.js 的模糊搜索，快速发现技能和角色 |
 | 📱 **跨平台** | 在桌面、平板和移动设备上无缝运行 |
 | 🌍 **多语言** | 支持中文和英文界面 |
 | 🎭 **主题系统** | 亮色、暗色和跟随系统三种主题模式 |
-| ❤️ **收藏系统** | 保存和管理您喜爱的技能 |
+| ❤️ **收藏系统** | 保存和管理您喜爱的技能和角色 |
 | 📊 **统计仪表板** | 查看技能使用情况和平台指标 |
 | 🔄 **自动同步** | 自动与仓库内容同步 |
 | ⚡ **性能优化** | 首屏加载 < 1秒，完全加载 < 3秒 |
 | 🔒 **安全增强** | XSS防护、输入验证、CSP策略 |
+
+---
+
+## 🎭 56个职业角色系统 v7.0 重磅发布
+
+基于2025-2026年真实招聘市场数据打造，覆盖功能型与专业型两大类别14个细分领域的完整职业角色AI助手体系。
+
+### 📊 角色体系架构
+
+| 分类 | 领域 | 角色数量 | 市场数据 |
+|:-----|:-----|:--------:|:---------|
+| **🔧 功能型角色** | 经营管理、人力资源、财务法务、市场营销、销售商务、行政支持 | **24个** | 全行业通用职能 |
+| **🔬 专业型角色** | AI大模型、芯片硬件、网络安全、生物医药、新能源汽车、企业数字化、建筑地产、创意媒体 | **32个** | 国家紧缺人才目录 |
+| **总计** | 14个专业领域 | **56个角色** | 95%对应真实招聘岗位 |
+
+### 💼 功能型角色 (6大类24个)
+
+| 分类 | 图标 | 核心角色 |
+|:-----|:-----|:---------|
+| **经营管理** | 👔 | CEO决策顾问、项目管理大师、产品总监、运营总监 |
+| **人力资源** | 💝 | 猎头顾问、组织发展专家、企业培训师、员工关系专家 |
+| **财务法务** | ⚖️ | 财务顾问、法律顾问、内审专家、专利律师 |
+| **市场营销** | 📢 | 品牌策略师、投放优化师、内容总监、社区运营 |
+| **销售商务** | 🤝 | 大客户销售、商务总监、渠道经理、客户成功 |
+| **行政支持** | 🏢 | 行政主管、IT运维、总裁助理、质量经理 |
+
+### 🧪 专业型角色 (8大类32个)
+
+| 分类 | 图标 | 人才缺口 | 核心角色 |
+|:-----|:-----|:--------:|:---------|
+| **AI大模型** | 🧠 | 500万人+ | 大模型工程师、提示词工程师、多模态算法、AI科学家 |
+| **芯片硬件** | 💾 | 30-40万人 | 前端设计、后端实现、验证工程师、EDA开发 |
+| **网络安全** | 🔐 | 300万人+ | 渗透测试、安全运营、云安全、等保合规师 |
+| **生物医药** | 🧬 | 80万人 | CRO科学家、注册事务、临床监查、药物警戒 |
+| **新能源汽车** | 🚗 | 100万人+ | 电池工程师、自动驾驶、电力电子、整车集成 |
+| **企业数字化** | 🖥️ | 4万亿市场 | SAP顾问、数据工程、BI分析师、低代码开发 |
+| **建筑地产** | 🏗️ | - | BIM工程师、造价工程师、绿色建筑、工程项目经理 |
+| **创意媒体** | 🎨 | AIGC重构期 | UI/UX设计、动效设计师、文案策划、社媒运营 |
+
+### ✨ 角色特色
+
+- **专业级激活指令**：每个角色配备经过工程化优化的完整prompt模板
+- **结构化输出框架**：统一的方法论、思考框架、输出格式
+- **真实职场场景**：基于真实工作场景设计的应用案例
+- **持续迭代优化**：根据用户反馈持续优化角色深度
 
 ---
 

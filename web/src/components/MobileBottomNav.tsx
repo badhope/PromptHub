@@ -12,9 +12,9 @@ interface NavItem {
 
 const NAV_ITEMS: NavItem[] = [
   { href: '/', label: '首页', icon: '🏠' },
-  { href: '/skills', label: '技能', icon: '📚' },
+  { href: '/ai-tools', label: 'AI工具', icon: '🛠️' },
+  { href: '/skills', label: '角色', icon: '🎭' },
   { href: '/search', label: '搜索', icon: '🔍' },
-  { href: '/compare', label: '对比', icon: '⚖️' },
   { href: '/settings', label: '设置', icon: '⚙️' }
 ];
 
