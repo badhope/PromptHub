@@ -1,202 +1,144 @@
 'use client';
 
-interface SkeletonProps {
-  className?: string;
-  variant?: 'text' | 'circular' | 'rectangular';
-  width?: string | number;
-  height?: string | number;
-  animation?: 'pulse' | 'wave' | 'none';
-}
+import { motion } from 'framer-motion';
 
-export function Skeleton({ 
-  className = '', 
-  variant = 'text',
-  width,
-  height,
-  animation = 'pulse'
-}: SkeletonProps) {
-  const baseClasses = 'bg-gray-200';
-  
-  const variantClasses = {
-    text: 'rounded',
-    circular: 'rounded-full',
-    rectangular: 'rounded-lg'
-  };
+const Pulse = ({ className = '' }: { className?: string }) => (
+  <motion.div
+    animate={{ opacity: [0.4, 0.8, 0.4] }}
+    transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+    className={`bg-gray-200 dark:bg-gray-700 rounded-xl ${className}`}
+  />
+);
 
-  const animationClasses = {
-    pulse: 'animate-pulse',
-    wave: 'animate-shimmer',
-    none: ''
-  };
-
-  const style: React.CSSProperties = {};
-  if (width) style.width = typeof width === 'number' ? `${width}px` : width;
-  if (height) style.height = typeof height === 'number' ? `${height}px` : height;
-
+export const SkillCardSkeleton = () => {
   return (
-    <div
-      className={`${baseClasses} ${variantClasses[variant]} ${animationClasses[animation]} ${className}`}
-      style={style}
-      aria-hidden="true"
-    />
-  );
-}
-
-export function SkillCardSkeleton() {
-  return (
-    <div className="bg-white rounded-lg shadow-md p-4 space-y-3">
-      <div className="flex items-start justify-between">
-        <Skeleton variant="rectangular" width={60} height={60} className="rounded-lg" />
-        <div className="flex-1 ml-4 space-y-2">
-          <Skeleton variant="text" width="60%" height={20} />
-          <Skeleton variant="text" width="40%" height={16} />
+    <div className="bg-white dark:bg-gray-800 rounded-2xl p-5 border border-gray-100 dark:border-gray-700/50">
+      <div className="flex items-start gap-4 mb-4">
+        <Pulse className="w-14 h-14 rounded-2xl" />
+        <div className="flex-1">
+          <Pulse className="h-6 w-3/4 mb-2" />
+          <Pulse className="h-4 w-full" />
         </div>
       </div>
-      <Skeleton variant="text" height={14} />
-      <Skeleton variant="text" height={14} width="80%" />
-      <div className="flex gap-2">
-        <Skeleton variant="rectangular" width={60} height={24} className="rounded-full" />
-        <Skeleton variant="rectangular" width={80} height={24} className="rounded-full" />
-        <Skeleton variant="rectangular" width={70} height={24} className="rounded-full" />
+      <Pulse className="h-4 w-full mb-2" />
+      <Pulse className="h-4 w-2/3 mb-4" />
+      <div className="flex gap-2 mb-4">
+        <Pulse className="h-6 w-16 rounded-full" />
+        <Pulse className="h-6 w-16 rounded-full" />
+        <Pulse className="h-6 w-16 rounded-full" />
       </div>
-      <div className="flex justify-between items-center pt-2">
-        <div className="flex gap-4">
-          <Skeleton variant="text" width={60} height={12} />
-          <Skeleton variant="text" width={60} height={12} />
-        </div>
-        <Skeleton variant="circular" width={32} height={32} />
+      <div className="flex gap-3">
+        <Pulse className="h-10 flex-1" />
+        <Pulse className="h-10 w-10" />
       </div>
     </div>
   );
-}
+};
 
-export function SkillListSkeleton({ count = 6 }: { count?: number }) {
+export const SkillsGridSkeleton = ({ count = 12 }: { count?: number }) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      {Array.from({ length: count }).map((_, index) => (
-        <SkillCardSkeleton key={index} />
+      {Array.from({ length: count }).map((_, i) => (
+        <SkillCardSkeleton key={i} />
       ))}
     </div>
   );
-}
+};
 
-export function SkillDetailSkeleton() {
-  return (
-    <div className="max-w-4xl mx-auto space-y-6">
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <div className="flex items-start gap-4 mb-6">
-          <Skeleton variant="rectangular" width={100} height={100} className="rounded-lg" />
-          <div className="flex-1 space-y-3">
-            <Skeleton variant="text" height={28} width="70%" />
-            <Skeleton variant="text" height={20} width="50%" />
-            <div className="flex gap-2 mt-2">
-              <Skeleton variant="rectangular" width={80} height={28} className="rounded-full" />
-              <Skeleton variant="rectangular" width={100} height={28} className="rounded-full" />
-              <Skeleton variant="rectangular" width={90} height={28} className="rounded-full" />
-            </div>
-          </div>
-        </div>
+export const SearchBarSkeleton = () => (
+  <Pulse className="h-14 w-full rounded-2xl mb-6" />
+);
 
-        <div className="space-y-4">
-          <Skeleton variant="text" height={16} />
-          <Skeleton variant="text" height={16} />
-          <Skeleton variant="text" height={16} width="90%" />
-          <Skeleton variant="text" height={16} width="85%" />
-        </div>
+export const StatsSkeleton = () => (
+  <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+    {[1, 2, 3, 4].map(i => (
+      <Pulse key={i} className="h-24 rounded-2xl" />
+    ))}
+  </div>
+);
 
-        <div className="grid grid-cols-3 gap-4 mt-6 pt-6 border-t">
-          <div className="text-center">
-            <Skeleton variant="text" height={24} width={60} className="mx-auto" />
-            <Skeleton variant="text" height={14} width={40} className="mx-auto mt-1" />
-          </div>
-          <div className="text-center">
-            <Skeleton variant="text" height={24} width={60} className="mx-auto" />
-            <Skeleton variant="text" height={14} width={40} className="mx-auto mt-1" />
-          </div>
-          <div className="text-center">
-            <Skeleton variant="text" height={24} width={60} className="mx-auto" />
-            <Skeleton variant="text" height={14} width={40} className="mx-auto mt-1" />
-          </div>
+export const CategoryTabsSkeleton = () => (
+  <div className="flex flex-wrap gap-3 mb-6">
+    {[1, 2, 3, 4, 5, 6].map(i => (
+      <Pulse key={i} className="h-10 w-24 rounded-xl" />
+    ))}
+  </div>
+);
+
+export const SkillDetailSkeleton = () => (
+  <div className="max-w-4xl mx-auto">
+    <div className="mb-8">
+      <div className="flex items-center gap-4 mb-4">
+        <Pulse className="w-16 h-16 rounded-2xl" />
+        <div>
+          <Pulse className="h-8 w-64 mb-2" />
+          <Pulse className="h-4 w-48" />
         </div>
       </div>
-
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <Skeleton variant="text" height={24} width={120} className="mb-4" />
-        <div className="space-y-3">
-          <Skeleton variant="text" height={16} />
-          <Skeleton variant="text" height={16} />
-          <Skeleton variant="text" height={16} width="95%" />
-        </div>
-      </div>
-
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <Skeleton variant="text" height={24} width={100} className="mb-4" />
-        <div className="grid grid-cols-2 gap-4">
-          {Array.from({ length: 4 }).map((_, index) => (
-            <Skeleton key={index} variant="rectangular" height={100} className="rounded-lg" />
-          ))}
-        </div>
+      <Pulse className="h-5 w-full mb-2" />
+      <Pulse className="h-5 w-full mb-2" />
+      <Pulse className="h-5 w-3/4 mb-6" />
+      <div className="flex gap-3">
+        <Pulse className="h-12 w-40 rounded-xl" />
+        <Pulse className="h-12 w-32 rounded-xl" />
       </div>
     </div>
-  );
+    <Pulse className="h-96 w-full rounded-2xl" />
+  </div>
+);
+
+interface EmptyStateProps {
+  icon?: string;
+  title?: string;
+  subtitle?: string;
+  action?: { label: string; onClick: () => void };
 }
 
-export function CategorySkeleton() {
+export const EmptyState = ({ 
+  icon = '🔍', 
+  title = '没有找到结果', 
+  subtitle = '试试其他搜索词或者清除筛选条件',
+  action,
+}: EmptyStateProps) => {
   return (
-    <div className="space-y-4">
-      <Skeleton variant="text" height={32} width={200} />
-      <div className="flex gap-2 overflow-hidden">
-        {Array.from({ length: 5 }).map((_, index) => (
-          <Skeleton key={index} variant="rectangular" width={120} height={40} className="rounded-full" />
-        ))}
-      </div>
-    </div>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="flex flex-col items-center justify-center py-20 px-6 text-center"
+    >
+      <motion.div
+        animate={{ scale: [1, 1.1, 1] }}
+        transition={{ duration: 2, repeat: Infinity }}
+        className="text-7xl mb-6"
+      >
+        {icon}
+      </motion.div>
+      <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">
+        {title}
+      </h3>
+      <p className="text-gray-500 dark:text-gray-400 mb-8 max-w-md">
+        {subtitle}
+      </p>
+      {action && (
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={action.onClick}
+          className="px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-bold rounded-xl shadow-lg shadow-indigo-500/20 hover:shadow-xl hover:shadow-indigo-500/30 transition-all"
+        >
+          {action.label}
+        </motion.button>
+      )}
+    </motion.div>
   );
-}
+};
 
-export function NavbarSkeleton() {
-  return (
-    <nav className="bg-white shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          <div className="flex items-center">
-            <Skeleton variant="rectangular" width={150} height={32} className="rounded" />
-          </div>
-          <div className="flex items-center gap-4">
-            <Skeleton variant="rectangular" width={200} height={36} className="rounded-lg" />
-            <Skeleton variant="circular" width={40} height={40} />
-          </div>
-        </div>
-      </div>
-    </nav>
-  );
-}
-
-export function TableSkeleton({ rows = 5, columns = 4 }: { rows?: number; columns?: number }) {
-  return (
-    <div className="overflow-hidden rounded-lg border border-gray-200">
-      <table className="min-w-full divide-y divide-gray-200">
-        <thead className="bg-gray-50">
-          <tr>
-            {Array.from({ length: columns }).map((_, index) => (
-              <th key={index} className="px-6 py-3">
-                <Skeleton variant="text" height={16} />
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody className="bg-white divide-y divide-gray-200">
-          {Array.from({ length: rows }).map((_, rowIndex) => (
-            <tr key={rowIndex}>
-              {Array.from({ length: columns }).map((_, colIndex) => (
-                <td key={colIndex} className="px-6 py-4">
-                  <Skeleton variant="text" height={14} />
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-}
+export default {
+  SkillCardSkeleton,
+  SkillsGridSkeleton,
+  SearchBarSkeleton,
+  StatsSkeleton,
+  CategoryTabsSkeleton,
+  SkillDetailSkeleton,
+  EmptyState,
+};

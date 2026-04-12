@@ -1,5 +1,5 @@
 import SkillClient from './SkillClient';
-import { getAllSkillIds, getSkillById, getRelatedSkills } from '@/lib/skills-data-server';
+import { getAllSkillIds, getSkillById } from '@/lib/skills-data-server';
 
 export function generateStaticParams() {
   const skillIds = getAllSkillIds();
@@ -18,26 +18,10 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   
   return {
     title: `${skill.name} - AI Skills`,
-    description: skill.metadata.description,
+    description: skill.metadata?.description || skill.metadata?.short_description || skill.name || '专业AI技能工具',
   };
 }
 
-export default async function SkillDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
-  const skill = getSkillById(id);
-  
-  if (!skill) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <div className="text-6xl mb-4">😕</div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">技能未找到</h2>
-        </div>
-      </div>
-    );
-  }
-  
-  const relatedSkills = getRelatedSkills(id);
-  
-  return <SkillClient skill={skill} relatedSkills={relatedSkills} />;
+export default function SkillDetailPage() {
+  return <SkillClient />;
 }

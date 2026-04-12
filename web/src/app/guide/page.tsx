@@ -36,7 +36,7 @@ export default function GuidePage() {
               <div>
                 <h3 className="font-semibold text-gray-900 dark:text-white mb-2">浏览技能</h3>
                 <p className="text-gray-600 dark:text-gray-400">
-                  在 <Link href="/skills" className="text-indigo-600 hover:text-indigo-700 dark:text-indigo-400">技能列表</Link> 页面浏览所有可用的 AI Skill。您可以使用搜索、分类筛选和排序功能快速找到需要的技能。
+                  在 <Link href="/categories" className="text-cyan-600 hover:text-cyan-700 dark:text-cyan-400 font-medium">技能分类</Link> 页面浏览所有可用的 AI Skill。您可以使用搜索、分类筛选和排序功能快速找到需要的技能。
                 </p>
               </div>
             </div>
@@ -97,48 +97,21 @@ export default function GuidePage() {
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 mb-8">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6"><span role="img" aria-label="文件夹">📁</span> 技能分类</h2>
           <div className="grid md:grid-cols-2 gap-4">
-            <Link href="/skills/functional" className="block p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-indigo-300 dark:hover:border-indigo-600 transition-colors">
+            <Link href="/categories" className="block p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-cyan-300 dark:hover:border-cyan-600 transition-colors">
               <div className="flex items-center gap-3">
-                <span className="text-2xl" role="img" aria-label="工具">🛠️</span>
+                <span className="text-2xl" role="img" aria-label="指南针">🧭</span>
                 <div>
-                  <h3 className="font-semibold text-gray-900 dark:text-white">功能型</h3>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm">实用工具类技能</p>
+                  <h3 className="font-semibold text-gray-900 dark:text-white">完整分类导航</h3>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm">浏览全部 6 大领域，12+ 个子分类</p>
                 </div>
               </div>
             </Link>
-            <Link href="/skills/professional" className="block p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-pink-300 dark:hover:border-pink-600 transition-colors">
+            <Link href="/categories" className="block p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-indigo-300 dark:hover:border-indigo-600 transition-colors md:col-span-2">
               <div className="flex items-center gap-3">
-                <span className="text-2xl" role="img" aria-label="公文包">💼</span>
+                <span className="text-2xl" role="img" aria-label="火箭">🚀</span>
                 <div>
-                  <h3 className="font-semibold text-gray-900 dark:text-white">专业型</h3>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm">专业领域技能</p>
-                </div>
-              </div>
-            </Link>
-            <Link href="/skills/creative" className="block p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-cyan-300 dark:hover:border-cyan-600 transition-colors">
-              <div className="flex items-center gap-3">
-                <span className="text-2xl" role="img" aria-label="调色板">🎨</span>
-                <div>
-                  <h3 className="font-semibold text-gray-900 dark:text-white">创意型</h3>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm">创意内容生成</p>
-                </div>
-              </div>
-            </Link>
-            <Link href="/skills/character" className="block p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-purple-300 dark:hover:border-purple-600 transition-colors">
-              <div className="flex items-center gap-3">
-                <span className="text-2xl" role="img" aria-label="面具">🎭</span>
-                <div>
-                  <h3 className="font-semibold text-gray-900 dark:text-white">角色型</h3>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm">角色扮演技能</p>
-                </div>
-              </div>
-            </Link>
-            <Link href="/skills/fiction" className="block p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-green-300 dark:hover:border-green-600 transition-colors md:col-span-2">
-              <div className="flex items-center gap-3">
-                <span className="text-2xl" role="img" aria-label="书本">📖</span>
-                <div>
-                  <h3 className="font-semibold text-gray-900 dark:text-white">虚构世界</h3>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm">虚构世界构建技能</p>
+                  <h3 className="font-semibold text-gray-900 dark:text-white">进入技能分类中心</h3>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm">探索功能型、专业型、创意型、角色型等全部技能</p>
                 </div>
               </div>
             </Link>

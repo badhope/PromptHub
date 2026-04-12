@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 
 interface SwipeConfig {
   onSwipeLeft?: () => void;
@@ -11,12 +12,18 @@ interface SwipeConfig {
   preventDefaultTouchMove?: boolean;
 }
 
-interface SwipeState {
-  startX: number;
-  startY: number;
-  currentX: number;
-  currentY: number;
-  isSwiping: boolean;
+interface PullToRefreshConfig {
+  onRefresh?: () => Promise<void> | void;
+  threshold?: number;
+}
+
+interface LongPressConfig {
+  onLongPress?: () => void;
+  duration?: number;
+}
+
+interface HapticConfig {
+  intensity?: 'light' | 'medium' | 'heavy';
 }
 
 export function useSwipe(config: SwipeConfig) {
@@ -30,12 +37,13 @@ export function useSwipe(config: SwipeConfig) {
   } = config;
 
   const ref = useRef<HTMLElement>(null);
-  const stateRef = useRef<SwipeState>({
+  const stateRef = useRef({
     startX: 0,
     startY: 0,
     currentX: 0,
     currentY: 0,
-    isSwiping: false
+    isSwiping: false,
+    startTime: 0
   });
 
   const handleTouchStart = useCallback((e: TouchEvent) => {
@@ -45,17 +53,16 @@ export function useSwipe(config: SwipeConfig) {
       startY: touch.clientY,
       currentX: touch.clientX,
       currentY: touch.clientY,
-      isSwiping: true
+      isSwiping: true,
+      startTime: Date.now()
     };
   }, []);
 
   const handleTouchMove = useCallback((e: TouchEvent) => {
     if (!stateRef.current.isSwiping) return;
-
     const touch = e.touches[0];
     stateRef.current.currentX = touch.clientX;
     stateRef.current.currentY = touch.clientY;
-
     if (preventDefaultTouchMove) {
       e.preventDefault();
     }
@@ -63,39 +70,39 @@ export function useSwipe(config: SwipeConfig) {
 
   const handleTouchEnd = useCallback(() => {
     if (!stateRef.current.isSwiping) return;
-
-    const { startX, startY, currentX, currentY } = stateRef.current;
+    const { startX, startY, currentX, currentY, startTime } = stateRef.current;
     const deltaX = currentX - startX;
     const deltaY = currentY - startY;
-
     const absX = Math.abs(deltaX);
     const absY = Math.abs(deltaY);
+    const velocity = Math.max(absX, absY) / (Date.now() - startTime);
 
-    if (absX > absY && absX > threshold) {
+    if (absX > absY && (absX > threshold || velocity > 1)) {
       if (deltaX > 0 && onSwipeRight) {
+        hapticFeedback();
         onSwipeRight();
       } else if (deltaX < 0 && onSwipeLeft) {
+        hapticFeedback();
         onSwipeLeft();
       }
-    } else if (absY > absX && absY > threshold) {
+    } else if (absY > absX && (absY > threshold || velocity > 1)) {
       if (deltaY > 0 && onSwipeDown) {
+        hapticFeedback();
         onSwipeDown();
       } else if (deltaY < 0 && onSwipeUp) {
+        hapticFeedback();
         onSwipeUp();
       }
     }
-
     stateRef.current.isSwiping = false;
   }, [threshold, onSwipeLeft, onSwipeRight, onSwipeUp, onSwipeDown]);
 
   useEffect(() => {
     const element = ref.current;
     if (!element) return;
-
     element.addEventListener('touchstart', handleTouchStart, { passive: true });
     element.addEventListener('touchmove', handleTouchMove, { passive: !preventDefaultTouchMove });
     element.addEventListener('touchend', handleTouchEnd, { passive: true });
-
     return () => {
       element.removeEventListener('touchstart', handleTouchStart);
       element.removeEventListener('touchmove', handleTouchMove);
@@ -103,128 +110,120 @@ export function useSwipe(config: SwipeConfig) {
     };
   }, [handleTouchStart, handleTouchMove, handleTouchEnd, preventDefaultTouchMove]);
 
-  return ref;
+  return { ref };
 }
 
-interface LongPressConfig {
-  onLongPress: () => void;
-  delay?: number;
-  onPressStart?: () => void;
-  onPressEnd?: () => void;
+export function useHapticFeedback() {
+  const vibrate = useCallback((config: HapticConfig = {}) => {
+    const { intensity = 'medium' } = config;
+    if (!navigator.vibrate) return;
+    const patterns = {
+      light: [10],
+      medium: [20],
+      heavy: [40]
+    };
+    navigator.vibrate(patterns[intensity]);
+  }, []);
+
+  const selection = useCallback(() => vibrate({ intensity: 'light' }), [vibrate]);
+  const success = useCallback(() => navigator.vibrate?.([10, 50, 10]), []);
+  const warning = useCallback(() => navigator.vibrate?.([20, 50, 20, 50, 20]), []);
+  const error = useCallback(() => navigator.vibrate?.([40, 100, 40, 100, 40]), []);
+
+  return { vibrate, selection, success, warning, error };
+}
+
+export function hapticFeedback(config: HapticConfig = {}) {
+  const { intensity = 'medium' } = config;
+  if (!navigator.vibrate) return;
+  const patterns = {
+    light: [10],
+    medium: [20],
+    heavy: [40]
+  };
+  navigator.vibrate(patterns[intensity]);
 }
 
 export function useLongPress(config: LongPressConfig) {
-  const {
-    onLongPress,
-    delay = 500,
-    onPressStart,
-    onPressEnd
-  } = config;
-
+  const { onLongPress, duration = 500 } = config;
   const ref = useRef<HTMLElement>(null);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const [isLongPress, setIsLongPress] = useState(false);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const handleTouchStart = useCallback(() => {
-    setIsLongPress(false);
-    
-    if (onPressStart) {
-      onPressStart();
-    }
+  const handleStart = useCallback(() => {
+    timerRef.current = setTimeout(() => {
+      hapticFeedback({ intensity: 'heavy' });
+      onLongPress?.();
+    }, duration);
+  }, [duration, onLongPress]);
 
-    timeoutRef.current = setTimeout(() => {
-      setIsLongPress(true);
-      onLongPress();
-    }, delay);
-  }, [onLongPress, delay, onPressStart]);
-
-  const handleTouchEnd = useCallback(() => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-      timeoutRef.current = null;
-    }
-
-    if (onPressEnd) {
-      onPressEnd();
-    }
-  }, [onPressEnd]);
-
-  const handleTouchMove = useCallback(() => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-      timeoutRef.current = null;
+  const handleEnd = useCallback(() => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
     }
   }, []);
 
   useEffect(() => {
     const element = ref.current;
     if (!element) return;
-
-    element.addEventListener('touchstart', handleTouchStart, { passive: true });
-    element.addEventListener('touchend', handleTouchEnd, { passive: true });
-    element.addEventListener('touchmove', handleTouchMove, { passive: true });
-
+    element.addEventListener('touchstart', handleStart, { passive: true });
+    element.addEventListener('touchend', handleEnd, { passive: true });
+    element.addEventListener('touchmove', handleEnd, { passive: true });
+    element.addEventListener('mousedown', handleStart);
+    element.addEventListener('mouseup', handleEnd);
+    element.addEventListener('mouseleave', handleEnd);
     return () => {
-      element.removeEventListener('touchstart', handleTouchStart);
-      element.removeEventListener('touchend', handleTouchEnd);
-      element.removeEventListener('touchmove', handleTouchMove);
+      element.removeEventListener('touchstart', handleStart);
+      element.removeEventListener('touchend', handleEnd);
+      element.removeEventListener('touchmove', handleEnd);
+      element.removeEventListener('mousedown', handleStart);
+      element.removeEventListener('mouseup', handleEnd);
+      element.removeEventListener('mouseleave', handleEnd);
+      handleEnd();
     };
-  }, [handleTouchStart, handleTouchEnd, handleTouchMove]);
+  }, [handleStart, handleEnd]);
 
-  return { ref, isLongPress };
-}
-
-interface PullToRefreshConfig {
-  onRefresh: () => Promise<void>;
-  threshold?: number;
-  resistance?: number;
+  return { ref };
 }
 
 export function usePullToRefresh(config: PullToRefreshConfig) {
-  const {
-    onRefresh,
-    threshold = 80,
-    resistance = 2.5
-  } = config;
-
+  const { onRefresh, threshold = 100 } = config;
   const ref = useRef<HTMLElement>(null);
-  const [isRefreshing, setIsRefreshing] = useState(false);
   const [pullDistance, setPullDistance] = useState(0);
-  const startYRef = useRef(0);
-  const isPullingRef = useRef(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const stateRef = useRef({
+    startY: 0,
+    isPulling: false
+  });
 
   const handleTouchStart = useCallback((e: TouchEvent) => {
     const element = ref.current;
-    if (!element || element.scrollTop > 0) return;
-
-    const touch = e.touches[0];
-    startYRef.current = touch.clientY;
-    isPullingRef.current = true;
-  }, []);
+    if (!element || isRefreshing) return;
+    if (element.scrollTop === 0) {
+      stateRef.current = {
+        startY: e.touches[0].clientY,
+        isPulling: true
+      };
+    }
+  }, [isRefreshing]);
 
   const handleTouchMove = useCallback((e: TouchEvent) => {
-    if (!isPullingRef.current || isRefreshing) return;
-
-    const element = ref.current;
-    if (!element || element.scrollTop > 0) return;
-
-    const touch = e.touches[0];
-    const deltaY = (touch.clientY - startYRef.current) / resistance;
-
+    if (!stateRef.current.isPulling || isRefreshing) return;
+    const deltaY = e.touches[0].clientY - stateRef.current.startY;
     if (deltaY > 0) {
-      setPullDistance(Math.min(deltaY, threshold * 1.5));
+      const resistance = Math.min(deltaY * 0.5, threshold * 1.5);
+      setPullDistance(resistance);
     }
-  }, [isRefreshing, threshold, resistance]);
+  }, [isRefreshing, threshold]);
 
   const handleTouchEnd = useCallback(async () => {
-    if (!isPullingRef.current) return;
-
-    isPullingRef.current = false;
-
-    if (pullDistance >= threshold && !isRefreshing) {
+    if (!stateRef.current.isPulling) return;
+    stateRef.current.isPulling = false;
+    if (pullDistance >= threshold && onRefresh) {
       setIsRefreshing(true);
+      hapticFeedback({ intensity: 'medium' });
       try {
-        await onRefresh();
+        await Promise.resolve(onRefresh());
       } finally {
         setIsRefreshing(false);
         setPullDistance(0);
@@ -232,16 +231,14 @@ export function usePullToRefresh(config: PullToRefreshConfig) {
     } else {
       setPullDistance(0);
     }
-  }, [pullDistance, threshold, isRefreshing, onRefresh]);
+  }, [pullDistance, threshold, onRefresh]);
 
   useEffect(() => {
     const element = ref.current;
     if (!element) return;
-
     element.addEventListener('touchstart', handleTouchStart, { passive: true });
     element.addEventListener('touchmove', handleTouchMove, { passive: true });
     element.addEventListener('touchend', handleTouchEnd, { passive: true });
-
     return () => {
       element.removeEventListener('touchstart', handleTouchStart);
       element.removeEventListener('touchmove', handleTouchMove);
@@ -249,98 +246,44 @@ export function usePullToRefresh(config: PullToRefreshConfig) {
     };
   }, [handleTouchStart, handleTouchMove, handleTouchEnd]);
 
-  return { ref, isRefreshing, pullDistance };
-}
-
-interface DoubleTapConfig {
-  onDoubleTap: () => void;
-  delay?: number;
-}
-
-export function useDoubleTap(config: DoubleTapConfig) {
-  const { onDoubleTap, delay = 300 } = config;
-  
-  const ref = useRef<HTMLElement>(null);
-  const lastTapRef = useRef(0);
-
-  const handleTap = useCallback(() => {
-    const now = Date.now();
-    const timeDiff = now - lastTapRef.current;
-
-    if (timeDiff < delay && timeDiff > 0) {
-      onDoubleTap();
-      lastTapRef.current = 0;
-    } else {
-      lastTapRef.current = now;
-    }
-  }, [onDoubleTap, delay]);
-
-  useEffect(() => {
-    const element = ref.current;
-    if (!element) return;
-
-    element.addEventListener('click', handleTap);
-
-    return () => {
-      element.removeEventListener('click', handleTap);
-    };
-  }, [handleTap]);
-
-  return ref;
-}
-
-interface PinchConfig {
-  onPinchIn?: () => void;
-  onPinchOut?: () => void;
-  threshold?: number;
-}
-
-export function usePinch(config: PinchConfig) {
-  const { onPinchIn, onPinchOut, threshold = 10 } = config;
-  
-  const ref = useRef<HTMLElement>(null);
-  const initialDistanceRef = useRef(0);
-
-  const getDistance = (touches: TouchList): number => {
-    const dx = touches[0].clientX - touches[1].clientX;
-    const dy = touches[0].clientY - touches[1].clientY;
-    return Math.sqrt(dx * dx + dy * dy);
+  return {
+    ref,
+    pullDistance,
+    isRefreshing,
+    canRefresh: pullDistance >= threshold
   };
+}
 
-  const handleTouchStart = useCallback((e: TouchEvent) => {
-    if (e.touches.length === 2) {
-      initialDistanceRef.current = getDistance(e.touches);
-    }
-  }, []);
-
-  const handleTouchMove = useCallback((e: TouchEvent) => {
-    if (e.touches.length !== 2) return;
-
-    const currentDistance = getDistance(e.touches);
-    const distanceDiff = currentDistance - initialDistanceRef.current;
-
-    if (Math.abs(distanceDiff) > threshold) {
-      if (distanceDiff > 0 && onPinchOut) {
-        onPinchOut();
-      } else if (distanceDiff < 0 && onPinchIn) {
-        onPinchIn();
-      }
-      initialDistanceRef.current = currentDistance;
-    }
-  }, [threshold, onPinchIn, onPinchOut]);
-
+export function useEdgeSwipeBack(enabled = true) {
+  const router = useRouter();
+  
   useEffect(() => {
-    const element = ref.current;
-    if (!element) return;
+    if (!enabled) return;
+    let startX = 0;
+    let startY = 0;
 
-    element.addEventListener('touchstart', handleTouchStart, { passive: true });
-    element.addEventListener('touchmove', handleTouchMove, { passive: true });
-
-    return () => {
-      element.removeEventListener('touchstart', handleTouchStart);
-      element.removeEventListener('touchmove', handleTouchMove);
+    const handleTouchStart = (e: TouchEvent) => {
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
     };
-  }, [handleTouchStart, handleTouchMove]);
 
-  return ref;
+    const handleTouchEnd = (e: TouchEvent) => {
+      const endX = e.changedTouches[0].clientX;
+      const endY = e.changedTouches[0].clientY;
+      const deltaX = endX - startX;
+      const deltaY = Math.abs(endY - startY);
+      
+      if (startX < 30 && deltaX > 50 && deltaY < 50) {
+        hapticFeedback();
+        router.back();
+      }
+    };
+
+    document.addEventListener('touchstart', handleTouchStart, { passive: true });
+    document.addEventListener('touchend', handleTouchEnd, { passive: true });
+    return () => {
+      document.removeEventListener('touchstart', handleTouchStart);
+      document.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [enabled, router]);
 }

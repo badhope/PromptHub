@@ -23,8 +23,8 @@ export function useI18n(initialLanguage?: Language) {
         if (prefs.language) {
           return prefs.language;
         }
-      } catch {
-        // ignore
+      } catch (error) {
+        console.warn('Failed to parse language preference:', error);
       }
     }
     return 'zh-CN';
@@ -39,8 +39,8 @@ export function useI18n(initialLanguage?: Language) {
           if (prefs.language && prefs.language !== language) {
             setLanguage(prefs.language);
           }
-        } catch {
-          // ignore
+        } catch (error) {
+          console.warn('Failed to check language change:', error);
         }
       }
     };
@@ -52,8 +52,8 @@ export function useI18n(initialLanguage?: Language) {
           if (prefs.language && prefs.language !== language) {
             setLanguage(prefs.language);
           }
-        } catch {
-          // ignore
+        } catch (error) {
+          console.warn('Failed to handle storage change:', error);
         }
       }
     };

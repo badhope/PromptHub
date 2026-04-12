@@ -29,13 +29,15 @@ export function getCategoryName(category: string, language: string = 'zh-CN'): s
 }
 
 export const CATEGORY_I18N_KEYS: Record<string, string> = {
-  functional: 'skills.functional',
-  professional: 'skills.professional',
-  creative: 'skills.creative',
-  character: 'skills.character',
+  game: 'skills.game',
   fiction: 'skills.fiction',
-  tool: 'skills.tool',
-  game: 'skills.game'
+  character: 'skills.character',
+  creative: 'skills.creative',
+  tools: 'skills.tools',
+  professional: 'skills.professional',
+  business: 'skills.business',
+  lifestyle: 'skills.lifestyle',
+  education: 'skills.education'
 };
 
 export function getCategoryGradient(category: string): string {

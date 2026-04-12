@@ -1,17 +1,17 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowUp } from 'lucide-react';
+import { useHapticFeedback } from '@/hooks/useGestures';
 
 export default function BackToTop() {
   const [isVisible, setIsVisible] = useState(false);
+  const { success } = useHapticFeedback();
 
   useEffect(() => {
     const toggleVisibility = () => {
-      if (window.scrollY > 300) {
-        setIsVisible(true);
-      } else {
-        setIsVisible(false);
-      }
+      setIsVisible(window.scrollY > 400);
     };
 
     window.addEventListener('scroll', toggleVisibility, { passive: true });
@@ -19,36 +19,34 @@ export default function BackToTop() {
   }, []);
 
   const scrollToTop = () => {
+    success();
     window.scrollTo({
       top: 0,
       behavior: 'smooth'
     });
   };
 
-  if (!isVisible) return null;
-
   return (
-    <button
-      onClick={scrollToTop}
-      className="fixed bottom-20 md:bottom-8 right-4 z-40 p-3 bg-indigo-600 text-white rounded-full shadow-lg hover:bg-indigo-700 transition-all duration-300 hover:scale-110 group"
-      aria-label="Back to top"
-    >
-      <svg
-        className="w-5 h-5 transform group-hover:-translate-y-1 transition-transform duration-300"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={2.5}
-          d="M5 10l7-7m0 0l7 7m-7-7v18"
-        />
-      </svg>
-      <span className="absolute right-full mr-3 px-2 py-1 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-        返回顶部
-      </span>
-    </button>
+    <AnimatePresence>
+      {isVisible && (
+        <motion.button
+          initial={{ opacity: 0, scale: 0.5, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.5, y: 20 }}
+          whileHover={{ scale: 1.1, y: -2 }}
+          whileTap={{ scale: 0.9 }}
+          onClick={scrollToTop}
+          className="fixed bottom-24 right-4 sm:bottom-8 sm:right-8 z-40 p-4 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-500 text-white shadow-xl shadow-indigo-500/30 hover:shadow-2xl hover:shadow-indigo-500/40 transition-all"
+          style={{ backdropFilter: 'blur(12px)' }}
+        >
+          <motion.div
+            animate={{ y: [0, -3, 0] }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <ArrowUp className="w-5 h-5" strokeWidth={2.5} />
+          </motion.div>
+        </motion.button>
+      )}
+    </AnimatePresence>
   );
 }

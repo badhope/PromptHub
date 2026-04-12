@@ -6,13 +6,14 @@ function getInitialFavorites(): string[] {
   if (typeof window === 'undefined') {
     return [];
   }
-  const stored = localStorage.getItem('favorites');
-  if (stored) {
-    try {
-      return JSON.parse(stored);
-    } catch {
-      return [];
+  try {
+    const stored = localStorage.getItem('favorites');
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      return Array.isArray(parsed) ? parsed : [];
     }
+  } catch (error) {
+    console.warn('Failed to parse favorites from localStorage:', error);
   }
   return [];
 }
@@ -26,7 +27,11 @@ export function useFavorites() {
         ? prev.filter(id => id !== skillId)
         : [...prev, skillId];
       
-      localStorage.setItem('favorites', JSON.stringify(newFavorites));
+      try {
+        localStorage.setItem('favorites', JSON.stringify(newFavorites));
+      } catch (error) {
+        console.warn('Failed to save favorites to localStorage:', error);
+      }
       return newFavorites;
     });
   }, []);
@@ -43,7 +48,11 @@ export function useFavorites() {
 
   const clearFavorites = useCallback(() => {
     setFavorites([]);
-    localStorage.removeItem('favorites');
+    try {
+      localStorage.removeItem('favorites');
+    } catch (error) {
+      console.warn('Failed to clear favorites from localStorage:', error);
+    }
   }, []);
 
   const favoritesCount = favorites.length;

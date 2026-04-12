@@ -24,7 +24,7 @@ async function loadFullSkillsData(): Promise<SkillsData> {
     return loadingPromise;
   }
   
-  loadingPromise = import('@/skills-data.json').then((module) => {
+  loadingPromise = import('@/../skills-data.json').then((module) => {
     fullSkillsData = module.default as SkillsData;
     return fullSkillsData;
   });
@@ -53,8 +53,8 @@ export function useLazySkills(options: UseLazySkillsOptions = {}): UseLazySkills
   const { category, searchQuery = '', sortBy = 'popular', limit } = options;
 
   const summaryData = skillsSummaryData as SkillsSummaryData;
-  const allSkills = summaryData.summaries;
-  const categories = summaryData.categories;
+  const allSkills = summaryData.skills || summaryData.summaries || [];
+  const categories = summaryData.categories || {};
 
   const filteredAndSortedSkills = useMemo(() => {
     let result = filterSkillsByCategory(allSkills, category);

@@ -2,7 +2,7 @@
 
 import { useMemo } from 'react';
 import type { Skill, SkillsData } from '@/types/skill';
-import skillsDataLite from '@/skills-data-lite.json';
+import { useSkillData } from '@/lib/skill-data-loader';
 import { skillSearchCache } from '@/lib/cache-manager';
 import {
   sortSkills,
@@ -34,9 +34,8 @@ export interface UseLiteSkillsResult {
 export function useLiteSkills(options: UseLiteSkillsOptions = {}): UseLiteSkillsResult {
   const { category, searchQuery = '', sortBy = 'popular', limit } = options;
 
-  const data = skillsDataLite as SkillsData;
-  const allSkills = data.skills;
-  const categories = data.categories;
+  const { skills: allSkills, isLoading, error, totalCount } = useSkillData();
+  const categories = {};
 
   const filteredAndSortedSkills = useMemo(() => {
     let result = filterSkillsByCategory(allSkills, category);
@@ -67,9 +66,9 @@ export function useLiteSkills(options: UseLiteSkillsOptions = {}): UseLiteSkills
     skills: filteredAndSortedSkills,
     allSkills,
     categories,
-    isLoading: false,
-    error: null,
-    totalCount: allSkills.length,
+    isLoading,
+    error,
+    totalCount,
     filteredCount: filteredAndSortedSkills.length,
   };
 }
@@ -82,24 +81,20 @@ export interface UseLiteSkillResult {
 }
 
 export function useLiteSkill(skillId: string): UseLiteSkillResult {
-  const data = skillsDataLite as SkillsData;
+  const { skills: allSkills, isLoading, error } = useSkillData();
 
   const skill = useMemo(() => {
-    return data.skills.find(s => s.id === skillId) || null;
-  }, [data.skills, skillId]);
+    return allSkills.find(s => s.id === skillId) || null;
+  }, [allSkills, skillId]);
 
   const relatedSkills = useMemo(() => {
-    return getRelatedSkills(data.skills, skillId, 4);
-  }, [skillId, data.skills]);
-
-  const error = useMemo(() => {
-    return skillId && !skill ? 'Skill not found' : null;
-  }, [skillId, skill]);
+    return getRelatedSkills(allSkills, skillId, 4);
+  }, [skillId, allSkills]);
 
   return {
     skill,
-    isLoading: false,
-    error,
+    isLoading,
+    error: skillId && !skill && !isLoading ? 'Skill not found' : error,
     relatedSkills,
   };
 }
@@ -114,16 +109,15 @@ export interface LiteSkillStats {
 }
 
 export function useLiteSkillStats(): LiteSkillStats {
-  const data = skillsDataLite as SkillsData;
-  const skills = data.skills;
+  const { skills: allSkills } = useSkillData();
 
   return useMemo(() => {
-    const baseStats = calculateSkillStats(skills, Object.keys(data.categories).length);
-    const recentUpdates = getRecentUpdates(skills, 5);
+    const baseStats = calculateSkillStats(allSkills, 8);
+    const recentUpdates = getRecentUpdates(allSkills, 5);
 
     return {
       ...baseStats,
       recentUpdates,
     };
-  }, [skills, data.categories]);
+  }, [allSkills]);
 }

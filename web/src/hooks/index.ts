@@ -5,6 +5,7 @@ export { useLocalStorage } from './useLocalStorage';
 export { usePreferences, type UserPreferences } from './usePreferences';
 export { useI18n } from './useI18n';
 export { useNotifications } from './useNotifications';
-export { useSkills, useSkill, useSkillStats } from './useSkills';
+export { useSkills, useSkill } from './useSkills';
+export { useLiteSkillStats as useSkillStats } from './useLiteSkills';
 export { useDebouncedSearch } from './useDebouncedSearch';
 export { useContextMemory } from './useContextMemory';

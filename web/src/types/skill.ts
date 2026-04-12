@@ -11,11 +11,38 @@ export interface Skill {
   name: string;
   number?: string;
   index?: number;
+  icon?: string;
+  category?: string;
+  description?: string;
+  guide?: string;
+  scenarios?: string[];
+  activation?: string;
+  source?: 'skill' | 'tool';
+  systemPrompt?: string;
+  useCount?: number;
+  rawUrl?: string | null;
   metadata: SkillMetadata;
   categorization: SkillCategorization;
   content?: SkillContent;
   stats: SkillStats;
   thumbnails?: SkillThumbnails;
+  activation_command?: {
+    content_markdown?: string;
+  };
+  system_prompt?: string;
+  capabilities?: {
+    mobile_optimized?: boolean;
+    best_for?: string[];
+    difficulty_level?: string;
+    response_time?: string;
+    context_length?: string;
+    input_types?: string[];
+    output_types?: string[];
+    min_context?: number;
+    timeout?: number;
+    retry?: number;
+    scenarios?: Array<{ scenario: string; description: string }>;
+  };
 }
 
 export interface SkillMetadata {
@@ -34,16 +61,23 @@ export interface SkillCategorization {
   subcategory: string;
   tags: string[];
   secondary_categories?: string[];
+  attributes?: {
+    entertainment?: number;
+    professional?: number;
+    education?: number;
+  };
 }
 
 export type CategoryType = 
-  | 'functional' 
-  | 'character' 
-  | 'fiction' 
-  | 'professional' 
-  | 'creative' 
   | 'game' 
-  | 'tool';
+  | 'fiction' 
+  | 'character' 
+  | 'creative' 
+  | 'tools' 
+  | 'professional' 
+  | 'business'
+  | 'lifestyle'
+  | 'education';
 
 export interface SkillContent {
   raw_url?: string;
@@ -68,17 +102,23 @@ export interface SkillThumbnails {
 export interface SkillSummary {
   id: string;
   name: string;
+  icon?: string;
+  category?: string;
+  description?: string;
+  scenarios?: string[];
   number?: string;
   index?: number;
   metadata: {
     title: string;
     short_description?: string;
     keywords?: string[];
+    updated_at?: string;
   };
   categorization: {
     primary_category: CategoryType;
     subcategory: string;
     tags: string[];
+    secondary_categories?: string[];
   };
   stats: {
     rating: number;
@@ -95,7 +135,8 @@ export interface SkillsData {
   schema_version?: string;
   generated_at?: string;
   skills: Skill[];
-  categories: Record<string, CategoryCount>;
+  tools?: Skill[];
+  categories?: (string | CategoryInfo)[] | Record<string, CategoryCount>;
   version?: string;
   meta?: {
     total_skills: number;
@@ -126,7 +167,7 @@ export interface SubcategoryInfo {
 }
 
 export interface Subcategory {
-  id: string;
+  id?: string;
   name: string;
   name_en?: string;
   icon?: string;
@@ -312,10 +353,13 @@ export interface PaginationParams {
 }
 
 export function getSkillCategory(skill: Skill | SkillSummary): string {
-  return skill.categorization?.primary_category || '';
+  return skill.category || skill.categorization?.primary_category || '';
 }
 
 export function getSkillDescription(skill: Skill | SkillSummary): string {
+  if (skill.description) {
+    return skill.description;
+  }
   if ('metadata' in skill && skill.metadata) {
     if ('short_description' in skill.metadata && skill.metadata.short_description) {
       return skill.metadata.short_description;
@@ -328,13 +372,29 @@ export function getSkillDescription(skill: Skill | SkillSummary): string {
 }
 
 export function getSkillTags(skill: Skill | SkillSummary): string[] {
+  if (skill.scenarios && Array.isArray(skill.scenarios)) {
+    return skill.scenarios;
+  }
   return skill.categorization?.tags || [];
 }
 
 export function getSkillRating(skill: Skill | SkillSummary): number {
-  return skill.stats?.rating || 0;
+  return skill.stats?.rating || 4.8;
 }
 
 export function getSkillUseCount(skill: Skill | SkillSummary): number {
-  return skill.stats?.use_count || 0;
+  return skill.stats?.use_count || 1000;
+}
+
+export function getSkillSystemPrompt(skill: Skill | SkillSummary): string {
+  if ('system_prompt' in skill && skill.system_prompt) {
+    return skill.system_prompt;
+  }
+  if ('activation_command' in skill && skill.activation_command?.content_markdown) {
+    return skill.activation_command.content_markdown;
+  }
+  if ('content' in skill && skill.content?.content_markdown) {
+    return skill.content.content_markdown;
+  }
+  return `你现在是【${skill.name}】。请完全进入你的角色，根据你的人设与我进行对话和互动。`;
 }

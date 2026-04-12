@@ -1,9 +1,11 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
+import AppHeader from "@/components/AppHeader";
 import Footer from "@/components/Footer";
 import BackToTop from "@/components/BackToTop";
 import FloatingAd from "@/components/FloatingAd";
+import MobileBottomNav from "@/components/MobileBottomNav";
+import ActivityBarrage from "@/components/ActivityBarrage";
 import { I18nProvider } from "@/components/I18nProvider";
 import ToastProvider from "@/components/ToastProvider";
 import { APP_CONFIG } from "@/lib/constants";
@@ -81,7 +83,9 @@ export default function RootLayout({
                 if (theme === 'dark' || (!theme && prefersDark)) {
                   document.documentElement.classList.add('dark');
                 }
-              } catch (e) {}
+              } catch (e) {
+                console.warn('Theme initialization failed:', e);
+              }
             `,
           }}
         />
@@ -89,11 +93,13 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col bg-gray-50 dark:bg-gray-900 transition-colors duration-300 font-sans">
         <I18nProvider>
           <ToastProvider>
-            <Navbar />
-            <main className="flex-1">{children}</main>
+            <AppHeader />
+            <main className="flex-1 pb-20 sm:pb-0">{children}</main>
             <Footer />
             <BackToTop />
             <FloatingAd />
+            <MobileBottomNav />
+            <ActivityBarrage />
           </ToastProvider>
         </I18nProvider>
       </body>

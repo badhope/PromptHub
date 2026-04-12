@@ -76,7 +76,8 @@ export default function SettingsPage() {
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
       showToast('success', t('settings.importSuccess'));
-    } catch {
+    } catch (error) {
+      console.warn('Failed to export settings:', error);
       showToast('error', language === 'zh-CN' ? '导出失败，请重试' : 'Export failed, please try again');
     }
   }, [exportPreferences, showToast, t, language]);

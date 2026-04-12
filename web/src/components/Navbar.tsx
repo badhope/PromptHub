@@ -62,17 +62,26 @@ export default function Navbar() {
   
   const handleToggleTheme = () => {
     if (!isLoaded) return;
+    
+    document.documentElement.classList.add('theme-transition');
+    
     const newTheme = preferences.theme === 'light' ? 'dark' :
                      preferences.theme === 'dark' ? 'light' : 'dark';
     updatePreference('theme', newTheme);
+    
+    setTimeout(() => {
+      document.documentElement.classList.remove('theme-transition');
+    }, 600);
   };
 
   const navItems = [
     { href: '/', label: t('nav.home'), icon: '🏠' },
-    { href: '/ai-tools', label: 'AI工具库', icon: '🛠️' },
-    { href: '/skills', label: t('nav.skills'), icon: '📚' },
-    { href: '/search', label: t('nav.search'), icon: '🔍' },
+    { href: '/skills', label: 'AI工具库', icon: '🔧' },
+    { href: '/models', label: '模型接入', icon: '🤖' },
     { href: '/favorites', label: t('nav.favorites'), icon: '❤️' },
+  ];
+
+  const moreItems = [
     { href: '/compare', label: t('nav.compare'), icon: '⚖️' },
     { href: '/guide', label: t('nav.guide'), icon: '📖' },
     { href: '/about', label: t('nav.about'), icon: 'ℹ️' },
@@ -84,42 +93,64 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         <div className="flex justify-between h-14 sm:h-16 items-center">
           <div className="flex items-center">
-            <Link href="/" className="flex items-center space-x-2 sm:space-x-3 group">
-              <span className="text-xl sm:text-2xl group-hover:scale-110 transition-transform duration-300">🚀</span>
-              <span className="text-base sm:text-xl font-bold text-gray-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-200">
+            <Link href="/" className="flex items-center space-x-2 sm:space-x-3 group relative">
+              <span className="text-xl sm:text-2xl group-hover:scale-125 group-active:scale-90 transition-all duration-300 cursor-pointer relative z-10">🚀</span>
+              <span className="text-base sm:text-xl font-bold text-gray-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-all duration-200 cursor-pointer relative z-10 group-active:scale-95">
                 Mobile Skills
               </span>
+              <div className="absolute inset-0 -inset-x-3 -inset-y-2 bg-gray-100 dark:bg-gray-800 rounded-xl scale-0 group-hover:scale-100 transition-transform duration-300 origin-left opacity-0 group-hover:opacity-100" />
+              <div className="absolute inset-0 -inset-x-3 -inset-y-2 bg-indigo-50 dark:bg-indigo-900/30 rounded-xl scale-0 group-active:scale-100 transition-transform duration-150 origin-center opacity-0 group-active:opacity-100" />
             </Link>
           </div>
 
-          <div className="hidden lg:flex items-center space-x-3 xl:space-x-6">
+          <div className="hidden lg:flex items-center space-x-1 xl:space-x-2">
             {navItems.map(item => (
               <Link 
                 key={item.href}
                 href={item.href} 
-                className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors duration-200 relative group text-sm xl:text-base"
+                className="px-3 xl:px-4 py-2 text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg font-medium transition-all duration-200 text-sm xl:text-base"
               >
                 {item.label}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-indigo-600 dark:bg-indigo-400 group-hover:w-full transition-all duration-300"></span>
               </Link>
             ))}
             
-            <ThemeToggleButton 
-              mounted={mounted} 
-              currentTheme={currentTheme} 
-              onToggle={handleToggleTheme} 
-            />
+            <div className="relative group ml-2">
+              <button className="px-3 xl:px-4 py-2 text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg font-medium transition-all duration-200 text-sm xl:text-base flex items-center gap-1.5">
+                更多
+                <svg className="w-4 h-4 group-hover:rotate-180 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              <div className="absolute right-0 mt-2 w-44 bg-white dark:bg-gray-900 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 translate-y-2 group-hover:translate-y-0 z-50 overflow-hidden">
+                {moreItems.map(item => (
+                  <Link 
+                    key={item.href}
+                    href={item.href} 
+                    className="block px-4 py-3 text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-gray-50 dark:hover:bg-gray-800 font-medium transition-all duration-200 text-sm"
+                  >
+                    {item.icon} {item.label}
+                  </Link>
+                ))}
+                <div className="border-t border-gray-200 dark:border-gray-700">
+                  <a
+                    href="https://github.com/badhope/mobile-skills"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block px-4 py-3 text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-gray-50 dark:hover:bg-gray-800 font-medium transition-all duration-200 text-sm"
+                  >
+                    🔗 GitHub
+                  </a>
+                </div>
+              </div>
+            </div>
             
-            <a
-              href="https://github.com/badhope/mobile-skills"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200"
-            >
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
-              </svg>
-            </a>
+            <div className="ml-2 pl-2 border-l border-gray-200 dark:border-gray-700">
+              <ThemeToggleButton 
+                mounted={mounted} 
+                currentTheme={currentTheme} 
+                onToggle={handleToggleTheme} 
+              />
+            </div>
           </div>
 
           <div className="flex items-center gap-1 sm:gap-2 lg:hidden">
@@ -160,11 +191,23 @@ export default function Navbar() {
                 {item.icon} {item.label}
               </Link>
             ))}
+            <div className="my-2 border-t border-gray-200 dark:border-gray-700" />
+            {moreItems.map(item => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="block px-3 sm:px-4 py-2.5 sm:py-3 text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-gray-800 rounded-lg font-medium transition-all duration-200 text-sm sm:text-base"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                {item.icon} {item.label}
+              </Link>
+            ))}
+            <div className="my-2 border-t border-gray-200 dark:border-gray-700" />
             <a
               href="https://github.com/badhope/mobile-skills"
               target="_blank"
               rel="noopener noreferrer"
-              className="block px-3 sm:px-4 py-2.5 sm:py-3 text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-gray-800 rounded-lg font-medium transition-all duration-200 text-sm sm:text-base"
+              className="block px-3 sm:px-4 py-2.5 sm:py-3 text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-gray-800 rounded-lg font-medium transition-all duration-200 text-sm sm:text-base"
               onClick={() => setIsMenuOpen(false)}
             >
               🔗 GitHub

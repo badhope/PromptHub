@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import Breadcrumb from '@/components/Breadcrumb';
 import type { SkillsData, Skill } from '@/types/skill';
-import skillsData from '@/skills-data.json';
+import skillsData from '@/../skills-data.json';
 import { getCategoryIcon, getCategoryName } from '@/lib/categories';
 
 const MAX_COMPARE = 4;
@@ -34,10 +34,10 @@ function convertToCompareItem(skill: Skill): CompareItem {
     rating: skill.stats.rating,
     useCount: skill.stats.use_count,
     favoriteCount: skill.stats.favorite_count,
-    mobileOptimized: skill.capabilities.mobile_optimized,
-    bestFor: skill.capabilities.best_for,
+    mobileOptimized: skill.capabilities?.mobile_optimized ?? false,
+    bestFor: skill.capabilities?.best_for ?? [],
     tags: skill.categorization.tags,
-    attributes: skill.categorization.attributes
+    attributes: (skill.categorization.attributes ?? { entertainment: 0, professional: 0, education: 0 }) as { entertainment: number; professional: number; education: number }
   };
 }
 
@@ -56,23 +56,27 @@ function getInitialCompareIds(): string[] {
 }
 
 export default function ComparePage() {
-  const { skills } = skillsData as SkillsData;
+  const { skills = [] } = skillsData as SkillsData;
   const [selectedIds, setSelectedIds] = useState<string[]>(() => getInitialCompareIds());
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<string>('');
 
   useEffect(() => {
-    localStorage.setItem('compare-skills', JSON.stringify(selectedIds));
+    try {
+      localStorage.setItem('compare-skills', JSON.stringify(selectedIds));
+    } catch (error) {
+      console.warn('Failed to save compare skills:', error);
+    }
   }, [selectedIds]);
 
   const filteredSkills = useMemo(() => {
-    let result = skills.filter(s => !selectedIds.includes(s.id));
+    let result = (skills || []).filter(s => !selectedIds.includes(s.id));
     
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       result = result.filter(s => 
         s.name.toLowerCase().includes(query) ||
-        s.metadata.description.toLowerCase().includes(query)
+        s.metadata.description?.toLowerCase().includes(query)
       );
     }
     

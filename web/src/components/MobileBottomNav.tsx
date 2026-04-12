@@ -1,139 +1,154 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { usePathname } from 'next/navigation';
-import Link from 'next/link';
+import { useState, useEffect, useCallback } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { Home, Search, Heart, Settings, Cpu } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useSwipe, useHapticFeedback } from '@/hooks/useGestures';
 
 interface NavItem {
   href: string;
   label: string;
-  icon: string;
+  icon: React.ReactNode;
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { href: '/', label: '首页', icon: '🏠' },
-  { href: '/ai-tools', label: 'AI工具', icon: '🛠️' },
-  { href: '/skills', label: '角色', icon: '🎭' },
-  { href: '/search', label: '搜索', icon: '🔍' },
-  { href: '/settings', label: '设置', icon: '⚙️' }
+  { href: '/', label: '首页', icon: <Home className="w-5.5 h-5.5" strokeWidth={2.1} /> },
+  { href: '/skills', label: '智能体', icon: <Cpu className="w-5.5 h-5.5" strokeWidth={2.1} /> },
+  { href: '/favorites', label: '收藏', icon: <Heart className="w-5.5 h-5.5" strokeWidth={2.1} /> },
+  { href: '/search', label: '搜索', icon: <Search className="w-5.5 h-5.5" strokeWidth={2.1} /> },
+  { href: '/settings', label: '设置', icon: <Settings className="w-5.5 h-5.5" strokeWidth={2.1} /> }
 ];
 
 export default function MobileBottomNav() {
   const pathname = usePathname();
-  const [isExpanded, setIsExpanded] = useState(false);
+  const router = useRouter();
+  const { success, selection } = useHapticFeedback();
   const [mounted, setMounted] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
     setMounted(true);
-  }, []);
+    const currentIndex = NAV_ITEMS.findIndex(item => 
+      item.href === '/' ? pathname === '/' : pathname.startsWith(item.href)
+    );
+    setActiveIndex(currentIndex >= 0 ? currentIndex : 0);
+  }, [pathname]);
 
-  const isActive = (href: string) => {
-    if (href === '/') {
-      return pathname === '/';
+  const handleNavClick = useCallback((index: number) => {
+    const item = NAV_ITEMS[index];
+    if (index === activeIndex) {
+      success();
+    } else {
+      selection();
     }
-    return pathname.startsWith(href);
-  };
+    router.push(item.href);
+  }, [router, activeIndex, success, selection]);
 
-  const toggleExpand = () => {
-    setIsExpanded(!isExpanded);
-  };
-
-  const handleNavClick = () => {
-    setIsExpanded(false);
-  };
+  const { ref } = useSwipe({
+    threshold: 60,
+    onSwipeLeft: () => {
+      const nextIndex = (activeIndex + 1) % NAV_ITEMS.length;
+      if (nextIndex !== activeIndex) {
+        selection();
+        router.push(NAV_ITEMS[nextIndex].href);
+      }
+    },
+    onSwipeRight: () => {
+      const prevIndex = (activeIndex - 1 + NAV_ITEMS.length) % NAV_ITEMS.length;
+      if (prevIndex !== activeIndex) {
+        selection();
+        router.push(NAV_ITEMS[prevIndex].href);
+      }
+    }
+  });
 
   if (!mounted) {
     return (
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50">
-        <div className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-md border-t border-gray-200 dark:border-gray-700 shadow-md">
-          <div className="w-full flex items-center justify-center py-2">
-            <div className="flex flex-col items-center gap-1">
-              <div className="w-10 h-1 bg-gray-300 dark:bg-gray-600 rounded-full"></div>
-            </div>
-          </div>
-        </div>
-        <div className="h-4 bg-transparent"></div>
+      <nav 
+        className="sm:hidden fixed bottom-0 left-0 right-0 z-50"
+        style={{ paddingBottom: 'var(--safe-area-inset-bottom)' }}
+      >
+        <div className="h-16 bg-transparent" />
       </nav>
     );
   }
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50">
-      <div 
-        className={`
-          bg-white/95 dark:bg-gray-900/95 backdrop-blur-md 
-          border-t border-gray-200 dark:border-gray-700 
-          transition-all duration-300 ease-out
-          ${isExpanded ? 'shadow-lg' : 'shadow-md'}
-        `}
-      >
-        <button
-          onClick={toggleExpand}
-          className="w-full flex items-center justify-center py-2 text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
-          aria-label={isExpanded ? '收起导航' : '展开导航'}
-        >
-          <div className="flex flex-col items-center gap-1">
-            <div className="w-10 h-1 bg-gray-300 dark:bg-gray-600 rounded-full"></div>
-            <span className="text-xs font-medium flex items-center gap-1">
-              {isExpanded ? (
-                <>
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                  收起
-                </>
-              ) : (
-                <>
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
-                  </svg>
-                  导航
-                </>
-              )}
-            </span>
-          </div>
-        </button>
+    <nav 
+      ref={ref}
+      className="sm:hidden fixed bottom-0 left-0 right-0 z-50 swipe-container"
+      style={{ paddingBottom: 'var(--safe-area-inset-bottom)' }}
+    >
+      <div className="absolute inset-0 bg-gradient-to-t from-black/6 to-transparent pointer-events-none -top-3 h-6" />
+      
+      <div className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-t border-gray-200/60 dark:border-gray-700/60 shadow-[0_-1px_40px_rgba(0,0,0,0.08)]">
+        <div className="flex items-center justify-around relative h-12">
+          {NAV_ITEMS.map((item, index) => {
+            const isActive = activeIndex === index;
+            return (
+              <motion.button
+                key={item.href}
+                onClick={() => handleNavClick(index)}
+                whileTap={{ scale: 0.85 }}
+                transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                className={`
+                  relative flex flex-col items-center justify-center
+                  transition-all duration-400 ease-out
+                  min-w-[48px] min-h-[49px]
+                `}
+              >
+                <AnimatePresence mode="wait">
+                  {isActive && (
+                    <motion.div
+                      layoutId="nav-active-bg"
+                      className="absolute inset-x-1 inset-y-1 rounded-2xl"
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ 
+                        opacity: 1, 
+                        scale: 1,
+                        backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                      }}
+                      exit={{ opacity: 0, scale: 0.8 }}
+                      transition={{ type: 'spring', stiffness: 350, damping: 30 }}
+                    />
+                  )}
+                </AnimatePresence>
 
-        <div 
-          className={`
-            overflow-hidden transition-all duration-300 ease-out
-            ${isExpanded ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'}
-          `}
-        >
-          <div className="flex items-center justify-around h-16 px-2 safe-area-inset-bottom border-t border-gray-100 dark:border-gray-800">
-            {NAV_ITEMS.map((item) => {
-              const active = isActive(item.href);
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={handleNavClick}
-                  className={`flex flex-col items-center justify-center flex-1 h-full transition-all duration-200 ${
-                    active 
-                      ? 'text-indigo-600 dark:text-indigo-400' 
-                      : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
-                  }`}
+                <motion.span 
+                  className={`
+                    relative z-10 transform transition-all duration-300
+                    ${isActive 
+                      ? 'text-indigo-600 dark:text-indigo-400 scale-105 -translate-y-0.5' 
+                      : 'text-gray-500 dark:text-gray-400'
+                    }
+                  `}
+                  animate={{
+                    y: isActive ? [0, -2, 0] : 0
+                  }}
+                  transition={{
+                    duration: 0.6,
+                    ease: "easeInOut"
+                  }}
                 >
-                  <span className={`text-xl mb-1 transition-transform duration-200 ${
-                    active ? 'scale-110' : ''
-                  }`}>
-                    {item.icon}
-                  </span>
-                  <span className={`text-xs font-medium ${
-                    active ? 'font-semibold' : ''
-                  }`}>
-                    {item.label}
-                  </span>
-                </Link>
-              );
-            })}
-          </div>
+                  {item.icon}
+                </motion.span>
+                <span 
+                  className={`
+                    text-[11px] font-semibold relative z-10 transition-all duration-300 mt-0.5 tracking-tight
+                    ${isActive 
+                      ? 'text-indigo-600 dark:text-indigo-400 opacity-100 scale-1' 
+                      : 'text-gray-500 dark:text-gray-400 opacity-80 scale-0.95'
+                    }
+                  `}
+                >
+                  {item.label}
+                </span>
+              </motion.button>
+            );
+          })}
         </div>
       </div>
-
-      {!isExpanded && (
-        <div className="h-4 bg-transparent"></div>
-      )}
     </nav>
   );
 }

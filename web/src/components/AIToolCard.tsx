@@ -15,9 +15,9 @@ interface AIToolCardProps {
     activation: string;
     rawUrl?: string;
   };
-  index: number;
+  index?: number;
   isFavorite?: boolean;
-  onToggleFavorite?: () => void;
+  onToggleFavorite?: (id: string) => void;
 }
 
 export default function AIToolCard({ tool, index, isFavorite, onToggleFavorite }: AIToolCardProps) {
@@ -40,14 +40,14 @@ export default function AIToolCard({ tool, index, isFavorite, onToggleFavorite }
     e.preventDefault();
     e.stopPropagation();
     showFavoriteToast(tool.name, !isFavorite);
-    onToggleFavorite?.();
+    onToggleFavorite?.(tool.id);
   };
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, delay: index * 0.05 }}
+      transition={{ duration: 0.4, delay: (index || 0) * 0.05 }}
       className="group"
     >
       <div className={`h-full border rounded-2xl overflow-hidden

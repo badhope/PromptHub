@@ -32,7 +32,7 @@ export default function Footer() {
               <li>
                 <Link href="/skills" className="text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200 text-sm flex items-center gap-2 group">
                   <span className="w-1.5 h-1.5 bg-gray-400 dark:bg-gray-600 rounded-full group-hover:bg-indigo-600 dark:group-hover:bg-indigo-400 transition-colors"></span>
-                  所有技能
+                  技能探索
                 </Link>
               </li>
               <li>

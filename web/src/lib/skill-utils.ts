@@ -24,10 +24,11 @@ export interface SortableSkillBase {
 }
 
 export function sortSkills<T extends SortableSkillBase>(
-  skills: T[],
+  skills: T[] | undefined | null,
   sortBy: SortBy
 ): T[] {
-  const result = [...skills];
+  const safeSkills = skills || [];
+  const result = [...safeSkills];
 
   switch (sortBy) {
     case 'popular':
@@ -63,30 +64,63 @@ export function sortSkills<T extends SortableSkillBase>(
 }
 
 export function filterSkillsByCategory<T extends Skill | SkillSummary>(
-  skills: T[],
+  skills: readonly T[] | undefined | null,
   category?: string
 ): T[] {
-  if (!category) return skills;
+  const safeSkills = skills || [];
+  if (!category) return safeSkills as T[];
 
-  return skills.filter(skill => getSkillCategory(skill) === category);
+  const result: T[] = [];
+  for (let i = 0, len = safeSkills.length; i < len; i++) {
+    const skill = safeSkills[i];
+    const directCategory = ('category' in skill && skill.category) || '';
+    const primary = ('categorization' in skill && skill.categorization?.primary_category) || '';
+    const sub = ('categorization' in skill && skill.categorization?.subcategory) || '';
+    const secondary = ('categorization' in skill && skill.categorization?.secondary_categories) || [];
+    
+    if (
+      directCategory === category ||
+      primary === category ||
+      sub === category ||
+      secondary.includes(category)
+    ) {
+      result.push(skill);
+    }
+  }
+  return result;
 }
 
 export function searchSkills<T extends Skill | SkillSummary>(
-  skills: T[],
+  skills: readonly T[] | undefined | null,
   query: string
 ): T[] {
-  if (!query.trim()) return skills;
+  const safeSkills = skills || [];
+  const trimmedQuery = query.trim();
+  if (!trimmedQuery) return safeSkills as T[];
 
-  const lowerQuery = query.toLowerCase().trim();
+  const lowerQuery = trimmedQuery.toLowerCase();
+  const result: T[] = [];
 
-  return skills.filter(skill => {
-    const nameMatch = skill.name.toLowerCase().includes(lowerQuery);
-    const descMatch = getSkillDescription(skill).toLowerCase().includes(lowerQuery);
+  for (let i = 0, len = safeSkills.length; i < len; i++) {
+    const skill = safeSkills[i];
+    
+    if (skill.name.toLowerCase().includes(lowerQuery)) {
+      result.push(skill);
+      continue;
+    }
+    
+    if (getSkillDescription(skill).toLowerCase().includes(lowerQuery)) {
+      result.push(skill);
+      continue;
+    }
+    
     const tags = getSkillTags(skill);
-    const tagsMatch = tags.some(tag => tag.toLowerCase().includes(lowerQuery));
+    if (tags.some(tag => tag.toLowerCase().includes(lowerQuery))) {
+      result.push(skill);
+    }
+  }
 
-    return nameMatch || descMatch || tagsMatch;
-  });
+  return result;
 }
 
 export interface StatsSkillBase {
@@ -113,50 +147,50 @@ export interface SkillStatsResult {
 }
 
 export function calculateSkillStats<T extends StatsSkillBase>(
-  skills: T[],
+  skills: readonly T[],
   categoriesCount: number
 ): SkillStatsResult {
   const totalSkills = skills.length;
-  const totalUses = skills.reduce((sum, s) => {
-    const count = s.useCount ?? s.stats?.use_count ?? 0;
-    return sum + count;
-  }, 0);
-  
-  const averageRating = skills.reduce((sum, s) => {
-    const rating = s.rating ?? s.stats?.rating ?? 0;
-    return sum + rating;
-  }, 0) / totalSkills;
+  let totalUses = 0;
+  let totalRating = 0;
 
-  const topCategories = getTopCategories(skills);
+  for (let i = 0, len = skills.length; i < len; i++) {
+    const s = skills[i];
+    totalUses += s.useCount ?? s.stats?.use_count ?? 0;
+    totalRating += s.rating ?? s.stats?.rating ?? 0;
+  }
+  
+  const averageRating = totalSkills > 0 ? Math.round((totalRating / totalSkills) * 10) / 10 : 0;
+  const topCategories = getTopCategories(skills as T[]);
 
   return {
     totalSkills,
     totalCategories: categoriesCount,
     totalUses,
-    averageRating: Math.round(averageRating * 10) / 10,
+    averageRating,
     topCategories,
   };
 }
 
 export function getTopCategories<T extends StatsSkillBase>(
-  skills: T[]
+  skills: readonly T[]
 ): Array<{ name: string; count: number }> {
   const categoryCount: Record<string, number> = {};
   
-  skills.forEach(skill => {
+  for (let i = 0, len = skills.length; i < len; i++) {
+    const skill = skills[i];
     const cat = skill.category ?? skill.categorization?.primary_category ?? '';
     if (cat) {
       categoryCount[cat] = (categoryCount[cat] || 0) + 1;
     }
-  });
+  }
 
-  return Object.entries(categoryCount)
-    .map(([name, count]) => ({ name, count }))
-    .sort((a, b) => {
-      const diff = b.count - a.count;
-      return diff !== 0 ? diff : a.name.localeCompare(b.name);
-    })
-    .slice(0, 5);
+  const categories = Object.entries(categoryCount).map(([name, count]) => ({ name, count }));
+  categories.sort((a, b) => {
+    const diff = b.count - a.count;
+    return diff !== 0 ? diff : a.name.localeCompare(b.name);
+  });
+  return categories.slice(0, 5);
 }
 
 export interface RecentUpdateSkill extends StatsSkillBase {

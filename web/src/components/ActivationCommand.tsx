@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Copy, Check, CopyCheck } from 'lucide-react';
+import { Copy, CopyCheck } from 'lucide-react';
 import { useCopyToClipboard } from 'usehooks-ts';
 import Balancer from 'react-wrap-balancer';
 import { showCopyToast } from './ToastProvider';
@@ -33,7 +33,7 @@ export default function ActivationCommand({ command, title = '激活指令' }: A
     const success = await copy(command);
     if (success) {
       setCopied(true);
-      showCopyToast();
+      showCopyToast('指令已复制');
       setTimeout(() => setCopied(false), 2000);
     }
   };

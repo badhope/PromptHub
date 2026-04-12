@@ -8,10 +8,15 @@ export default function FloatingAd() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      const lastClosed = localStorage.getItem('whiteLeftFloatAd_7day');
-      const sevenDays = 7 * 24 * 60 * 60 * 1000;
-      
-      if (!lastClosed || Date.now() - parseInt(lastClosed) > sevenDays) {
+      try {
+        const lastClosed = localStorage.getItem('whiteLeftFloatAd_7day');
+        const sevenDays = 7 * 24 * 60 * 60 * 1000;
+        
+        if (!lastClosed || Date.now() - parseInt(lastClosed) > sevenDays) {
+          setIsVisible(true);
+        }
+      } catch (error) {
+        console.warn('Failed to read ad status from localStorage:', error);
         setIsVisible(true);
       }
     }, 1500);
@@ -21,7 +26,11 @@ export default function FloatingAd() {
 
   const handleClose = () => {
     setIsVisible(false);
-    localStorage.setItem('whiteLeftFloatAd_7day', Date.now().toString());
+    try {
+      localStorage.setItem('whiteLeftFloatAd_7day', Date.now().toString());
+    } catch (error) {
+      console.warn('Failed to save ad status to localStorage:', error);
+    }
   };
 
   if (!isVisible) return null;

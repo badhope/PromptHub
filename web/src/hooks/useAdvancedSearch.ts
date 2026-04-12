@@ -31,15 +31,15 @@ export interface AdvancedSearchOptions {
 export function useAdvancedSearch(skills: Skill[]) {
   const [query, setQuery] = useState('');
   const [options, setOptions] = useState<AdvancedSearchOptions>({});
-  const [searchHistory, setSearchHistory] = useLocalStorage<SearchHistory[]>('search-history', []);
+  const { value: searchHistory, setValue: setSearchHistory } = useLocalStorage<SearchHistory[]>('search-history', []);
 
   const suggestions = useMemo(() => {
     if (!query.trim()) {
       const recentHistory = searchHistory
-        .sort((a, b) => b.timestamp - a.timestamp)
+        .sort((a: SearchHistory, b: SearchHistory) => b.timestamp - a.timestamp)
         .slice(0, 5);
       
-      return recentHistory.map(h => ({
+      return recentHistory.map((h: SearchHistory) => ({
         text: h.query,
         type: 'history' as const,
         count: h.count
@@ -72,10 +72,10 @@ export function useAdvancedSearch(skills: Skill[]) {
     });
 
     const matchingHistory = searchHistory
-      .filter(h => h.query.toLowerCase().includes(lowerQuery))
+      .filter((h: SearchHistory) => h.query.toLowerCase().includes(lowerQuery))
       .slice(0, 3);
     
-    matchingHistory.forEach(h => {
+    matchingHistory.forEach((h: SearchHistory) => {
       suggestions.push({ text: h.query, type: 'history', count: h.count });
     });
 
@@ -150,7 +150,7 @@ export function useAdvancedSearch(skills: Skill[]) {
   const addToHistory = useCallback((searchQuery: string) => {
     if (!searchQuery.trim()) return;
 
-    const existingIndex = searchHistory.findIndex(h => h.query === searchQuery);
+    const existingIndex = searchHistory.findIndex((h: SearchHistory) => h.query === searchQuery);
     
     if (existingIndex >= 0) {
       const updated = [...searchHistory];
@@ -173,7 +173,7 @@ export function useAdvancedSearch(skills: Skill[]) {
   }, [setSearchHistory]);
 
   const removeFromHistory = useCallback((queryToRemove: string) => {
-    setSearchHistory(searchHistory.filter(h => h.query !== queryToRemove));
+    setSearchHistory(searchHistory.filter((h: SearchHistory) => h.query !== queryToRemove));
   }, [searchHistory, setSearchHistory]);
 
   const updateOptions = useCallback((newOptions: Partial<AdvancedSearchOptions>) => {

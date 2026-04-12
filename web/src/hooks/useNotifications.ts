@@ -22,8 +22,8 @@ function getInitialNotificationState() {
     try {
       const prefs = JSON.parse(stored);
       isEnabled = prefs.showNotifications ?? true;
-    } catch {
-      // ignore
+    } catch (error) {
+      console.warn('Failed to parse notification preferences:', error);
     }
   }
   

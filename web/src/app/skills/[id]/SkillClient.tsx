@@ -1,199 +1,267 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import Link from 'next/link';
+import { useParams } from 'next/navigation';
+import { ArrowLeft, Copy, Check, Heart, MessageCircle, Share2, RefreshCw, Home, Info } from 'lucide-react';
+import { motion } from 'framer-motion';
 import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import rehypeHighlight from 'rehype-highlight';
-import type { Skill } from '@/types/skill';
-import { SoftwareApplicationJsonLd, BreadcrumbJsonLd } from '@/components/JsonLd';
-import {
-  getCategoryIcon,
-  getCategoryName
-} from '@/lib/categories';
-import { useI18nContext } from '@/components/I18nProvider';
-import ActivationCommand from '@/components/ActivationCommand';
+import { showCopyToast, showFavoriteToast } from '@/components/ToastProvider';
+import ChatModal from '@/components/ChatModal';
+import AgentPromptPanel from '@/components/AgentPromptPanel';
+import SystemPromptSection from '@/components/SystemPromptSection';
+import { SkillDetailSkeleton, EmptyState } from '@/components/Skeleton';
+import { useSkill } from '@/hooks/useSkills';
+import { getSkillCategory, getSkillDescription, getSkillTags, getSkillSystemPrompt, getSkillUseCount } from '@/types/skill';
+import { useFavorites } from '@/hooks/useFavorites';
+import { useHapticFeedback } from '@/hooks/useGestures';
 
-interface RelatedSkill {
-  id: string;
-  name: string;
-  categorization: {
-    primary_category: string;
-  };
-  metadata: {
-    description: string;
-  };
-  stats: {
-    rating: number;
-    use_count: number;
-  };
-}
+const TouchButton = ({ children, onClick, className = '', disabled = false }: any) => (
+  <motion.button
+    whileTap={{ scale: disabled ? 1 : 0.97 }}
+    transition={{ duration: 0.1 }}
+    onClick={onClick}
+    disabled={disabled}
+    className={`relative overflow-hidden ${className}`}
+  >
+    {children}
+  </motion.button>
+);
 
-function getInitialFavorite(skillId: string): boolean {
-  if (typeof window === 'undefined') return false;
-  const favorites = JSON.parse(localStorage.getItem('favorite-skills') || '[]');
-  return favorites.includes(skillId);
-}
+export default function SkillClient() {
+  const params = useParams();
+  const { status, data: rawSkill, error } = useSkill(params.id as string);
+  const [showChat, setShowChat] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const { favorites, toggleFavorite, isFavorite } = useFavorites();
+  const { success, selection } = useHapticFeedback();
 
-interface SkillClientProps {
-  skill: Skill;
-  relatedSkills: RelatedSkill[];
-}
+  const skill = useMemo(() => {
+    if (!rawSkill) return null;
+    return {
+      id: rawSkill.id,
+      name: rawSkill.name,
+      icon: rawSkill.icon || '🧠',
+      category: getSkillCategory(rawSkill),
+      description: getSkillDescription(rawSkill),
+      guide: rawSkill.guide || '描述你的需求，开始体验吧！',
+      scenarios: getSkillTags(rawSkill),
+      systemPrompt: getSkillSystemPrompt(rawSkill),
+      useCount: getSkillUseCount(rawSkill),
+      source: rawSkill.source,
+      rawUrl: (rawSkill as any).content?.raw_url
+    };
+  }, [rawSkill]);
 
-export default function SkillClient({ skill, relatedSkills }: SkillClientProps) {
-  const { language } = useI18nContext();
-  const [isFavorite, setIsFavorite] = useState(() => getInitialFavorite(skill.id));
-  const [showRawContent, setShowRawContent] = useState(false);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const category = skill.categorization.primary_category;
-  const icon = getCategoryIcon(category);
-  const categoryName = getCategoryName(category);
-
-  const toggleFavorite = () => {
-    const favorites = JSON.parse(localStorage.getItem('favorite-skills') || '[]');
-    if (isFavorite) {
-      const newFavorites = favorites.filter((id: string) => id !== skill.id);
-      localStorage.setItem('favorite-skills', JSON.stringify(newFavorites));
-    } else {
-      favorites.push(skill.id);
-      localStorage.setItem('favorite-skills', JSON.stringify(favorites));
+  const handleToggleFavorite = () => {
+    selection();
+    toggleFavorite(params.id as string);
+    if (!isFavorite(params.id as string)) {
+      showFavoriteToast(skill?.name || '', true);
     }
-    setIsFavorite(!isFavorite);
   };
+
+  const copyActivation = () => {
+    if (skill) {
+      success();
+      navigator.clipboard.writeText(skill.systemPrompt);
+      setCopied(true);
+      showCopyToast(skill.name);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
+  const startChat = () => {
+    success();
+    setShowChat(true);
+  };
+
+  const favStatus = useMemo(() => {
+    return isFavorite(params.id as string);
+  }, [isFavorite, params.id]);
+
+  if (status === 'loading') {
+    return (
+      <div className="min-h-screen bg-[#f2f2f7] dark:bg-black py-8 px-4 sm:px-6 pb-safe">
+        <SkillDetailSkeleton />
+      </div>
+    );
+  }
+
+  if (status === 'error' || !skill) {
+    return (
+      <div className="min-h-screen bg-[#f2f2f7] dark:bg-black pb-safe">
+        <EmptyState
+          icon="😵"
+          title="技能加载失败"
+          subtitle={`无法找到 ID: ${params.id} 对应的技能`}
+        />
+        <div className="flex flex-col gap-3 max-w-xs mx-auto -mt-8">
+          <Link 
+            href="/skills" 
+            className="w-full py-4 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-2xl font-semibold text-center transition-colors"
+          >
+            返回技能库
+          </Link>
+          <button
+            onClick={() => window.location.reload()}
+            className="w-full py-4 bg-gradient-to-r from-indigo-500/90 to-purple-500/90 text-white rounded-2xl font-semibold"
+          >
+            重新加载
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-white">
-      <SoftwareApplicationJsonLd
-        name={skill.name}
-        description={skill.metadata.description}
-        url={`https://badhope.github.io/mobile-skills/skills/${skill.id}`}
-        applicationCategory="UtilitiesApplication"
-        operatingSystem="Any"
-        offers={{
-          '@type': 'Offer',
-          price: '0',
-          priceCurrency: 'USD',
-        }}
-        aggregateRating={{
-          '@type': 'AggregateRating',
-          ratingValue: skill.stats.rating,
-          ratingCount: skill.stats.rating_count,
-        }}
-        author={{
-          '@type': 'Organization',
-          name: skill.metadata.author,
-        }}
-      />
-      <BreadcrumbJsonLd
-        items={[
-          { name: '首页', url: 'https://badhope.github.io/mobile-skills/' },
-          { name: '技能', url: 'https://badhope.github.io/mobile-skills/skills' },
-          { name: skill.name, url: `https://badhope.github.io/mobile-skills/skills/${skill.id}` },
-        ]}
-      />
-
-      <div>
-        <div className="bg-black text-white py-16 sm:py-20">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <Link 
-              href="/categories" 
-              className="inline-flex items-center text-gray-400 hover:text-white mb-8 transition-colors font-medium text-sm"
-            >
-              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-              {language === 'zh-CN' ? '返回分类' : 'Back to Categories'}
-            </Link>
-            
-            <div 
-              className={`flex flex-col sm:flex-row items-start gap-6 transition-all duration-700 ${
-                mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-              }`}
-            >
-              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white rounded-2xl flex items-center justify-center flex-shrink-0">
-                <span className="text-3xl sm:text-4xl">{icon}</span>
-              </div>
-              <div className="flex-1">
-                <div className="flex flex-wrap items-center gap-3 mb-4">
-                  <span className="px-4 py-2 bg-white/10 rounded-xl text-sm font-semibold text-gray-300">
-                    {categoryName}
-                  </span>
-                  <span className="text-gray-500 text-sm font-medium">
-                    v{skill.version}
-                  </span>
-                </div>
-                <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-4">{skill.name}</h1>
-                <p className="text-lg text-gray-400 font-medium leading-relaxed max-w-2xl">{skill.metadata.description}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div 
-            className={`mb-12 transition-all duration-700 ${
-              mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-            }`}
-            style={{ transitionDelay: '100ms' }}
-          >
-            <ActivationCommand 
-              command={skill.activation_command?.content_markdown || `你是${skill.name}。请根据你的角色设定，与我进行对话和互动。`}
-              title={language === 'zh-CN' ? '激活指令' : 'Activation Command'}
-            />
-          </div>
-
-          {skill.system_prompt && (
-            <div 
-              className={`mb-12 transition-all duration-700 ${
-                mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-              }`}
-              style={{ transitionDelay: '200ms' }}
-            >
-              <h2 className="text-2xl font-bold text-black mb-6">
-                {language === 'zh-CN' ? '系统提示词' : 'System Prompt'}
-              </h2>
-              <div className="bg-gray-50 border border-gray-200 rounded-2xl p-8">
-                <div className="prose prose-gray max-w-none">
-                  <ReactMarkdown
-                    remarkPlugins={[remarkGfm]}
-                    rehypePlugins={[rehypeHighlight]}
-                  >
-                    {skill.system_prompt}
-                  </ReactMarkdown>
+    <div className="min-h-screen bg-[#f2f2f7] dark:bg-black pb-safe">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
+          className="mb-8"
+        >
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200/50 dark:border-gray-700/50 overflow-hidden">
+            <div className="p-6">
+              <div className="flex items-start gap-5 mb-5">
+                <motion.div 
+                  whileHover={{ scale: 1.05 }}
+                  className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500/90 to-purple-500/90 flex items-center justify-center text-3xl shadow-lg shadow-indigo-500/20 flex-shrink-0"
+                >
+                  {skill.icon}
+                </motion.div>
+                
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between gap-2 mb-2">
+                    <h1 className="text-[22px] font-bold text-gray-900 dark:text-white tracking-tight">
+                      {skill.name}
+                    </h1>
+                    <motion.button
+                      whileTap={{ scale: 0.9 }}
+                      onClick={handleToggleFavorite}
+                      className="p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors flex-shrink-0"
+                    >
+                      <Heart 
+                        className={`w-6 h-6 transition-all ${
+                          favStatus 
+                            ? 'text-red-500 fill-red-500 scale-110' 
+                            : 'text-gray-400 dark:text-gray-500'
+                        }`} 
+                      />
+                    </motion.button>
+                  </div>
+                  
+                  <div className="flex flex-wrap items-center gap-2 mb-3">
+                    {skill.source === 'skill' ? (
+                      <span className="px-3 py-1 bg-gradient-to-r from-indigo-500/15 to-purple-500/15 text-indigo-600 dark:text-indigo-400 text-[13px] rounded-full font-medium">
+                        🧠 Agent 智能体
+                      </span>
+                    ) : (
+                      <span className="px-3 py-1 bg-gradient-to-r from-amber-500/15 to-orange-500/15 text-amber-600 dark:text-amber-400 text-[13px] rounded-full font-medium">
+                        🔧 专业工具
+                      </span>
+                    )}
+                    <span className="px-3 py-1 bg-gray-100 dark:bg-gray-700/50 text-gray-600 dark:text-gray-400 text-[13px] rounded-full font-medium">
+                      {skill.category}
+                    </span>
+                  </div>
+                  
+                  <p className="text-[15px] text-gray-600 dark:text-gray-300 leading-relaxed">
+                    {skill.description}
+                  </p>
                 </div>
               </div>
-            </div>
-          )}
-
-          {skill.categorization.tags && skill.categorization.tags.length > 0 && (
-            <div 
-              className={`transition-all duration-700 ${
-                mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-              }`}
-              style={{ transitionDelay: '300ms' }}
-            >
-              <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4">
-                {language === 'zh-CN' ? '标签' : 'Tags'}
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                {skill.categorization.tags.map((tag: string) => (
-                  <span 
-                    key={tag}
-                    className="px-4 py-2 bg-gray-100 text-gray-600 rounded-xl text-sm font-semibold hover:bg-gray-200 transition-colors"
-                  >
-                    {tag}
+              
+              <div className="flex flex-wrap gap-2 mb-6">
+                {skill.scenarios.map((tag, i) => (
+                  <span key={i} className="px-3 py-1.5 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 text-[13px] rounded-xl font-medium">
+                    #{tag}
                   </span>
                 ))}
               </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <TouchButton
+                  onClick={copyActivation}
+                  className="py-4 rounded-2xl font-semibold text-[14px] bg-gray-900 dark:bg-gray-700 text-white hover:bg-gray-800 dark:hover:bg-gray-600 transition-all shadow-lg"
+                >
+                  <div className="flex items-center justify-center gap-2">
+                    {copied ? <Check className="w-5 h-5 text-green-400" /> : <Copy className="w-5 h-5" />}
+                    {copied ? '已复制' : '复制提示词'}
+                  </div>
+                </TouchButton>
+
+                <TouchButton
+                  onClick={startChat}
+                  className="py-4 rounded-2xl font-semibold text-[14px] bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-lg shadow-indigo-500/25 hover:shadow-xl hover:shadow-indigo-500/40 transition-all"
+                >
+                  <div className="flex items-center justify-center gap-2">
+                    <MessageCircle className="w-5 h-5" />
+                    开始对话
+                  </div>
+                </TouchButton>
+              </div>
             </div>
-          )}
-        </div>
+          </div>
+        </motion.div>
+
+        {skill.source === 'skill' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15, duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
+            className="mb-8"
+          >
+            <AgentPromptPanel skillName={skill.name} basePrompt={skill.systemPrompt} />
+          </motion.div>
+        )}
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.25, duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
+          className="mb-8"
+        >
+          <SystemPromptSection 
+            systemPrompt={skill.systemPrompt} 
+            onCopy={copyActivation}
+            copied={copied}
+          />
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.35, duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
+        >
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200/50 dark:border-gray-700/50 overflow-hidden">
+            <div className="px-6 pt-5 pb-4 border-b border-gray-100 dark:border-gray-700/50">
+              <h2 className="text-[17px] font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                <span className="w-8 h-8 rounded-xl bg-gradient-to-br from-green-500/90 to-emerald-500/90 flex items-center justify-center text-white text-sm">💡</span>
+                使用指南
+              </h2>
+            </div>
+            
+            <div className="p-6 bg-emerald-50/50 dark:bg-emerald-500/5">
+              <div className="prose dark:prose-invert prose-sm max-w-none text-emerald-800/90 dark:text-emerald-200/90">
+                <ReactMarkdown>{skill.guide}</ReactMarkdown>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
+        <div className="h-8" />
       </div>
+
+      <ChatModal
+        isOpen={showChat}
+        onClose={() => setShowChat(false)}
+        skillName={skill.name}
+        systemPrompt={skill.systemPrompt}
+        icon={skill.icon}
+      />
     </div>
   );
 }

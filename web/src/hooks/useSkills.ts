@@ -1,129 +1,120 @@
-'use client';
+import { useState, useEffect, useCallback, useSyncExternalStore } from 'react';
+import type { Skill } from '@/types/skill';
+import { getSkillsSync, getSkillByIdSync, invalidateAllData, loadUnifiedSkillsData } from '@/lib/unified-data-loader';
 
-import { useMemo } from 'react';
-import type { Skill, SkillsData } from '@/types/skill';
-import skillsData from '@/skills-data.json';
-import { skillSearchCache } from '@/lib/cache-manager';
-import {
-  sortSkills,
-  filterSkillsByCategory,
-  searchSkills,
-  calculateSkillStats,
-  getRecentUpdates,
-  getRelatedSkills,
-  type SortBy
-} from '@/lib/skill-utils';
+type DataStatus = 'idle' | 'loading' | 'success' | 'error';
 
-export interface UseSkillsOptions {
-  category?: string;
-  searchQuery?: string;
-  sortBy?: SortBy;
-  limit?: number;
+interface SkillsState {
+  status: DataStatus;
+  data: Skill[];
+  error: Error | null;
 }
 
-export interface UseSkillsResult {
-  skills: Skill[];
-  allSkills: Skill[];
-  categories: SkillsData['categories'];
-  isLoading: boolean;
-  error: string | null;
-  totalCount: number;
-  filteredCount: number;
+interface SkillState {
+  status: DataStatus;
+  data: Skill | null;
+  error: Error | null;
 }
 
-export function useSkills(options: UseSkillsOptions = {}): UseSkillsResult {
-  const { category, searchQuery = '', sortBy = 'popular', limit } = options;
+let globalState: SkillsState = {
+  status: 'idle',
+  data: [],
+  error: null,
+};
 
-  const data = skillsData as SkillsData;
-  const allSkills = data.skills;
-  const categories = data.categories;
+const subscribers = new Set<() => void>();
 
-  const filteredAndSortedSkills = useMemo(() => {
-    let result = filterSkillsByCategory(allSkills, category);
+function notify() {
+  subscribers.forEach(cb => cb());
+}
 
-    if (searchQuery.trim()) {
-      const query = searchQuery.toLowerCase().trim();
-      const cacheKey = `${query}-${category || 'all'}`;
-      
-      const cached = skillSearchCache.get(cacheKey);
-      if (cached) {
-        result = cached;
-      } else {
-        result = searchSkills(result, query);
-        skillSearchCache.set(cacheKey, result);
+function setState(partial: Partial<SkillsState>) {
+  globalState = { ...globalState, ...partial };
+  notify();
+}
+
+async function ensureDataLoaded() {
+  if (globalState.data.length === 0 && globalState.status !== 'loading') {
+    setState({ status: 'loading' });
+    try {
+      invalidateAllData();
+      const unifiedData = await loadUnifiedSkillsData();
+      setState({ status: 'success', data: unifiedData.skills, error: null });
+      return unifiedData.skills;
+    } catch (e) {
+      console.error('数据加载失败:', e);
+      setState({ status: 'error', error: e as Error });
+      return [];
+    }
+  }
+  return globalState.data;
+}
+
+const SERVER_STATE: SkillsState = {
+  status: 'loading',
+  data: [],
+  error: null,
+};
+
+export function useSkills() {
+  const state = useSyncExternalStore(
+    cb => {
+      subscribers.add(cb);
+      return () => subscribers.delete(cb);
+    },
+    () => globalState,
+    () => SERVER_STATE
+  );
+
+  useEffect(() => {
+    if (state.status === 'idle') {
+      ensureDataLoaded();
+    }
+  }, [state.status]);
+
+  const refresh = useCallback(() => {
+    setState({ status: 'loading' });
+    setTimeout(async () => {
+      invalidateAllData();
+      const unifiedData = await loadUnifiedSkillsData();
+      setState({ status: 'success', data: unifiedData.skills, error: null });
+    }, 0);
+  }, []);
+
+  return {
+    ...state,
+    skills: state.data,
+    refresh,
+  };
+}
+
+export function useSkill(id: string | undefined) {
+  const [state, setState] = useState<SkillState>({
+    status: 'idle',
+    data: null,
+    error: null,
+  });
+
+  useEffect(() => {
+    if (!id) return;
+
+    async function loadSkill() {
+      setState({ status: 'loading', data: null, error: null });
+      try {
+        const skills = await ensureDataLoaded();
+        const skill = skills.find(s => s.id === id) || (id ? getSkillByIdSync(id) : null);
+        if (skill) {
+          setState({ status: 'success', data: skill, error: null });
+        } else {
+          setState({ status: 'error', data: null, error: new Error('Skill not found') });
+        }
+      } catch (e) {
+        setState({ status: 'error', data: null, error: e as Error });
       }
     }
 
-    result = sortSkills(result, sortBy);
+    loadSkill();
+  }, [id]);
 
-    if (limit && limit > 0) {
-      result = result.slice(0, limit);
-    }
-
-    return result;
-  }, [allSkills, category, searchQuery, sortBy, limit]);
-
-  return {
-    skills: filteredAndSortedSkills,
-    allSkills,
-    categories,
-    isLoading: false,
-    error: null,
-    totalCount: allSkills.length,
-    filteredCount: filteredAndSortedSkills.length,
-  };
-}
-
-export interface UseSkillResult {
-  skill: Skill | null;
-  isLoading: boolean;
-  error: string | null;
-  relatedSkills: Skill[];
-}
-
-export function useSkill(skillId: string): UseSkillResult {
-  const data = skillsData as SkillsData;
-
-  const skill = useMemo(() => {
-    return data.skills.find(s => s.id === skillId) || null;
-  }, [data.skills, skillId]);
-
-  const relatedSkills = useMemo(() => {
-    return getRelatedSkills(data.skills, skillId, 4);
-  }, [skillId, data.skills]);
-
-  const error = useMemo(() => {
-    return skillId && !skill ? 'Skill not found' : null;
-  }, [skillId, skill]);
-
-  return {
-    skill,
-    isLoading: false,
-    error,
-    relatedSkills,
-  };
-}
-
-export interface SkillStats {
-  totalSkills: number;
-  totalCategories: number;
-  totalUses: number;
-  averageRating: number;
-  topCategories: Array<{ name: string; count: number }>;
-  recentUpdates: Array<{ name: string; date: string; relativeTime: string }>;
-}
-
-export function useSkillStats(): SkillStats {
-  const data = skillsData as SkillsData;
-  const skills = data.skills;
-
-  return useMemo(() => {
-    const baseStats = calculateSkillStats(skills, Object.keys(data.categories).length);
-    const recentUpdates = getRecentUpdates(skills, 5);
-
-    return {
-      ...baseStats,
-      recentUpdates,
-    };
-  }, [skills, data.categories]);
+  return state;
 }

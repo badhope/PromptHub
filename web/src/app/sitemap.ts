@@ -59,16 +59,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }
   ]
 
-  const categoryPages = Object.keys(categories).map(category => ({
+  const categoryPages = Object.keys(categories || {}).map(category => ({
     url: `${baseUrl}/category/${category}`,
     lastModified: new Date(),
     changeFrequency: 'weekly' as const,
     priority: 0.8
   }))
 
-  const skillPages = skills.map((skill) => ({
+  const skillPages = (skills || []).map((skill) => ({
     url: `${baseUrl}/skills/${skill.id}/`,
-    lastModified: new Date(skill.metadata.updated_at),
+    lastModified: new Date(skill.metadata?.updated_at || Date.now()),
     changeFrequency: 'weekly' as const,
     priority: 0.7
   }))

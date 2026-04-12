@@ -1,10 +1,10 @@
 'use client';
 
-import { use, useState, useMemo } from 'react';
+import { use, useMemo } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import SkillCard from '@/components/SkillCard';
-import { MULTI_LEVEL_CATEGORY_SYSTEM, getSubcategorySkills } from '@/lib/category-system';
+import { MULTI_LEVEL_CATEGORY_SYSTEM, getSubcategorySkills, getCategorySkills } from '@/lib/category-system';
 import type { SkillsSummaryData } from '@/types/skill';
 import skillsSummaryData from '@/skills-summary.json';
 
@@ -13,11 +13,10 @@ export default function CategoryContent({ params }: { params: Promise<{ category
   const searchParams = useSearchParams();
   const subcategoryParam = searchParams.get('sub');
   const { summaries } = skillsSummaryData as SkillsSummaryData;
-  const [showNavigation, setShowNavigation] = useState(false);
   
   const categoryInfo = MULTI_LEVEL_CATEGORY_SYSTEM[category];
   const allCategorySkills = useMemo(() => 
-    summaries.filter(s => s.category === category),
+    getCategorySkills(category, summaries),
     [summaries, category]
   );
   
@@ -38,17 +37,17 @@ export default function CategoryContent({ params }: { params: Promise<{ category
 
   const sortedSkills = useMemo(() => {
     return [...displaySkills].sort((a, b) => {
-      const aUseCount = 'useCount' in a ? a.useCount : 0;
-      const bUseCount = 'useCount' in b ? b.useCount : 0;
-      const diff = bUseCount - aUseCount;
+      const aUseCount = ('useCount' in a ? a.useCount : a.stats.use_count) || 0;
+      const bUseCount = ('useCount' in b ? b.useCount : b.stats.use_count) || 0;
+      const diff = (bUseCount as number) - (aUseCount as number);
       return diff !== 0 ? diff : a.id.localeCompare(b.id);
     });
   }, [displaySkills]);
 
   const totalUseCount = useMemo(() => {
     return displaySkills.reduce((sum, s) => {
-      const useCount = 'useCount' in s ? s.useCount : 0;
-      return sum + useCount;
+      const useCount = ('useCount' in s ? s.useCount : s.stats.use_count) || 0;
+      return sum + (useCount as number);
     }, 0);
   }, [displaySkills]);
   
@@ -176,7 +175,7 @@ export default function CategoryContent({ params }: { params: Promise<{ category
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 md:gap-6">
             {sortedSkills.map((skill, index) => (
               <SkillCard key={skill.id} skill={skill} index={index} />
             ))}

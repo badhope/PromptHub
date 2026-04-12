@@ -54,6 +54,7 @@ export default function CustomSkillsPage() {
   const [newSkill, setNewSkill] = useState({ name: '', description: '', category: '' });
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- 客户端水合检测
     setMounted(true);
   }, []);
 

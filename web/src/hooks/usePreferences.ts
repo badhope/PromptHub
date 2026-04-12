@@ -43,14 +43,14 @@ function getInitialPreferences(): UserPreferences {
     return DEFAULT_PREFERENCES;
   }
   
-  const stored = localStorage.getItem(PREFERENCES_KEY);
-  if (stored) {
-    try {
+  try {
+    const stored = localStorage.getItem(PREFERENCES_KEY);
+    if (stored) {
       const parsed = JSON.parse(stored);
       return { ...DEFAULT_PREFERENCES, ...parsed };
-    } catch {
-      return DEFAULT_PREFERENCES;
     }
+  } catch (error) {
+    console.warn('Failed to parse preferences from localStorage:', error);
   }
   return DEFAULT_PREFERENCES;
 }
@@ -71,7 +71,11 @@ export function usePreferences() {
   ) => {
     setPreferences(prev => {
       const newPrefs = { ...prev, [key]: value };
-      localStorage.setItem(PREFERENCES_KEY, JSON.stringify(newPrefs));
+      try {
+        localStorage.setItem(PREFERENCES_KEY, JSON.stringify(newPrefs));
+      } catch (error) {
+        console.warn('Failed to save preferences to localStorage:', error);
+      }
       return newPrefs;
     });
   }, []);
