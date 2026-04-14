@@ -26,7 +26,7 @@ const CATEGORY_COLORS: Record<string, string> = {
   game: 'from-red-500 to-rose-600',
 };
 
-const TouchButton = ({ children, onClick, className = '' }: any) => (
+const TouchButton = ({ children, onClick, className = '' }: { children: React.ReactNode; onClick?: (e: React.MouseEvent) => void; className?: string }) => (
   <motion.button
     whileTap={{ scale: 0.85 }}
     transition={{ type: 'spring', stiffness: 500, damping: 30 }}
@@ -197,8 +197,8 @@ export default function UnifiedSkillCard({ skill, viewMode, isFavorite, onToggle
           className="absolute inset-0 bg-gradient-to-br from-white/0 via-indigo-50/30 to-purple-50/30 dark:via-indigo-500/5 dark:to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
         />
 
-        <div className="relative p-5">
-          <div className="absolute top-4 right-4 z-10">
+        <div className="relative p-4 sm:p-5">
+          <div className="absolute top-3 right-3 sm:top-4 sm:right-4 z-10">
             <div className="flex items-center gap-2">
               <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}

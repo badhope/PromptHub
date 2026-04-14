@@ -1,6 +1,0 @@
-User-Agent: *
-Allow: /
-Disallow: /api/
-Disallow: /_next/
-
-Sitemap: https://badhope.github.io/mobile-skills/sitemap.xml

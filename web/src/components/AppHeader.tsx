@@ -15,7 +15,8 @@ const AppHeader = () => {
   const { preferences, isLoaded, updatePreference } = usePreferences();
 
   useEffect(() => {
-    setMounted(true);
+    const timer = setTimeout(() => setMounted(true), 1);
+    return () => clearTimeout(timer);
   }, []);
 
   const currentTheme = useMemo(() => {
@@ -136,12 +137,14 @@ const AppHeader = () => {
               whileTap={{ scale: 0.95 }}
               onClick={cycleTheme}
               className="flex items-center gap-2 px-3 py-2 rounded-xl bg-gray-50 dark:bg-gray-800/80 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-              title={`当前主题: ${currentTheme}`}
+              title={mounted ? `当前主题: ${currentTheme}` : '主题切换'}
             >
               {mounted && getThemeIcon()}
-              <span className="hidden sm:inline text-sm font-medium text-gray-600 dark:text-gray-300">
-                {currentTheme === 'light' ? '浅色' : currentTheme === 'dark' ? '深色' : '跟随'}
-              </span>
+              {mounted && (
+                <span className="hidden sm:inline text-sm font-medium text-gray-600 dark:text-gray-300">
+                  {currentTheme === 'light' ? '浅色' : currentTheme === 'dark' ? '深色' : '跟随'}
+                </span>
+              )}
             </motion.button>
           </div>
         </div>

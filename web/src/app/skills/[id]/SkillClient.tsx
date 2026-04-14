@@ -3,7 +3,7 @@
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { ArrowLeft, Copy, Check, Heart, MessageCircle, Share2, RefreshCw, Home, Info } from 'lucide-react';
+import { Copy, Check, Heart, MessageCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import ReactMarkdown from 'react-markdown';
 import { showCopyToast, showFavoriteToast } from '@/components/ToastProvider';
@@ -16,7 +16,7 @@ import { getSkillCategory, getSkillDescription, getSkillTags, getSkillSystemProm
 import { useFavorites } from '@/hooks/useFavorites';
 import { useHapticFeedback } from '@/hooks/useGestures';
 
-const TouchButton = ({ children, onClick, className = '', disabled = false }: any) => (
+const TouchButton = ({ children, onClick, className = '', disabled = false }: { children: React.ReactNode; onClick?: () => void; className?: string; disabled?: boolean }) => (
   <motion.button
     whileTap={{ scale: disabled ? 1 : 0.97 }}
     transition={{ duration: 0.1 }}
@@ -30,10 +30,10 @@ const TouchButton = ({ children, onClick, className = '', disabled = false }: an
 
 export default function SkillClient() {
   const params = useParams();
-  const { status, data: rawSkill, error } = useSkill(params.id as string);
+  const { status, data: rawSkill } = useSkill(params.id as string);
   const [showChat, setShowChat] = useState(false);
   const [copied, setCopied] = useState(false);
-  const { favorites, toggleFavorite, isFavorite } = useFavorites();
+  const { toggleFavorite, isFavorite } = useFavorites();
   const { success, selection } = useHapticFeedback();
 
   const skill = useMemo(() => {
@@ -49,7 +49,8 @@ export default function SkillClient() {
       systemPrompt: getSkillSystemPrompt(rawSkill),
       useCount: getSkillUseCount(rawSkill),
       source: rawSkill.source,
-      rawUrl: (rawSkill as any).content?.raw_url
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      rawUrl: ((rawSkill as any)?.content)?.raw_url as string | undefined
     };
   }, [rawSkill]);
 

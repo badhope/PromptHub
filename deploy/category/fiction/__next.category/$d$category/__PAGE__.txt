@@ -1,7 +1,0 @@
-1:"$Sreact.fragment"
-2:I[89147,["/_next/static/chunks/13whm3o~r9gdg.js","/_next/static/chunks/15c-lqwq80xgz.js","/_next/static/chunks/0yc44iq.yebyc.js","/_next/static/chunks/0uo.28ht3ebce.js"],"default"]
-4:I[51858,["/_next/static/chunks/13whm3o~r9gdg.js","/_next/static/chunks/15c-lqwq80xgz.js"],"OutletBoundary"]
-5:"$Sreact.suspense"
-0:{"rsc":["$","$1","c",{"children":[["$","$L2",null,{"params":"$@3"}],[["$","script","script-0",{"src":"/_next/static/chunks/0yc44iq.yebyc.js","async":true}],["$","script","script-1",{"src":"/_next/static/chunks/0uo.28ht3ebce.js","async":true}]],["$","$L4",null,{"children":["$","$5",null,{"name":"Next.MetadataOutlet","children":"$@6"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"e8MbrTlar5VM1hZz8dU9h"}
-3:{"category":"fiction"}
-6:null

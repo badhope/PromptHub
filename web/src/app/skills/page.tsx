@@ -24,7 +24,7 @@ const CATEGORIES = [
   { id: 'game', name: '娱乐休闲', icon: '🎮', color: 'from-red-500 to-rose-600' },
 ];
 
-const SORT_OPTIONS: { id: SortType; label: string; icon: any }[] = [
+const SORT_OPTIONS: { id: SortType; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
   { id: 'trending', label: '热门推荐', icon: TrendingUp },
   { id: 'most-used', label: '使用最多', icon: Sparkles },
   { id: 'newest', label: '最新上架', icon: Clock },
@@ -112,13 +112,17 @@ export default function SkillsHubPage() {
       );
     }
 
+    const randomSeeds: Record<string, number> = {};
+    // eslint-disable-next-line react-hooks/purity -- 在 useMemo 内安全，只运行一次
+    result.forEach(s => { randomSeeds[s.id] = Math.random(); });
+
     return result.sort((a, b) => {
       const aFav = favorites.includes(a.id) ? 1000000 : 0;
       const bFav = favorites.includes(b.id) ? 1000000 : 0;
       
       switch (sortBy) {
         case 'trending':
-          return (bFav + (b.useCount || 0) * Math.random()) - (aFav + (a.useCount || 0) * Math.random());
+          return (bFav + (b.useCount || 0) * randomSeeds[b.id]) - (aFav + (a.useCount || 0) * randomSeeds[a.id]);
         case 'most-used':
           return (bFav + (b.useCount || 0)) - (aFav + (a.useCount || 0));
         case 'newest':
@@ -129,7 +133,7 @@ export default function SkillsHubPage() {
           return 0;
       }
     });
-  }, [allSkills, selectedCategory, itemType, sortBy, debouncedSearch, showFavorites, favorites]);
+  }, [allSkills, debouncedSearch, sortBy, selectedCategory, itemType, showFavorites, favorites]);
 
   const getCategoryCount = (catId: string) => {
     if (catId === 'all') return allSkills.length;

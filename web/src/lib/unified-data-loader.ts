@@ -12,22 +12,16 @@ export interface UnifiedSkillsData {
 let globalSkillsData: any = null;
 let globalToolsData: any = null;
 
-try {
-  if (typeof window === 'undefined') {
-    globalSkillsData = require('@/../public/skills-data.json');
-    console.log('✅ skills-data.json 预加载成功，共', globalSkillsData.skills?.length || 0, '个技能');
+declare global {
+  interface Window {
+    __PRELOADED_SKILLS__: any;
+    __PRELOADED_TOOLS__: any;
   }
-} catch (e) {
-  console.warn('⚠️ skills-data.json 预加载失败，将使用 fetch:', e);
 }
 
-try {
-  if (typeof window === 'undefined') {
-    globalToolsData = require('@/../public/ai-tools.json');
-    console.log('✅ ai-tools.json 预加载成功，共', globalToolsData.tools?.length || 0, '个工具');
-  }
-} catch (e) {
-  console.warn('⚠️ ai-tools.json 预加载失败，将使用 fetch:', e);
+if (typeof window !== 'undefined') {
+  globalSkillsData = window.__PRELOADED_SKILLS__ || null;
+  globalToolsData = window.__PRELOADED_TOOLS__ || null;
 }
 
 function generateFiveLayerSystemPrompt(name: string, description: string, scenarios: string[] = []): string {
@@ -195,9 +189,24 @@ let injectedCount = 0;
 function buildUnifiedData(): UnifiedSkillsData {
   const skillsData = globalSkillsData || { skills: [] };
   const toolsData = globalToolsData || { tools: [] };
+  const usedIds = new Set<string>();
+
+  function generateUniqueId(name: string, index: number, prefix: string = 'skill'): string {
+    const baseId = name?.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '') || `${prefix}-${index}`;
+    if (!usedIds.has(baseId)) {
+      usedIds.add(baseId);
+      return baseId;
+    }
+    let counter = 2;
+    while (usedIds.has(`${baseId}-${counter}`)) {
+      counter++;
+    }
+    usedIds.add(`${baseId}-${counter}`);
+    return `${baseId}-${counter}`;
+  }
 
   const enhancedSkills: Skill[] = [
-    ...skillsData.skills?.map((s: any) => {
+    ...skillsData.skills?.map((s: any, index: number) => {
       const needsInjection = !s.systemPrompt || s.systemPrompt.length < 200;
       
       if (needsInjection) {
@@ -206,7 +215,7 @@ function buildUnifiedData(): UnifiedSkillsData {
       
       return {
         ...s,
-        id: s.id || s.name?.toLowerCase().replace(/\s+/g, '-'),
+        id: generateUniqueId(s.name || `anonymous-skill`, index, 'skill'),
         source: 'skill' as const,
         systemPrompt: needsInjection 
           ? generateFiveLayerSystemPrompt(s.name, s.description, s.scenarios)
@@ -215,16 +224,16 @@ function buildUnifiedData(): UnifiedSkillsData {
           ? generateCompleteGuide(s.name, s.description)
           : s.guide || generateCompleteGuide(s.name, s.description),
         category: s.category || 'professional',
-        useCount: s.useCount || Math.floor(Math.random() * 5000) + 100,
+        useCount: s.useCount || 1000 + index * 10,
         isFavorite: false,
       };
     }) || [],
-    ...toolsData.tools?.map((t: any) => ({
+    ...toolsData.tools?.map((t: any, index: number) => ({
       ...t,
-      id: t.id || t.name?.toLowerCase().replace(/\s+/g, '-'),
+      id: generateUniqueId(t.name || `anonymous-tool`, skillsData.skills?.length + index, 'tool'),
       source: 'tool' as const,
       category: t.category || 'professional',
-      useCount: t.useCount || Math.floor(Math.random() * 5000) + 100,
+      useCount: t.useCount || 1000 + (skillsData.skills?.length + index) * 10,
       isFavorite: false,
     })) || [],
   ];
@@ -251,11 +260,6 @@ function buildUnifiedData(): UnifiedSkillsData {
 
 let globalUnifiedData: UnifiedSkillsData | null = null;
 
-if (typeof window === 'undefined') {
-  globalUnifiedData = buildUnifiedData();
-  console.log('✅ 服务端数据构建完成，共', globalUnifiedData?.totalCount || 0, '个技能/工具');
-}
-
 export async function loadUnifiedSkillsData(): Promise<UnifiedSkillsData> {
   if (globalUnifiedData) {
     return globalUnifiedData;
@@ -266,6 +270,8 @@ export async function loadUnifiedSkillsData(): Promise<UnifiedSkillsData> {
       fetch('/skills-data.json').then(r => r.json()),
       fetch('/ai-tools.json').then(r => r.json()),
     ]);
+    globalSkillsData = skillsRes;
+    globalToolsData = toolsRes;
 
     globalSkillsData = skillsRes;
     globalToolsData = toolsRes;

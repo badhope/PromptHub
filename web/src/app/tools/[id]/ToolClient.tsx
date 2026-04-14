@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { ArrowLeft, Copy, Check, Heart, MessageCircle, AlertTriangle } from 'lucide-react';
+import { ArrowLeft, Copy, Check, Heart, MessageCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import ReactMarkdown from 'react-markdown';
 import { showCopyToast, showFavoriteToast } from '@/components/ToastProvider';
@@ -53,7 +53,8 @@ export default function ToolClient() {
         scenarios: getSkillTags(found),
         systemPrompt: getSkillSystemPrompt(found),
         useCount: getSkillUseCount(found),
-        rawUrl: (found as any).content?.raw_url
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        rawUrl: ((found as any)?.content)?.raw_url as string | undefined
       });
     } else {
       console.error('❌ ToolClient 同步查找失败，重试:', params.id);
@@ -71,11 +72,16 @@ export default function ToolClient() {
           scenarios: getSkillTags(retry),
           systemPrompt: getSkillSystemPrompt(retry),
           useCount: getSkillUseCount(retry),
-          rawUrl: (retry as any).content?.raw_url
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          rawUrl: ((retry as any)?.content)?.raw_url as string | undefined
         });
       }
     }
   }, [params.id]);
+
+  const favStatus = useMemo(() => {
+    return isFavorite(params.id as string);
+  }, [isFavorite, params.id]);
 
   if (!mounted || !skill) {
     return (
@@ -110,10 +116,6 @@ export default function ToolClient() {
     setShowChat(true);
     success();
   };
-
-  const favStatus = useMemo(() => {
-    return isFavorite(params.id as string);
-  }, [isFavorite, params.id]);
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
