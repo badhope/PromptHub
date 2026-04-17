@@ -7,6 +7,7 @@ import BackToTop from "@/components/BackToTop";
 import FloatingAd from "@/components/FloatingAd";
 import MobileBottomNav from "@/components/MobileBottomNav";
 import ActivityBarrage from "@/components/ActivityBarrage";
+import SEOStructuredData from "@/components/SEOStructuredData";
 import { I18nProvider } from "@/components/I18nProvider";
 import ToastProvider from "@/components/ToastProvider";
 import { APP_CONFIG } from "@/lib/constants";
@@ -77,6 +78,7 @@ export default function RootLayout({
         <link rel="manifest" href="/manifest.json" />
       </head>
       <body className="min-h-full flex flex-col bg-gray-50 dark:bg-gray-900 transition-colors duration-300 font-sans">
+        <SEOStructuredData />
         <I18nProvider>
           <ToastProvider>
             <AppHeader />

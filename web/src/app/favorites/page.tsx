@@ -5,8 +5,7 @@ import Link from 'next/link';
 import SimpleSkillCard from '@/components/SimpleSkillCard';
 import AIToolCard from '@/components/AIToolCard';
 import Breadcrumb from '@/components/Breadcrumb';
-import type { SkillsData } from '@/types/skill';
-import skillsData from '@/../skills-data.json';
+import { useSkills } from '@/hooks/useSkills';
 
 interface AITool {
   id: string;
@@ -37,11 +36,18 @@ function getInitialFavoriteIds(key: string): string[] {
 }
 
 export default function FavoritesPage() {
-  const { skills = [] } = skillsData as SkillsData;
+  const { data: skills, status } = useSkills();
   const [activeTab, setActiveTab] = useState<TabType>('skills');
-  const [skillFavoriteIds, setSkillFavoriteIds] = useState<string[]>(() => getInitialFavoriteIds('favorite-skills'));
-  const [toolFavoriteIds, setToolFavoriteIds] = useState<string[]>(() => getInitialFavoriteIds('ai-tools-favorites'));
+  const [skillFavoriteIds, setSkillFavoriteIds] = useState<string[]>([]);
+  const [toolFavoriteIds, setToolFavoriteIds] = useState<string[]>([]);
   const [aiTools, setAiTools] = useState<{ tools: AITool[] }>({ tools: [] });
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    setSkillFavoriteIds(getInitialFavoriteIds('favorite-skills'));
+    setToolFavoriteIds(getInitialFavoriteIds('ai-tools-favorites'));
+  }, []);
 
   useEffect(() => {
     fetch('/ai-tools.json')

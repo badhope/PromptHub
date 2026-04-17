@@ -5,14 +5,14 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import SkillCard from '@/components/SkillCard';
 import { MULTI_LEVEL_CATEGORY_SYSTEM, getSubcategorySkills, getCategorySkills } from '@/lib/category-system';
-import type { SkillsSummaryData } from '@/types/skill';
-import skillsSummaryData from '@/skills-summary.json';
+import { useSkills } from '@/hooks/useSkills';
 
 export default function CategoryContent({ params }: { params: Promise<{ category: string }> }) {
   const { category } = use(params);
   const searchParams = useSearchParams();
   const subcategoryParam = searchParams.get('sub');
-  const { summaries } = skillsSummaryData as SkillsSummaryData;
+  const { data: skills, status } = useSkills();
+  const summaries = skills || [];
   
   const categoryInfo = MULTI_LEVEL_CATEGORY_SYSTEM[category];
   const allCategorySkills = useMemo(() => 

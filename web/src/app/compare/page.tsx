@@ -3,8 +3,8 @@
 import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import Breadcrumb from '@/components/Breadcrumb';
-import type { SkillsData, Skill } from '@/types/skill';
-import skillsData from '@/../skills-data.json';
+import type { Skill } from '@/types/skill';
+import { useSkills } from '@/hooks/useSkills';
 import { getCategoryIcon, getCategoryName } from '@/lib/categories';
 
 const MAX_COMPARE = 4;
@@ -56,8 +56,14 @@ function getInitialCompareIds(): string[] {
 }
 
 export default function ComparePage() {
-  const { skills = [] } = skillsData as SkillsData;
-  const [selectedIds, setSelectedIds] = useState<string[]>(() => getInitialCompareIds());
+  const { data: skills, status } = useSkills();
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    setSelectedIds(getInitialCompareIds());
+  }, []);
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<string>('');
 
