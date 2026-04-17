@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { Edit, Eye, Save, RotateCcw, Clock, Copy, Check, History, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Edit, Eye, Save, RotateCcw, Clock, Copy, Check, History } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { motion, AnimatePresence } from 'framer-motion';
 import { showCopyToast, showToast } from '@/components/ToastProvider';
@@ -24,15 +24,13 @@ interface PromptEditorProps {
 export default function PromptEditor({ initialContent, skillName, onSave }: PromptEditorProps) {
   const [mode, setMode] = useState<'edit' | 'preview' | 'split'>('split');
   const [content, setContent] = useState(initialContent);
-  const [versions, setVersions] = useState<Version[]>([
-    {
-      id: 1,
-      content: initialContent,
-      timestamp: Date.now() - 86400000,
-      author: 'System',
-      message: '初始版本'
-    }
-  ]);
+  const [versions, setVersions] = useState<Version[]>(() => [{
+    id: 1,
+    content: initialContent,
+    timestamp: typeof window !== 'undefined' ? Date.now() - 86400000 : 0,
+    author: 'System',
+    message: '初始版本'
+  }]);
   const [showHistory, setShowHistory] = useState(false);
   const [historyIndex, setHistoryIndex] = useState(0);
   const [copied, setCopied] = useState(false);

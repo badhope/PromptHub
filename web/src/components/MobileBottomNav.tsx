@@ -24,15 +24,22 @@ export default function MobileBottomNav() {
   const pathname = usePathname();
   const router = useRouter();
   const { success, selection } = useHapticFeedback();
-  const [mounted, setMounted] = useState(false);
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [mounted] = useState(typeof window !== 'undefined');
+  const [activeIndex, setActiveIndex] = useState(() => {
+    if (typeof window === 'undefined') return 0;
+    const currentIndex = NAV_ITEMS.findIndex(item => 
+      item.href === '/' ? pathname === '/' : pathname.startsWith(item.href)
+    );
+    return currentIndex >= 0 ? currentIndex : 0;
+  });
 
   useEffect(() => {
-    setMounted(true);
     const currentIndex = NAV_ITEMS.findIndex(item => 
       item.href === '/' ? pathname === '/' : pathname.startsWith(item.href)
     );
     setActiveIndex(currentIndex >= 0 ? currentIndex : 0);
+    // eslint-disable-next-line react-compiler/react-compiler
+    // 这是合法的：响应外部系统（路由）变化更新状态
   }, [pathname]);
 
   const handleNavClick = useCallback((index: number) => {

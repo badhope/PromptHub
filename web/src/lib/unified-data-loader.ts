@@ -1,4 +1,11 @@
-import type { Skill } from '@/types/skill';
+import type { Skill, SkillsData } from '@/types/skill';
+import { validateSkill } from './validation';
+import { runDataHealthCheck } from './data-health-check';
+
+export interface AiToolsData {
+  tools: Skill[];
+  version?: string;
+}
 
 export interface UnifiedSkillsData {
   skills: Skill[];
@@ -9,13 +16,13 @@ export interface UnifiedSkillsData {
   version: string;
 }
 
-let globalSkillsData: any = null;
-let globalToolsData: any = null;
+let globalSkillsData: SkillsData | null = null;
+let globalToolsData: AiToolsData | null = null;
 
 declare global {
   interface Window {
-    __PRELOADED_SKILLS__: any;
-    __PRELOADED_TOOLS__: any;
+    __PRELOADED_SKILLS__: SkillsData | undefined;
+    __PRELOADED_TOOLS__: AiToolsData | undefined;
   }
 }
 
@@ -205,31 +212,36 @@ function buildUnifiedData(): UnifiedSkillsData {
     return `${baseId}-${counter}`;
   }
 
-  const enhancedSkills: Skill[] = [
-    ...skillsData.skills?.map((s: any, index: number) => {
+  const enhancedSkills = [
+    ...skillsData.skills?.map((s: Partial<Skill>, index: number) => {
       const needsInjection = !s.systemPrompt || s.systemPrompt.length < 200;
       
       if (needsInjection) {
         injectedCount++;
       }
       
+      const skillName = s.name || `Skill ${index + 1}`;
+      const desc = s.description || '';
+      const scenarios = s.scenarios || [];
       return {
         ...s,
-        id: generateUniqueId(s.name || `anonymous-skill`, index, 'skill'),
+        name: skillName,
+        id: generateUniqueId(skillName, index, 'skill'),
         source: 'skill' as const,
         systemPrompt: needsInjection 
-          ? generateFiveLayerSystemPrompt(s.name, s.description, s.scenarios)
+          ? generateFiveLayerSystemPrompt(skillName, desc, scenarios)
           : s.systemPrompt,
         guide: needsInjection
-          ? generateCompleteGuide(s.name, s.description)
-          : s.guide || generateCompleteGuide(s.name, s.description),
+          ? generateCompleteGuide(skillName, desc)
+          : s.guide || generateCompleteGuide(skillName, desc),
         category: s.category || 'professional',
         useCount: s.useCount || 1000 + index * 10,
         isFavorite: false,
       };
     }) || [],
-    ...toolsData.tools?.map((t: any, index: number) => ({
+    ...toolsData.tools?.map((t: Partial<Skill>, index: number) => ({
       ...t,
+      name: t.name || `Tool ${index + 1}`,
       id: generateUniqueId(t.name || `anonymous-tool`, skillsData.skills?.length + index, 'tool'),
       source: 'tool' as const,
       category: t.category || 'professional',
@@ -245,17 +257,23 @@ function buildUnifiedData(): UnifiedSkillsData {
   const categories = Array.from(new Set(enhancedSkills.map(s => s.category || 'professional'))).filter(Boolean) as string[];
   const categoriesMap: Record<string, Skill[]> = {};
   categories.forEach(cat => {
-    categoriesMap[cat] = enhancedSkills.filter(s => (s.category || 'professional') === cat);
+    categoriesMap[cat] = enhancedSkills.filter(s => (s.category || 'professional') === cat) as Skill[];
   });
 
-  return {
-    skills: enhancedSkills,
+  const result: UnifiedSkillsData = {
+    skills: enhancedSkills as Skill[],
     categories,
     categoriesMap,
     skillsByCategory: categoriesMap,
     totalCount: enhancedSkills.length,
     version: '2.0.0-unified-five-layer'
   };
+
+  if (process.env.NODE_ENV === 'development') {
+    runDataHealthCheck(result.skills);
+  }
+
+  return result;
 }
 
 let globalUnifiedData: UnifiedSkillsData | null = null;
@@ -273,8 +291,12 @@ export async function loadUnifiedSkillsData(): Promise<UnifiedSkillsData> {
     globalSkillsData = skillsRes;
     globalToolsData = toolsRes;
 
-    globalSkillsData = skillsRes;
-    globalToolsData = toolsRes;
+    if (globalSkillsData?.skills) {
+      globalSkillsData.skills.forEach((skill: Skill) => {
+        validateSkill(skill);
+      });
+    }
+
     globalUnifiedData = buildUnifiedData();
     
     console.log('✅ 浏览器端数据加载完成，共', globalUnifiedData.totalCount, '个技能/工具');

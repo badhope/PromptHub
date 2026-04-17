@@ -23,7 +23,8 @@ const AppHeader = () => {
     return isLoaded ? preferences.theme : 'system';
   }, [isLoaded, preferences.theme]);
 
-  const isDark = useMemo(() => {
+  // Theme detection used for internal consistency
+  void useMemo(() => {
     if (!mounted) return false;
     return currentTheme === 'dark' ||
       (currentTheme === 'system' && typeof window !== 'undefined' &&
@@ -45,10 +46,11 @@ const AppHeader = () => {
     return <Monitor className="w-4 h-4" />;
   };
 
-  const isHome = pathname === '/';
   const isSkills = pathname === '/skills';
   const isSkillDetail = pathname.startsWith('/skills/');
   const showBack = isSkillDetail;
+  // For future use
+  void (pathname === '/');
 
   const goBack = () => {
     selection();

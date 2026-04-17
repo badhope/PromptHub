@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useSyncExternalStore } from 'react';
 import type { Skill } from '@/types/skill';
-import { getSkillsSync, getSkillByIdSync, invalidateAllData, loadUnifiedSkillsData } from '@/lib/unified-data-loader';
+import { getSkillByIdSync, invalidateAllData, loadUnifiedSkillsData } from '@/lib/unified-data-loader';
 
 type DataStatus = 'idle' | 'loading' | 'success' | 'error';
 

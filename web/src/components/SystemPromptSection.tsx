@@ -12,7 +12,13 @@ interface SystemPromptSectionProps {
   copied: boolean;
 }
 
-const TouchButton = ({ children, onClick, className = '' }: any) => (
+interface TouchButtonProps {
+  children: React.ReactNode;
+  onClick: (e: React.MouseEvent) => void;
+  className?: string;
+}
+
+const TouchButton = ({ children, onClick, className = '' }: TouchButtonProps) => (
   <motion.button
     whileTap={{ scale: 0.95 }}
     transition={{ type: 'spring', stiffness: 500, damping: 30 }}

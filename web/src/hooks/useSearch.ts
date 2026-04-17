@@ -177,7 +177,7 @@ export function useSearch(skills: Skill[], options: UseSearchOptions = {}) {
       });
       searchResults = directResults.map(item => ({ item }));
     } else {
-      searchResults = fuse.search(trimmedQuery) as unknown as any;
+      searchResults = fuse.search(trimmedQuery) as unknown as { item: Skill }[];
     }
 
     if (keywords.length > 1) {

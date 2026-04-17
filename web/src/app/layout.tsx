@@ -10,6 +10,7 @@ import ActivityBarrage from "@/components/ActivityBarrage";
 import SEOStructuredData from "@/components/SEOStructuredData";
 import { I18nProvider } from "@/components/I18nProvider";
 import ToastProvider from "@/components/ToastProvider";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { APP_CONFIG } from "@/lib/constants";
 
 export const viewport: Viewport = {
@@ -81,13 +82,15 @@ export default function RootLayout({
         <SEOStructuredData />
         <I18nProvider>
           <ToastProvider>
-            <AppHeader />
-            <main className="flex-1 pb-20 sm:pb-0">{children}</main>
-            <Footer />
-            <BackToTop />
-            <FloatingAd />
-            <MobileBottomNav />
-            <ActivityBarrage />
+            <ErrorBoundary componentName="App">
+              <AppHeader />
+              <main className="flex-1 pb-20 sm:pb-0">{children}</main>
+              <Footer />
+              <BackToTop />
+              <FloatingAd />
+              <MobileBottomNav />
+              <ActivityBarrage />
+            </ErrorBoundary>
           </ToastProvider>
         </I18nProvider>
       </body>

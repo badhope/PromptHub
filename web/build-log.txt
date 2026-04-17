@@ -1,0 +1,76 @@
+
+> mobile-skills-web@2.0.0 build
+> next build
+
+鈻?Next.js 16.2.2 (Turbopack)
+- Experiments (use with caution):
+  路 optimizePackageImports
+
+  Creating an optimized production build ...
+Turbopack build encountered 1 warnings:
+./next.config.ts
+Encountered unexpected file in NFT list
+A file was traced that indicates that the whole project was traced unintentionally. Somewhere in the import trace below, there are:
+- filesystem operations (like path.join, path.resolve or fs.readFile), or
+- very dynamic requires (like require('./' + foo)).
+To resolve this, you can
+- remove them if possible, or
+- only use them in development, or
+- make sure they are statically scoped to some subfolder: path.join(process.cwd(), 'data', bar), or
+- add ignore comments: path.join(/*turbopackIgnore: true*/ process.cwd(), bar)
+
+Import trace:
+  App Route:
+    ./next.config.ts
+    ./src/lib/skills-data-server.ts
+    ./src/app/sitemap.ts
+    ./src/app/sitemap--route-entry.js
+
+
+鉁?Compiled successfully in 57s
+  Running TypeScript ...
+  Finished TypeScript in 2.6min ...
+  Collecting page data using 15 workers ...
+  Generating static pages using 15 workers (0/373) ...
+  Generating static pages using 15 workers (93/373) 
+  Generating static pages using 15 workers (186/373) 
+  Generating static pages using 15 workers (279/373) 
+鉁?Generating static pages using 15 workers (373/373) in 11.9s
+  Finalizing page optimization ...
+
+Route (app)
+鈹?鈼?/
+鈹?鈼?/_not-found
+鈹?鈼?/about
+鈹?鈼?/ai-tools
+鈹?鈼?/categories
+鈹?鈼?/category/[category]
+鈹?鈹?/category/life
+鈹?鈹?/category/programming
+鈹?鈹?/category/creation
+鈹?鈹?[+17 more paths]
+鈹?鈼?/compare
+鈹?鈼?/custom
+鈹?鈼?/favorites
+鈹?鈼?/guide
+鈹?鈼?/models
+鈹?鈼?/robots.txt
+鈹?鈼?/search
+鈹?鈼?/settings
+鈹?鈼?/sitemap.xml
+鈹?鈼?/skills
+鈹?鈼?/skills/[id]
+鈹?鈹?/skills/omega-protocol
+鈹?鈹?/skills/cooking-coach
+鈹?鈹?/skills/architecture-designer
+鈹?鈹?[+165 more paths]
+鈹?鈼?/tools/[id]
+  鈹?/tools/omega-protocol
+  鈹?/tools/cooking-coach
+  鈹?/tools/architecture-designer
+  鈹?[+165 more paths]
+
+
+鈼? (Static)  prerendered as static content
+鈼? (SSG)     prerendered as static HTML (uses generateStaticParams)
+

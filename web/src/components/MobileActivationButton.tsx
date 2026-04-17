@@ -34,11 +34,7 @@ export default function MobileActivationButton({
 }: MobileActivationButtonProps) {
   const [copied, setCopied] = useState(false);
   const [, copy] = useCopyToClipboard();
-  const [isMobileDevice, setIsMobileDevice] = useState(false);
-
-  useEffect(() => {
-    setIsMobileDevice(isMobile());
-  }, []);
+  const [isMobileDevice] = useState(() => isMobile());
 
   const handleCopy = async (e: React.MouseEvent) => {
     e.preventDefault();

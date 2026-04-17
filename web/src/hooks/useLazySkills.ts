@@ -1,15 +1,9 @@
 'use client';
 
-import { useState, useEffect, useMemo, useRef } from 'react';
+import { useState, useEffect, useMemo, useRef, useTransition } from 'react';
 import type { Skill, SkillSummary } from '@/types/skill';
-import { searchCache, skillSearchCache } from '@/lib/cache-manager';
-import {
-  sortSkills,
-  filterSkillsByCategory,
-  searchSkills,
-  calculateSkillStats,
-  type SortBy
-} from '@/lib/skill-utils';
+import { skillSearchCache } from '@/lib/cache-manager';
+
 import { loadUnifiedSkillsData, getSkillByIdSync } from '@/lib/unified-data-loader';
 
 let fullSkillsData: Skill[] | null = null;
@@ -32,34 +26,40 @@ async function loadFullSkillsData(): Promise<Skill[]> {
   return loadingPromise;
 }
 
+function getInitialCachedData() {
+  if (typeof window === 'undefined') return { skills: [], isLoading: true, hasLoaded: false };
+  const cached = skillSearchCache.get('all_skills');
+  if (cached) {
+    return { skills: cached, isLoading: false, hasLoaded: true };
+  }
+  return { skills: [], isLoading: true, hasLoaded: false };
+}
+
 export function useLazySkills() {
-  const [allSkills, setAllSkills] = useState<Skill[]>([]);
-  const [summaries, setSummaries] = useState<SkillSummary[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [hasLoaded, setHasLoaded] = useState(false);
+  const initialData = useMemo(() => getInitialCachedData(), []);
+  const [allSkills, setAllSkills] = useState<Skill[]>(initialData.skills);
+  const [summaries, setSummaries] = useState<SkillSummary[]>(initialData.skills);
+  const [isLoading, setIsLoading] = useState(initialData.isLoading);
+  const [hasLoaded, setHasLoaded] = useState(initialData.hasLoaded);
+  const [, startTransition] = useTransition();
   const initialized = useRef(false);
 
   useEffect(() => {
     if (initialized.current) return;
     initialized.current = true;
 
-    const cached = skillSearchCache.get('all_skills');
-    if (cached) {
-      setAllSkills(cached);
-      setSummaries(cached);
-      setIsLoading(false);
-      setHasLoaded(true);
-      return;
-    }
+    if (initialData.hasLoaded) return;
 
     loadFullSkillsData().then((skills) => {
-      setAllSkills(skills);
-      setSummaries(skills);
-      skillSearchCache.set('all_skills', skills);
-      setIsLoading(false);
-      setHasLoaded(true);
+      startTransition(() => {
+        setAllSkills(skills);
+        setSummaries(skills);
+        skillSearchCache.set('all_skills', skills);
+        setIsLoading(false);
+        setHasLoaded(true);
+      });
     });
-  }, []);
+  }, [initialData.hasLoaded, startTransition]);
 
   const loadSkillById = useMemo(() => {
     return (id: string) => getSkillByIdSync(id);

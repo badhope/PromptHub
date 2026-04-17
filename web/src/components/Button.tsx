@@ -63,7 +63,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         onClick={handleClick}
         disabled={disabled || loading}
         className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${width} ${className}`}
-        {...(props as any)}
+        {...(props as object)}
       >
         {loading && (
           <div className="absolute inset-0 flex items-center justify-center bg-current/10">

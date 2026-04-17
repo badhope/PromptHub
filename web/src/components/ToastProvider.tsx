@@ -1,10 +1,10 @@
 'use client';
 
 import { Toaster, toast as hotToast } from 'react-hot-toast';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { 
   CheckCircle, XCircle, Info, AlertTriangle,
-  Copy, Heart, Sparkles, Share2, Settings, X
+  Copy, Heart, Sparkles, X
 } from 'lucide-react';
 import { useHapticFeedback } from '@/hooks/useGestures';
 
@@ -44,12 +44,15 @@ const iconComponents = {
   custom: <Sparkles size={18} />
 };
 
+interface ToastContentProps {
+  id: string;
+  visible: boolean;
+}
+
 function ToastContent({ 
-  t, 
   options,
   onDismiss 
 }: { 
-  t: any; 
   options: ToastOptions;
   onDismiss: () => void;
 }) {
@@ -127,7 +130,6 @@ export function showToast({ title, message, type = 'info', icon, duration = 3500
   const toastId = hotToast.custom(
     (t) => (
       <ToastContent 
-        t={t} 
         options={{ title, message, type, icon, action }}
         onDismiss={() => hotToast.dismiss(t.id)}
       />

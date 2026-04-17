@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useEffect, useCallback } from 'react';
+import { useRef, useCallback } from 'react';
 
 export function useAccessibleFocus() {
   const containerRef = useRef<HTMLElement>(null);

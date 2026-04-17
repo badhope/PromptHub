@@ -41,29 +41,23 @@ function convertToCompareItem(skill: Skill): CompareItem {
   };
 }
 
-function getInitialCompareIds(): string[] {
-  if (typeof window === 'undefined') return [];
-  const stored = localStorage.getItem('compare-skills');
-  if (stored) {
-    try {
-      return JSON.parse(stored);
-    } catch (e) {
-      console.error('Failed to parse compare skills:', e);
-      return [];
-    }
-  }
-  return [];
+import { getValidatedCompareIds } from '@/lib/validation';
+
+function getInitialState() {
+  if (typeof window === 'undefined') return { selectedIds: [], mounted: false };
+  return {
+    selectedIds: getValidatedCompareIds(),
+    mounted: true
+  };
 }
 
 export default function ComparePage() {
   const { data: skills, status } = useSkills();
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const [mounted, setMounted] = useState(false);
+  const initialState = useMemo(() => getInitialState(), []);
+  const [selectedIds, setSelectedIds] = useState<string[]>(initialState.selectedIds);
+  const [mounted] = useState(initialState.mounted);
 
-  useEffect(() => {
-    setMounted(true);
-    setSelectedIds(getInitialCompareIds());
-  }, []);
+  void status;
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<string>('');
 

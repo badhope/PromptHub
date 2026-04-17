@@ -6,6 +6,8 @@ import SimpleSkillCard from '@/components/SimpleSkillCard';
 import AIToolCard from '@/components/AIToolCard';
 import Breadcrumb from '@/components/Breadcrumb';
 import { useSkills } from '@/hooks/useSkills';
+import { getValidatedFavorites } from '@/lib/validation';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 
 interface AITool {
   id: string;
@@ -21,33 +23,31 @@ interface AITool {
 
 type TabType = 'skills' | 'tools';
 
-function getInitialFavoriteIds(key: string): string[] {
-  if (typeof window === 'undefined') return [];
-  try {
-    const stored = localStorage.getItem(key);
-    if (stored) {
-      const parsed = JSON.parse(stored);
-      return Array.isArray(parsed) ? parsed : [];
-    }
-  } catch (error) {
-    console.warn(`Failed to load favorites for key "${key}":`, error);
+function getInitialFavoritesState() {
+  if (typeof window === 'undefined') {
+    return {
+      skillFavorites: [] as string[],
+      toolFavorites: [] as string[],
+      mounted: false
+    };
   }
-  return [];
+  return {
+    skillFavorites: getValidatedFavorites('favorite-skills'),
+    toolFavorites: getValidatedFavorites('ai-tools-favorites'),
+    mounted: true
+  };
 }
 
 export default function FavoritesPage() {
   const { data: skills, status } = useSkills();
+  const initial = getInitialFavoritesState();
   const [activeTab, setActiveTab] = useState<TabType>('skills');
-  const [skillFavoriteIds, setSkillFavoriteIds] = useState<string[]>([]);
-  const [toolFavoriteIds, setToolFavoriteIds] = useState<string[]>([]);
+  const [skillFavoriteIds, setSkillFavoriteIds] = useState<string[]>(initial.skillFavorites);
+  const [toolFavoriteIds, setToolFavoriteIds] = useState<string[]>(initial.toolFavorites);
   const [aiTools, setAiTools] = useState<{ tools: AITool[] }>({ tools: [] });
-  const [mounted, setMounted] = useState(false);
+  const [mounted] = useState(initial.mounted);
 
-  useEffect(() => {
-    setMounted(true);
-    setSkillFavoriteIds(getInitialFavoriteIds('favorite-skills'));
-    setToolFavoriteIds(getInitialFavoriteIds('ai-tools-favorites'));
-  }, []);
+  void status;
 
   useEffect(() => {
     fetch('/ai-tools.json')

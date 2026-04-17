@@ -4,7 +4,7 @@ import { memo, useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import * as HoverCard from '@radix-ui/react-hover-card';
-import { ChevronRight, Copy, Check, Eye, Heart, MessageCircle } from 'lucide-react';
+import { ChevronRight, Copy, Check, Heart, MessageCircle } from 'lucide-react';
 import { useCopyToClipboard } from 'usehooks-ts';
 import Balancer from 'react-wrap-balancer';
 import { showCopyToast } from './ToastProvider';
@@ -21,7 +21,7 @@ import {
   CATEGORY_I18N_KEYS
 } from '@/lib/categories';
 import { useI18nContext } from '@/components/I18nProvider';
-import { useLongPress, hapticFeedback, useHapticFeedback } from '@/hooks/useGestures';
+import { useLongPress, useHapticFeedback } from '@/hooks/useGestures';
 
 interface SkillCardProps {
   skill: Skill | SkillSummary;

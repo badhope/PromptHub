@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Heart, Copy, Check, Sparkles, Wrench, Layers, ArrowUpRight } from 'lucide-react';
+import { Heart, Copy, Check, Sparkles, Wrench, ArrowUpRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { Skill } from '@/types/skill';
 import { showCopyToast, showFavoriteToast } from '@/components/ToastProvider';
@@ -39,7 +39,6 @@ const TouchButton = ({ children, onClick, className = '' }: { children: React.Re
 
 export default function UnifiedSkillCard({ skill, viewMode, isFavorite, onToggleFavorite, index = 0 }: UnifiedSkillCardProps) {
   const [copied, setCopied] = useState(false);
-  const [isPressed, setIsPressed] = useState(false);
   const { success, selection } = useHapticFeedback();
 
   const isAgent = skill.source === 'skill';

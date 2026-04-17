@@ -387,6 +387,9 @@ export function getSkillUseCount(skill: Skill | SkillSummary): number {
 }
 
 export function getSkillSystemPrompt(skill: Skill | SkillSummary): string {
+  if ('systemPrompt' in skill && skill.systemPrompt) {
+    return skill.systemPrompt;
+  }
   if ('system_prompt' in skill && skill.system_prompt) {
     return skill.system_prompt;
   }
@@ -396,5 +399,10 @@ export function getSkillSystemPrompt(skill: Skill | SkillSummary): string {
   if ('content' in skill && skill.content?.content_markdown) {
     return skill.content.content_markdown;
   }
+  
+  if (process.env.NODE_ENV === 'development') {
+    console.warn('⚠️ 技能缺少 systemPrompt:', skill.name);
+  }
+  
   return `你现在是【${skill.name}】。请完全进入你的角色，根据你的人设与我进行对话和互动。`;
 }
