@@ -125,8 +125,14 @@ const MouseFollower = () => {
     const mouseY = useMotionValue(0);
     const springX = useSpring(mouseX, { stiffness: 150, damping: 20 });
     const springY = useSpring(mouseY, { stiffness: 150, damping: 20 });
+    const [isTouchDevice, setIsTouchDevice] = useState(false);
 
     useEffect(() => {
+      const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      setIsTouchDevice(isTouch);
+
+      if (isTouch) return;
+
       const handleMouseMove = (e: MouseEvent) => {
         mouseX.set(e.clientX);
         mouseY.set(e.clientY);
@@ -135,17 +141,19 @@ const MouseFollower = () => {
       return () => window.removeEventListener('mousemove', handleMouseMove);
     }, [mouseX, mouseY]);
 
+    if (isTouchDevice) return null;
+
     return (
       <>
         <motion.div
-          className="fixed w-[500px] h-[500px] bg-gradient-to-r from-indigo-500/15 via-purple-500/10 to-pink-500/15 rounded-full pointer-events-none z-0 blur-3xl"
+          className="hidden lg:block fixed w-[500px] h-[500px] bg-gradient-to-r from-indigo-500/15 via-purple-500/10 to-pink-500/15 rounded-full pointer-events-none z-0 blur-3xl"
           style={{
             x: useTransform(springX, (x) => x - 250),
             y: useTransform(springY, (y) => y - 250),
           }}
         />
         <motion.div
-          className="fixed w-[300px] h-[300px] bg-gradient-to-r from-amber-500/10 to-emerald-500/10 rounded-full pointer-events-none z-0 blur-3xl"
+          className="hidden lg:block fixed w-[300px] h-[300px] bg-gradient-to-r from-amber-500/10 to-emerald-500/10 rounded-full pointer-events-none z-0 blur-3xl"
           style={{
             x: useTransform(springX, (x) => x - 150 + 100),
             y: useTransform(springY, (y) => y - 150 + 100),
