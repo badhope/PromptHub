@@ -1,7 +1,7 @@
 1:"$Sreact.fragment"
-2:I[82337,["/_next/static/chunks/16y9~lzyq9ocj.js","/_next/static/chunks/0xoatzmsoyru4.js","/_next/static/chunks/0i.l9589uvx0j.js","/_next/static/chunks/05s0r771umupw.js","/_next/static/chunks/0d_a_wgz4w6b-.js","/_next/static/chunks/13xl4dsyxeq2n.js","/_next/static/chunks/0_4ne9arlhu.p.js","/_next/static/chunks/16jwooozwv~fz.js","/_next/static/chunks/01xcsh60ftq_b.js"],"default"]
-4:I[897367,["/_next/static/chunks/16y9~lzyq9ocj.js","/_next/static/chunks/0xoatzmsoyru4.js","/_next/static/chunks/0i.l9589uvx0j.js","/_next/static/chunks/05s0r771umupw.js","/_next/static/chunks/0d_a_wgz4w6b-.js"],"OutletBoundary"]
+2:I[5104,["316","static/chunks/ad2866b8-e5e1a4a56b1dc426.js","500","static/chunks/500-c99b8dfd3de17c86.js","667","static/chunks/667-d17ef2f486dd28af.js","173","static/chunks/173-473c2e54c7657307.js","624","static/chunks/624-5e83c346f2984807.js","193","static/chunks/193-70a7a86663788f31.js","939","static/chunks/939-e7ddcb6e03334644.js","248","static/chunks/248-0b2f3a919ca77cca.js","599","static/chunks/599-d46ab1db89b676fc.js","539","static/chunks/539-ef2782f086940824.js","956","static/chunks/app/category/%5Bcategory%5D/page-ce1a7a99346ddc20.js"],"default"]
+4:I[484,[],"OutletBoundary"]
 5:"$Sreact.suspense"
-0:{"rsc":["$","$1","c",{"children":[["$","$L2",null,{"params":"$@3"}],[["$","script","script-0",{"src":"/_next/static/chunks/13xl4dsyxeq2n.js","async":true}],["$","script","script-1",{"src":"/_next/static/chunks/0_4ne9arlhu.p.js","async":true}],["$","script","script-2",{"src":"/_next/static/chunks/16jwooozwv~fz.js","async":true}],["$","script","script-3",{"src":"/_next/static/chunks/01xcsh60ftq_b.js","async":true}]],["$","$L4",null,{"children":["$","$5",null,{"name":"Next.MetadataOutlet","children":"$@6"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"4vYnFFvKFAhTlDXiMBN_0"}
+0:{"rsc":["$","$1","c",{"children":[["$","$L2",null,{"params":"$@3"}],null,["$","$L4",null,{"children":["$","$5",null,{"name":"Next.MetadataOutlet","children":"$@6"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"FTQi-IPatUjKvKjpTFQfh"}
 3:{"category":"hr"}
 6:null

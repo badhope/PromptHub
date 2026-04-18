@@ -18,7 +18,6 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   compress: true,
-  turbopack: {},
   experimental: {
     optimizePackageImports: ['react-markdown', 'rehype-highlight', 'remark-gfm', 'fuse.js'],
   },
