@@ -26,7 +26,7 @@ const hotKeywords = [
 export default function SearchBar({ 
   skills, 
   onSearch, 
-  placeholder = '搜索技能、Agent、工具...',
+  placeholder = '搜索提示词、角色、工具...',
   className = '' 
 }: SearchBarProps) {
   const [showSuggestions, setShowSuggestions] = useState(false);

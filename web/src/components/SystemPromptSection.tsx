@@ -1,8 +1,9 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Copy, Check, ChevronDown, ChevronUp, Maximize2, Minimize2 } from 'lucide-react';
+import { Copy, Check, ChevronDown, ChevronUp, Maximize2, Minimize2, BookOpen } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { useHapticFeedback } from '@/hooks/useGestures';
 
@@ -155,7 +156,7 @@ export default function SystemPromptSection({ systemPrompt, onCopy, copied }: Sy
       </div>
       
       <div className="px-5 sm:px-6 py-3.5 border-t border-gray-100 dark:border-gray-700/50 bg-gray-50/50 dark:bg-gray-900/30">
-        <div className="flex items-center justify-center gap-3 sm:gap-6">
+        <div className="flex items-center justify-center gap-3 sm:gap-4">
           <TouchButton
             onClick={handleToggleExpand}
             className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gray-100 dark:bg-gray-700/50 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors text-[13px] font-medium text-gray-600 dark:text-gray-300"
@@ -195,6 +196,16 @@ export default function SystemPromptSection({ systemPrompt, onCopy, copied }: Sy
               </>
             )}
           </TouchButton>
+
+          <Link
+            href="/guide"
+            onClick={() => success()}
+            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-50 dark:from-cyan-500/10 hover:from-cyan-100 dark:hover:from-cyan-500/20 transition-all text-[13px] font-medium text-cyan-600 dark:text-cyan-400 border border-cyan-200/50 dark:border-cyan-500/20"
+          >
+            <BookOpen className="w-4 h-4" />
+            <span className="hidden sm:inline">使用教程</span>
+            <span className="sm:hidden">教程</span>
+          </Link>
         </div>
       </div>
       

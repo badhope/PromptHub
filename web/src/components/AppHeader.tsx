@@ -91,7 +91,7 @@ const AppHeader = () => {
                       🧠
                     </motion.span>
                     <span className="font-black text-lg bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent group-hover:scale-105 transition-transform">
-                      Mobile Skills
+                      PromptHub
                     </span>
                   </Link>
                 </motion.div>

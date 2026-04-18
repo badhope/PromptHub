@@ -96,7 +96,7 @@ export default function Navbar() {
             <Link href="/" className="flex items-center space-x-2 sm:space-x-3 group relative">
               <span className="text-xl sm:text-2xl group-hover:scale-125 group-active:scale-90 transition-all duration-300 cursor-pointer relative z-10">🚀</span>
               <span className="text-base sm:text-xl font-bold text-gray-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-all duration-200 cursor-pointer relative z-10 group-active:scale-95">
-                Mobile Skills
+                PromptHub
               </span>
               <div className="absolute inset-0 -inset-x-3 -inset-y-2 bg-gray-100 dark:bg-gray-800 rounded-xl scale-0 group-hover:scale-100 transition-transform duration-300 origin-left opacity-0 group-hover:opacity-100" />
               <div className="absolute inset-0 -inset-x-3 -inset-y-2 bg-indigo-50 dark:bg-indigo-900/30 rounded-xl scale-0 group-active:scale-100 transition-transform duration-150 origin-center opacity-0 group-active:opacity-100" />

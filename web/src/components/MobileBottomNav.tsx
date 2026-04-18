@@ -14,7 +14,7 @@ interface NavItem {
 
 const NAV_ITEMS: NavItem[] = [
   { href: '/', label: '首页', icon: <Home className="w-5.5 h-5.5" strokeWidth={2.1} /> },
-  { href: '/skills', label: '智能体', icon: <Cpu className="w-5.5 h-5.5" strokeWidth={2.1} /> },
+  { href: '/skills', label: '提示词', icon: <Cpu className="w-5.5 h-5.5" strokeWidth={2.1} /> },
   { href: '/favorites', label: '收藏', icon: <Heart className="w-5.5 h-5.5" strokeWidth={2.1} /> },
   { href: '/search', label: '搜索', icon: <Search className="w-5.5 h-5.5" strokeWidth={2.1} /> },
   { href: '/settings', label: '设置', icon: <Settings className="w-5.5 h-5.5" strokeWidth={2.1} /> }

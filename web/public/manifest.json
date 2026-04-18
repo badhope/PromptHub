@@ -1,7 +1,7 @@
 {
-  "name": "AI Skill - AI技能生态系统",
-  "short_name": "AI Skill",
-  "description": "AI技能生态系统，提供丰富的AI角色和技能，让AI变得更有用、更有趣",
+  "name": "PromptHub - AI 提示词精选平台",
+  "short_name": "PromptHub",
+  "description": "AI 提示词精选平台，提供高质量的 Prompt 和便捷的使用方式",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

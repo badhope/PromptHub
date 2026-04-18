@@ -1,9 +1,9 @@
 /**
- * Mobile Skills 类型定义
+ * PromptHub 类型定义
  * 
- * 本文件定义了项目中使用的所有核心类型，包括技能、分类、统计等
+ * 本文件定义了项目中使用的所有核心类型，包括提示词、分类、统计等
  * @version 2.0.0
- * @author Mobile Skills Team
+ * @author PromptHub Team
  */
 
 export interface Skill {

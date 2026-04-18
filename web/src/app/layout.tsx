@@ -24,18 +24,18 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: {
-    default: `${APP_CONFIG.name} - AI Skill 生态系统`,
+    default: `${APP_CONFIG.name} - AI 提示词聚合平台`,
     template: `%s | ${APP_CONFIG.name}`
   },
-  description: `${APP_CONFIG.description}，提供丰富的 AI 角色和技能，让 AI 变得更有用、更有趣。`,
-  keywords: ["AI", "Skills", "智能体", "角色扮演", "技能系统", "AI Agent", "Prompt Engineering"],
+  description: `${APP_CONFIG.description}，精选 387+ 高质量 AI 提示词和智能体，一键复制即用。`,
+  keywords: ["AI", "Prompt", "提示词", "AI Prompt", "ChatGPT", "人工智能", "Prompt Engineering", "提示词工程师"],
   authors: [{ name: APP_CONFIG.author }],
   creator: APP_CONFIG.author,
   publisher: APP_CONFIG.name,
   metadataBase: new URL(APP_CONFIG.url),
   openGraph: {
-    title: `${APP_CONFIG.name} - AI Skill 生态系统`,
-    description: `${APP_CONFIG.description}，提供丰富的 AI 角色和技能`,
+    title: `${APP_CONFIG.name} - AI 提示词聚合平台`,
+    description: `${APP_CONFIG.description}，精选高质量 AI 提示词`,
     type: "website",
     locale: "zh_CN",
     siteName: APP_CONFIG.name,
@@ -43,8 +43,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: `${APP_CONFIG.name} - AI Skill 生态系统`,
-    description: `${APP_CONFIG.description}，提供丰富的 AI 角色和技能`,
+    title: `${APP_CONFIG.name} - AI 提示词聚合平台`,
+    description: `${APP_CONFIG.description}，精选高质量 AI 提示词`,
   },
   robots: {
     index: true,

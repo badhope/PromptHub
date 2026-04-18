@@ -221,29 +221,29 @@ const MouseFollower = () => {
   };
 
   export default function HomePage() {
-  const { displayText, isComplete } = useTypewriter('Mobile Skills');
+  const { displayText, isComplete } = useTypewriter('PromptHub');
   const { success } = useHapticFeedback();
 
   const features = [
     {
       icon: <Brain className="w-7 h-7 text-indigo-500" />,
-      title: '五层Agent架构',
-      desc: '感知-记忆-决策-执行-反思，完整的智能体工作流',
+      title: '专业级 Prompt',
+      desc: '五层架构标准，经过大量场景验证的高质量提示词',
     },
     {
       icon: <Zap className="w-7 h-7 text-amber-500" />,
       title: '一键复制即用',
-      desc: '精选462+个专业角色，复制粘贴直接使用',
+      desc: '精选387+个专业提示词，复制粘贴直接使用',
     },
     {
       icon: <Shield className="w-7 h-7 text-emerald-500" />,
-      title: '专业提示词',
-      desc: '每个角色经过精心打磨，输出质量有保障',
+      title: '质量有保障',
+      desc: '每个 Prompt 经过精心打磨，输出效果稳定',
     },
     {
       icon: <Rocket className="w-7 h-7 text-rose-500" />,
       title: '持续更新',
-      desc: '每周新增高质量技能，紧跟AI发展潮流',
+      desc: '每周新增高质量提示词，紧跟AI发展潮流',
     },
   ];
 
@@ -279,7 +279,7 @@ const MouseFollower = () => {
             >
               <Sparkles className="w-4 h-4 text-indigo-500" />
               <span className="text-sm font-bold text-indigo-600 dark:text-indigo-400">
-                462 个专业智能体已上线
+                387 个专业提示词已上线
               </span>
             </motion.div>
 
@@ -291,7 +291,7 @@ const MouseFollower = () => {
                 </span>
                 {isComplete && (
                   <span className="block mt-2">
-                    智能体聚合平台
+                    AI 提示词聚合平台
                   </span>
                 )}
               </h1>
@@ -303,7 +303,7 @@ const MouseFollower = () => {
               transition={{ delay: 1.5, duration: 0.5 }}
               className="text-lg sm:text-xl text-gray-500 dark:text-gray-400 max-w-2xl mx-auto mb-8 sm:mb-10 leading-relaxed"
             >
-              专业的 AI 角色技能库，让你的 ChatGPT、Claude、文心一言
+              专业的 AI 提示词精选库，让你的 ChatGPT、Claude、文心一言
               <br className="hidden sm:block" />
               立刻变身行业专家，效率提升 10 倍
             </motion.p>
@@ -347,13 +347,13 @@ const MouseFollower = () => {
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 mb-16 sm:mb-20">
             <TiltCard>
-              <StatCard value={462} label="专业技能" icon="🧠" color="bg-indigo-100 dark:bg-indigo-500/20" />
+              <StatCard value={387} label="精选提示词" icon="🧠" color="bg-indigo-100 dark:bg-indigo-500/20" />
             </TiltCard>
             <TiltCard>
-              <StatCard value={294} label="AI 智能体" icon="✨" color="bg-purple-100 dark:bg-purple-500/20" />
+              <StatCard value={128} label="角色 Prompt" icon="✨" color="bg-purple-100 dark:bg-purple-500/20" />
             </TiltCard>
             <TiltCard>
-              <StatCard value={168} label="专业工具" icon="🔧" color="bg-amber-100 dark:bg-amber-500/20" />
+              <StatCard value={189} label="专业工具" icon="🔧" color="bg-amber-100 dark:bg-amber-500/20" />
             </TiltCard>
             <TiltCard>
               <StatCard value={20} label="专业分类" icon="📂" color="bg-emerald-100 dark:bg-emerald-500/20" />
@@ -362,7 +362,7 @@ const MouseFollower = () => {
 
           <div className="text-center mb-10">
             <h2 className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white mb-3">
-              为什么选择 Mobile Skills？
+              为什么选择 PromptHub？
             </h2>
             <p className="text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">
               我们不做数量堆砌，只产出高质量、经过验证的专业提示词

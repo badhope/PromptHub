@@ -2,8 +2,8 @@ import Link from 'next/link';
 import Breadcrumb from '@/components/Breadcrumb';
 
 export const metadata = {
-  title: '关于我们 - Mobile Skills',
-  description: '了解 Mobile Skills 项目，AI Skill 生态系统的构建者',
+  title: '关于我们 - PromptHub',
+  description: '了解 PromptHub 项目，AI Prompt 精选平台的构建者',
 };
 
 export default function AboutPage() {
@@ -18,8 +18,8 @@ export default function AboutPage() {
           <div className="flex items-center gap-4 mt-4">
             <span className="text-5xl" role="img" aria-label="火箭">🚀</span>
             <div>
-              <h1 className="text-4xl font-bold">关于 Mobile Skills</h1>
-              <p className="text-white/80 mt-2">AI Skill 生态系统的构建者</p>
+              <h1 className="text-4xl font-bold">关于 PromptHub</h1>
+              <p className="text-white/80 mt-2">AI Prompt 精选平台</p>
             </div>
           </div>
         </div>
@@ -29,7 +29,7 @@ export default function AboutPage() {
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 mb-8">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6"><span role="img" aria-label="目标">🎯</span> 我们的使命</h2>
           <p className="text-gray-600 dark:text-gray-400 text-lg leading-relaxed">
-            Mobile Skills 致力于构建一个开放、易用的 AI Skill 生态系统。我们相信，通过标准化的技能定义和便捷的激活方式，每个人都能更好地利用 AI 的能力，让 AI 变得更有用、更有趣。
+            PromptHub 致力于打造一个开放、易用的 AI Prompt 精选平台。我们相信，通过精心打磨的提示词和便捷的一键复制，每个人都能更好地利用 AI 的能力，让 AI 变得更有用、更有趣。
           </p>
         </div>
 
@@ -43,7 +43,7 @@ export default function AboutPage() {
               <div>
                 <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Raw 链接激活</h3>
                 <p className="text-gray-600 dark:text-gray-400 text-sm">
-                  通过 Raw 链接直接激活 AI Skill，无需复杂配置
+                  精选高质量 AI 提示词，一键复制，无需复杂配置
                 </p>
               </div>
             </div>

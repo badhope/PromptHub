@@ -2,8 +2,8 @@ import Link from 'next/link';
 import Breadcrumb from '@/components/Breadcrumb';
 
 export const metadata = {
-  title: '使用指南 - Mobile Skills',
-  description: '了解如何使用 Mobile Skills 激活 AI Skill',
+  title: '使用指南 - PromptHub',
+  description: '了解如何使用 PromptHub 激活 AI Prompt',
 };
 
 export default function GuidePage() {
@@ -19,7 +19,7 @@ export default function GuidePage() {
             <span className="text-5xl" role="img" aria-label="书本">📖</span>
             <div>
               <h1 className="text-4xl font-bold">使用指南</h1>
-              <p className="text-white/80 mt-2">快速上手 Mobile Skills</p>
+              <p className="text-white/80 mt-2">快速上手 PromptHub</p>
             </div>
           </div>
         </div>
@@ -36,7 +36,7 @@ export default function GuidePage() {
               <div>
                 <h3 className="font-semibold text-gray-900 dark:text-white mb-2">浏览技能</h3>
                 <p className="text-gray-600 dark:text-gray-400">
-                  在 <Link href="/categories" className="text-cyan-600 hover:text-cyan-700 dark:text-cyan-400 font-medium">技能分类</Link> 页面浏览所有可用的 AI Skill。您可以使用搜索、分类筛选和排序功能快速找到需要的技能。
+                  在 <Link href="/categories" className="text-cyan-600 hover:text-cyan-700 dark:text-cyan-400 font-medium">提示词分类</Link> 页面浏览所有精选的 AI Prompt。您可以使用搜索、分类筛选和排序功能快速找到需要的提示词。
                 </p>
               </div>
             </div>

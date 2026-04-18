@@ -60,7 +60,7 @@ export function useNotifications() {
       const notification = new Notification(title, {
         body,
         icon: icon || '/favicon.ico',
-        tag: tag || `mobile-skills-${Date.now()}`,
+        tag: tag || `prompthub-${Date.now()}`,
         badge: '/favicon.ico'
       });
 
@@ -96,8 +96,8 @@ export function useNotifications() {
 
   const notifySkillUpdate = useCallback(() => {
     sendNotification({
-      title: '🚀 Mobile Skills',
-      body: '有新的技能更新！点击查看详情。',
+      title: '🚀 PromptHub',
+      body: '有新的提示词上线！点击查看详情。',
       tag: 'skill-update'
     });
   }, [sendNotification]);

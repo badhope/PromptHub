@@ -1,8 +1,8 @@
 {
-  "name": "mobile-skills-web",
+  "name": "prompthub-web",
   "version": "2.0.0",
-  "description": "Mobile Skills - AI Skill Ecosystem Platform Web Interface",
-  "author": "Mobile Skills Team",
+  "description": "PromptHub - AI Prompt Platform Web Interface",
+  "author": "PromptHub Team",
   "license": "MIT",
   "repository": {
     "type": "git",

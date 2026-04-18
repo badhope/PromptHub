@@ -38,7 +38,7 @@ export default function ModelsPage() {
             transition={{ delay: 0.2 }}
             className="text-xl text-gray-500 dark:text-gray-400 max-w-2xl mx-auto"
           >
-            一个平台，接入所有主流大模型。提供你的 API 密钥，立即使用任何智能体。
+            一个平台，接入所有主流大模型。提供你的 API 密钥，立即使用任何提示词。
           </motion.p>
         </div>
 

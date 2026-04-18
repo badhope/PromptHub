@@ -51,7 +51,7 @@ export default function Loading() {
 
         {/* Title */}
         <h2 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mb-3">
-          Mobile Skills
+          PromptHub
         </h2>
 
         {/* Loading message with fade */}

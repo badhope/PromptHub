@@ -6,9 +6,9 @@ export default function SEOStructuredData() {
   const structuredData = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
-    name: 'Mobile Skills - AI 技能聚合平台',
+    name: 'PromptHub - AI 提示词精选平台',
     url: 'https://badhope.github.io/mobile-skills/',
-    description: '165+ 高质量 AI 技能聚合平台，专为移动端优化，集成 Agent 智能体和专业工具，支持一键复制使用。',
+    description: '387+ 高质量 AI 提示词聚合平台，精选专业级 Prompt，支持一键复制使用。',
     author: {
       '@type': 'Person',
       name: 'badhope'

@@ -1,10 +1,10 @@
 export const APP_CONFIG = {
-  name: 'Mobile Skills',
-  version: '1.0.0',
-  description: 'AI Skill 生态系统',
+  name: 'PromptHub',
+  version: '2.0.0',
+  description: 'AI Prompt 精选平台',
   url: 'https://badhope.github.io/mobile-skills',
   github: 'https://github.com/badhope/mobile-skills',
-  author: 'Mobile Skills Team',
+  author: 'PromptHub Team',
 } as const;
 
 export const STORAGE_KEYS = {

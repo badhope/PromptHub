@@ -8,13 +8,13 @@ export default function Footer() {
           <div>
             <div className="flex items-center space-x-2 mb-4">
               <span className="text-2xl">🚀</span>
-              <span className="text-xl font-bold text-gray-900 dark:text-white">Mobile Skills</span>
+              <span className="text-xl font-bold text-gray-900 dark:text-white">PromptHub</span>
             </div>
             <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-4">
-              AI Skill 生态系统，提供丰富的 AI 角色和技能，让 AI 变得更有用、更有趣。
+              AI 提示词聚合平台，精选高质量 Prompt，让 AI 变得更有用、更有趣。
             </p>
             <p className="text-xs text-gray-500 dark:text-gray-500">
-              © {new Date().getFullYear()} Mobile Skills. MIT License.
+              © {new Date().getFullYear()} PromptHub. MIT License.
             </p>
           </div>
 

@@ -11,15 +11,15 @@ export const translations = {
       settings: '设置'
     },
     home: {
-      title: '🚀 AI Skill 生态系统',
-      subtitle: '通过 Raw 链接激活 AI Skill，让 AI 变得更有用、更有趣',
-      browseAll: '浏览所有技能',
+      title: '🚀 AI 提示词聚合平台',
+      subtitle: '精选高质量 AI Prompt，一键复制即用，让 AI 变得更有用、更有趣',
+      browseAll: '浏览所有提示词',
       github: 'GitHub',
-      categories: '技能分类',
-      hotSkills: '🔥 热门技能',
+      categories: '提示词分类',
+      hotSkills: '🔥 热门提示词',
       newSkills: '🆕 最新上线',
       viewAll: '查看全部',
-      skillsCount: '个技能'
+      skillsCount: '个提示词'
     },
     skills: {
       title: '全部技能',
@@ -144,10 +144,10 @@ export const translations = {
       loading: '加载中...'
     },
     footer: {
-      description: 'AI Skill 生态系统，提供丰富的 AI 角色和技能，让 AI 变得更有用、更有趣。',
+      description: 'AI 提示词聚合平台，精选高质量 Prompt，让 AI 变得更有用、更有趣。',
       quickLinks: '快速链接',
-      skillCategories: '技能分类',
-      copyright: '© {year} Mobile Skills. MIT License.'
+      skillCategories: '提示词分类',
+      copyright: '© {year} PromptHub. MIT License.'
     },
     common: {
       loading: '加载中...',
@@ -171,15 +171,15 @@ export const translations = {
       settings: 'Settings'
     },
     home: {
-      title: '🚀 AI Skill Ecosystem',
-      subtitle: 'Activate AI Skills via Raw links, making AI more useful and fun',
-      browseAll: 'Browse All Skills',
+      title: '🚀 AI Prompt Hub',
+      subtitle: 'Curated high-quality AI Prompts, one-click copy & use, making AI more useful and fun',
+      browseAll: 'Browse All Prompts',
       github: 'GitHub',
-      categories: 'Skill Categories',
-      hotSkills: '🔥 Hot Skills',
+      categories: 'Prompt Categories',
+      hotSkills: '🔥 Hot Prompts',
       newSkills: '🆕 New Arrivals',
       viewAll: 'View All',
-      skillsCount: 'skills'
+      skillsCount: 'prompts'
     },
     skills: {
       title: 'All Skills',
@@ -304,10 +304,10 @@ export const translations = {
       loading: 'Loading...'
     },
     footer: {
-      description: 'AI Skill Ecosystem providing rich AI roles and skills, making AI more useful and fun.',
+      description: 'AI Prompt Hub providing high-quality curated prompts, making AI more useful and fun.',
       quickLinks: 'Quick Links',
-      skillCategories: 'Skill Categories',
-      copyright: '© {year} Mobile Skills. MIT License.'
+      skillCategories: 'Prompt Categories',
+      copyright: '© {year} PromptHub. MIT License.'
     },
     common: {
       loading: 'Loading...',
