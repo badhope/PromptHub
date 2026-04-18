@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, ChevronRight, Grid3X3 } from 'lucide-react';
 import { MULTI_LEVEL_CATEGORY_SYSTEM, getCategorySkills, getSubcategorySkills } from '@/lib/category-system';
-import type { Skill, SkillSummary } from '@/types/skill';
+import type { Skill, SkillSummary, Subcategory } from '@/types/skill';
 import { useHapticFeedback } from '@/hooks/useGestures';
 import TouchButton from './TouchButton';
 
@@ -149,7 +149,7 @@ export default function CategoryNavigation({
                           </div>
                         </Link>
                         
-                        {Object.values(category.subcategories || {}).map((subcategory: any, subIndex: number) => {
+                        {Object.values(category.subcategories || {}).map((subcategory: Subcategory) => {
                           const subcategorySkills = getSubcategorySkills(categoryId, subcategory.id || '', skills);
                           const isSubSelected = selectedSubcategory === subcategory.id;
                           

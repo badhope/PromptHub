@@ -41,7 +41,14 @@ const LoadingDots = () => (
   </div>
 );
 
-const TouchButton = ({ children, onClick, className = '', disabled = false }: any) => {
+interface TouchButtonProps {
+  children: React.ReactNode;
+  onClick?: () => void;
+  className?: string;
+  disabled?: boolean;
+}
+
+const TouchButton = ({ children, onClick, className = '', disabled = false }: TouchButtonProps) => {
   const { selection } = useHapticFeedback();
   
   return (
