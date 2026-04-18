@@ -1,0 +1,83 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["jsonProtocol"]
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Skill {
+  id               String   @id @unique
+  name             String
+  number           String?
+  index            Int?     @map("skill_index")
+  icon             String?
+  category         String?
+  description      String?
+  guide            String?
+  scenarios        String?
+  activation       String?
+  source           String?  @default("skill")
+  systemPrompt     String?  @map("system_prompt")
+  useCount         Int?     @default(0) @map("use_count")
+  rawUrl           String?  @map("raw_url")
+
+  metadata         String?
+  categorization   String?
+  content          String?
+  stats            String?
+  thumbnails       String?
+  capabilities     String?
+
+  contentMarkdown  String?  @map("content_markdown")
+
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  @@map("skills")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  createdAt     DateTime  @default(now()) @map("created_at")
+
+  favorites     UserFavorite[]
+  @@map("users")
+}
+
+model UserFavorite {
+  id        String   @id @default(cuid())
+  userId    String
+  skillId   String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, skillId])
+  @@map("user_favorites")
+}
+
+model Analytics {
+  id        String   @id @default(cuid())
+  skillId   String
+  eventType String   @map("event_type")
+  ip        String?
+  userAgent String?  @map("user_agent")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("analytics")
+}
+
+model SearchLog {
+  id        String   @id @default(cuid())
+  query     String
+  results   Int?
+  hasResult Boolean  @default(true)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("search_logs")
+}
