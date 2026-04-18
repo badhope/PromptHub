@@ -188,6 +188,26 @@ const SkillCardComponent = function SkillCard({ skill, index = 0 }: SkillCardPro
                   className="absolute inset-0 bg-gradient-to-br from-indigo-50/50 to-transparent dark:from-indigo-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                   aria-hidden="true"
                 />
+                
+                <div 
+                  className="absolute w-40 h-40 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full opacity-0 group-hover:opacity-20 blur-3xl pointer-events-none transition-opacity duration-500"
+                  style={{
+                    left: `calc(${mousePos.x * 50 + 50}% - 80px)`,
+                    top: `calc(${mousePos.y * 50 + 50}% - 80px)`,
+                  }}
+                  aria-hidden="true"
+                />
+                
+                <div 
+                  className="absolute inset-0 rounded-2xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                  style={{
+                    mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                    maskComposite: 'exclude',
+                    WebkitMaskComposite: 'xor',
+                    padding: '1px',
+                  }}
+                  aria-hidden="true"
+                />
 
                 <div className="relative z-10">
                   <div className="flex items-start justify-between mb-4">

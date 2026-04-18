@@ -1,143 +1,131 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Search, Heart, Star, AlertCircle, Sparkles, ArrowRight } from 'lucide-react';
-import Link from 'next/link';
-import { useHapticFeedback } from '@/hooks/useGestures';
+import { Search, Heart, FileX, Sparkles } from 'lucide-react';
 
 interface EmptyStateProps {
-  type: 'search' | 'favorites' | 'error' | 'empty' | 'welcome';
+  type?: 'search' | 'favorites' | 'results' | 'error' | 'empty';
   title?: string;
   description?: string;
-  action?: {
-    label: string;
-    href: string;
-  };
+  icon?: React.ReactNode;
+  action?: React.ReactNode;
 }
 
-const icons = {
+const iconMap = {
   search: Search,
   favorites: Heart,
-  error: AlertCircle,
+  results: FileX,
+  error: FileX,
   empty: Sparkles,
-  welcome: Star,
 };
 
-const gradients = {
-  search: 'from-blue-400 to-indigo-500',
-  favorites: 'from-rose-400 to-pink-500',
-  error: 'from-amber-400 to-orange-500',
-  empty: 'from-purple-400 to-violet-500',
-  welcome: 'from-green-400 to-emerald-500',
+const colorMap = {
+  search: 'from-indigo-400 to-purple-400',
+  favorites: 'from-rose-400 to-pink-400',
+  results: 'from-amber-400 to-orange-400',
+  error: 'from-red-400 to-amber-400',
+  empty: 'from-emerald-400 to-teal-400',
 };
 
-const defaultContent = {
-  search: {
-    title: '没有找到相关结果',
-    description: '试试其他关键词，或者浏览全部智能体',
-  },
-  favorites: {
-    title: '还没有收藏',
-    description: '点击 ❤️ 收藏你喜欢的智能体，随时可以快速访问',
-  },
-  error: {
-    title: '出了点小问题',
-    description: '请刷新页面重试，或者稍后再来',
-  },
-  empty: {
-    title: '这里空空如也',
-    description: '很快就会有更多精彩内容上线',
-  },
-  welcome: {
-    title: '欢迎使用 Mobile Skills',
-    description: '发现数百个专业级 AI 智能体，即刻开始你的效率革命',
-  },
+const titleMap = {
+  search: '没有找到相关技能',
+  favorites: '还没有收藏任何技能',
+  results: '暂无内容',
+  error: '加载出错了',
+  empty: '这里空空如也',
 };
 
-export default function EmptyState({ type, title, description, action }: EmptyStateProps) {
-  const Icon = icons[type];
-  const gradient = gradients[type];
-  const content = defaultContent[type];
-  const { selection } = useHapticFeedback();
+const descriptionMap = {
+  search: '试试其他关键词吧，比如「写作」、「编程」、「翻译」等',
+  favorites: '点击技能卡片上的心形图标，收藏你喜欢的技能',
+  results: '当前分类下还没有内容，稍后再来看看吧',
+  error: '遇到了一点小问题，请刷新页面重试',
+  empty: '马上就会有精彩内容在这里呈现',
+};
+
+export default function EmptyState({
+  type = 'empty',
+  title,
+  description,
+  icon,
+  action,
+}: EmptyStateProps) {
+  const IconComponent = iconMap[type];
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ type: 'spring', stiffness: 200, damping: 25 }}
-      className="flex flex-col items-center justify-center py-16 px-6 text-center"
+      transition={{ duration: 0.5 }}
+      className="flex flex-col items-center justify-center py-16 sm:py-24 px-6 text-center"
     >
       <motion.div
-        initial={{ scale: 0.8, rotate: -10 }}
-        animate={{ scale: 1, rotate: 0 }}
-        transition={{ 
-          type: 'spring', 
-          stiffness: 300, 
-          damping: 20,
-          delay: 0.1
+        animate={{
+          scale: [1, 1.05, 1],
+          rotate: [0, 2, -2, 0],
         }}
-        className={`
-          w-24 h-24 rounded-3xl bg-gradient-to-br ${gradient}
-          flex items-center justify-center mb-6
-          shadow-xl shadow-indigo-500/20
-        `}
+        transition={{
+          duration: 4,
+          repeat: Infinity,
+          ease: 'easeInOut',
+        }}
+        className={`relative w-24 h-24 sm:w-32 sm:h-32 mb-6 sm:mb-8 rounded-3xl bg-gradient-to-br ${colorMap[type]} flex items-center justify-center shadow-xl`}
       >
-        <motion.div
-          animate={{ 
-            y: [0, -4, 0],
-          }}
-          transition={{
-            duration: 2.5,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        >
-          <Icon className="w-12 h-12 text-white" strokeWidth={2} />
-        </motion.div>
+        <div className="absolute inset-0 bg-white/20 rounded-3xl" />
+        {icon || <IconComponent className="w-12 h-12 sm:w-16 sm:h-16 text-white relative z-10" />}
       </motion.div>
 
       <motion.h3
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.2 }}
-        className="text-[20px] font-semibold text-gray-900 dark:text-white mb-2 tracking-tight"
+        transition={{ delay: 0.2, duration: 0.5 }}
+        className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4"
       >
-        {title || content.title}
+        {title || titleMap[type]}
       </motion.h3>
 
       <motion.p
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.25 }}
-        className="text-[15px] text-gray-500 dark:text-gray-400 max-w-xs leading-relaxed mb-6"
+        transition={{ delay: 0.3, duration: 0.5 }}
+        className="text-sm sm:text-base text-gray-500 dark:text-gray-400 max-w-md mx-auto mb-6 sm:mb-8 leading-relaxed"
       >
-        {description || content.description}
+        {description || descriptionMap[type]}
       </motion.p>
 
       {action && (
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.4, duration: 0.5 }}
         >
-          <Link
-            href={action.href}
-            onClick={() => selection()}
-            className="
-              inline-flex items-center gap-2 px-5 py-3
-              bg-gradient-to-r from-indigo-500 to-purple-500
-              text-white text-[14px] font-semibold rounded-2xl
-              shadow-lg shadow-indigo-500/25
-              hover:shadow-xl hover:shadow-indigo-500/30
-              transition-all duration-300
-              active:scale-95
-            "
-          >
-            {action.label}
-            <ArrowRight className="w-4 h-4" />
-          </Link>
+          {action}
         </motion.div>
       )}
+
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {[...Array(8)].map((_, i) => (
+          <motion.div
+            key={i}
+            className={`absolute w-2 h-2 rounded-full bg-gradient-to-r ${colorMap[type]} opacity-20`}
+            style={{
+              left: `${10 + i * 12}%`,
+              top: `${20 + (i % 3) * 20}%`,
+            }}
+            animate={{
+              y: [0, -30, 0],
+              opacity: [0.2, 0.5, 0.2],
+              scale: [1, 1.5, 1],
+            }}
+            transition={{
+              duration: 3 + i * 0.5,
+              repeat: Infinity,
+              delay: i * 0.3,
+              ease: 'easeInOut',
+            }}
+          />
+        ))}
+      </div>
     </motion.div>
   );
 }

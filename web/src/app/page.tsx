@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { Sparkles, ArrowRight, Zap, Shield, Brain, Rocket } from 'lucide-react';
 import { useHapticFeedback } from '@/hooks/useGestures';
 
@@ -120,7 +120,99 @@ const FeatureCard = ({ icon, title, desc, delay }: { icon: React.ReactNode; titl
   );
 };
 
-export default function HomePage() {
+const MouseFollower = () => {
+    const mouseX = useMotionValue(0);
+    const mouseY = useMotionValue(0);
+    const springX = useSpring(mouseX, { stiffness: 150, damping: 20 });
+    const springY = useSpring(mouseY, { stiffness: 150, damping: 20 });
+
+    useEffect(() => {
+      const handleMouseMove = (e: MouseEvent) => {
+        mouseX.set(e.clientX);
+        mouseY.set(e.clientY);
+      };
+      window.addEventListener('mousemove', handleMouseMove);
+      return () => window.removeEventListener('mousemove', handleMouseMove);
+    }, [mouseX, mouseY]);
+
+    return (
+      <>
+        <motion.div
+          className="fixed w-[500px] h-[500px] bg-gradient-to-r from-indigo-500/15 via-purple-500/10 to-pink-500/15 rounded-full pointer-events-none z-0 blur-3xl"
+          style={{
+            x: useTransform(springX, (x) => x - 250),
+            y: useTransform(springY, (y) => y - 250),
+          }}
+        />
+        <motion.div
+          className="fixed w-[300px] h-[300px] bg-gradient-to-r from-amber-500/10 to-emerald-500/10 rounded-full pointer-events-none z-0 blur-3xl"
+          style={{
+            x: useTransform(springX, (x) => x - 150 + 100),
+            y: useTransform(springY, (y) => y - 150 + 100),
+          }}
+        />
+      </>
+    );
+  };
+
+  const FloatingOrbs = () => {
+    return (
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {[...Array(6)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-2 h-2 bg-gradient-to-r from-indigo-400 to-purple-400 rounded-full opacity-40"
+            style={{
+              left: `${15 + i * 15}%`,
+              top: `${20 + (i % 3) * 25}%`,
+              animation: `float ${4 + i * 0.5}s ease-in-out infinite ${i * 0.3}s`,
+            }}
+          />
+        ))}
+      </div>
+    );
+  };
+
+  const TiltCard = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => {
+    const ref = useRef<HTMLDivElement>(null);
+    const rotateX = useSpring(0, { stiffness: 150, damping: 20 });
+    const rotateY = useSpring(0, { stiffness: 150, damping: 20 });
+
+    const handleMouseMove = (e: React.MouseEvent) => {
+      if (!ref.current) return;
+      const rect = ref.current.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      rotateX.set(((y - centerY) / centerY) * -5);
+      rotateY.set(((x - centerX) / centerX) * 5);
+    };
+
+    const handleMouseLeave = () => {
+      rotateX.set(0);
+      rotateY.set(0);
+    };
+
+    return (
+      <motion.div
+        ref={ref}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        style={{
+          perspective: 1000,
+          transformStyle: 'preserve-3d',
+          rotateX,
+          rotateY,
+        }}
+        className={className}
+      >
+        {children}
+      </motion.div>
+    );
+  };
+
+  export default function HomePage() {
   const { displayText, isComplete } = useTypewriter('Mobile Skills');
   const { success } = useHapticFeedback();
 
@@ -164,20 +256,11 @@ export default function HomePage() {
         }
       `}</style>
 
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <motion.div
-          animate={{ float: [0, 1, 0] }}
-          transition={{ duration: 8, repeat: Infinity }}
-          className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-indigo-500/20 to-purple-500/20 rounded-full blur-3xl"
-          style={{ animation: 'float 8s ease-in-out infinite, glow 4s ease-in-out infinite' }}
-        />
-        <motion.div
-          className="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-tr from-amber-500/15 to-pink-500/15 rounded-full blur-3xl"
-          style={{ animation: 'float 10s ease-in-out infinite reverse, glow 5s ease-in-out infinite' }}
-        />
-      </div>
+      <MouseFollower />
+      <FloatingOrbs />
 
       <section className="relative py-12 sm:py-16 md:py-20 lg:py-24">
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-indigo-500/5 to-transparent pointer-events-none" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-4xl mx-auto mb-12 sm:mb-16">
             <motion.div
@@ -192,17 +275,19 @@ export default function HomePage() {
               </span>
             </motion.div>
 
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 dark:text-white mb-4 sm:mb-6 leading-tight">
-              <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent inline-flex items-center h-10 sm:h-12 md:h-16">
-                {displayText}
-                {!isComplete && <Cursor />}
-              </span>
-              {isComplete && (
-                <span className="block mt-2">
-                  智能体聚合平台
+            <TiltCard className="mb-4 sm:mb-6">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 dark:text-white leading-tight" style={{ transform: 'translateZ(50px)' }}>
+                <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent inline-flex items-center h-10 sm:h-12 md:h-16 drop-shadow-sm">
+                  {displayText}
+                  {!isComplete && <Cursor />}
                 </span>
-              )}
-            </h1>
+                {isComplete && (
+                  <span className="block mt-2">
+                    智能体聚合平台
+                  </span>
+                )}
+              </h1>
+            </TiltCard>
 
             <motion.p
               initial={{ opacity: 0 }}
@@ -221,29 +306,50 @@ export default function HomePage() {
               transition={{ delay: 1.8, duration: 0.5 }}
               className="flex flex-col sm:flex-row items-center justify-center gap-4"
             >
-              <Link
-                href="/skills"
-                onClick={() => success()}
-                className="group w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-bold text-lg rounded-2xl shadow-xl shadow-indigo-500/25 hover:shadow-2xl hover:shadow-indigo-500/40 hover:scale-105 active:scale-95 transition-all duration-300"
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="relative"
               >
-                开始探索
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </Link>
-              <Link
-                href="/guide"
-                onClick={() => success()}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 font-bold text-lg rounded-2xl border border-gray-200 dark:border-gray-700 hover:border-indigo-500/30 hover:shadow-lg hover:scale-105 active:scale-95 transition-all duration-300"
+                <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-2xl blur-xl opacity-40 animate-pulse" />
+                <Link
+                  href="/skills"
+                  onClick={() => success()}
+                  className="relative group w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white font-bold text-lg rounded-2xl shadow-xl shadow-indigo-500/30 overflow-hidden"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                  开始探索
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </Link>
+              </motion.div>
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
-                使用指南
-              </Link>
+                <Link
+                  href="/guide"
+                  onClick={() => success()}
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm text-gray-700 dark:text-gray-300 font-bold text-lg rounded-2xl border border-gray-200/50 dark:border-gray-700/50 hover:border-indigo-500/50 hover:shadow-xl transition-all duration-300"
+                >
+                  使用指南
+                </Link>
+              </motion.div>
             </motion.div>
           </div>
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 mb-16 sm:mb-20">
-            <StatCard value={462} label="专业技能" icon="🧠" color="bg-indigo-100 dark:bg-indigo-500/20" />
-            <StatCard value={294} label="AI 智能体" icon="✨" color="bg-purple-100 dark:bg-purple-500/20" />
-            <StatCard value={168} label="专业工具" icon="🔧" color="bg-amber-100 dark:bg-amber-500/20" />
-            <StatCard value={20} label="专业分类" icon="📂" color="bg-emerald-100 dark:bg-emerald-500/20" />
+            <TiltCard>
+              <StatCard value={462} label="专业技能" icon="🧠" color="bg-indigo-100 dark:bg-indigo-500/20" />
+            </TiltCard>
+            <TiltCard>
+              <StatCard value={294} label="AI 智能体" icon="✨" color="bg-purple-100 dark:bg-purple-500/20" />
+            </TiltCard>
+            <TiltCard>
+              <StatCard value={168} label="专业工具" icon="🔧" color="bg-amber-100 dark:bg-amber-500/20" />
+            </TiltCard>
+            <TiltCard>
+              <StatCard value={20} label="专业分类" icon="📂" color="bg-emerald-100 dark:bg-emerald-500/20" />
+            </TiltCard>
           </div>
 
           <div className="text-center mb-10">

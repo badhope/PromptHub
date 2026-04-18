@@ -2,9 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
 import SimpleSkillCard from '@/components/SimpleSkillCard';
 import AIToolCard from '@/components/AIToolCard';
 import Breadcrumb from '@/components/Breadcrumb';
+import EmptyState from '@/components/EmptyState';
 import { useSkills } from '@/hooks/useSkills';
 import { getValidatedFavorites } from '@/lib/validation';
 
@@ -135,24 +137,18 @@ export default function FavoritesPage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {totalFavorites === 0 ? (
-          <div className="text-center py-16">
-            <div className="text-6xl mb-4">💔</div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">
-              还没有收藏任何内容
-            </h3>
-            <p className="text-gray-600 mb-6">
-              浏览技能和工具库，点击心形图标即可收藏
-            </p>
-            <Link 
-              href="/skills" 
-              className="inline-flex items-center gap-2 bg-rose-500 text-white px-6 py-3 rounded-xl font-semibold hover:bg-rose-600 transition-colors"
-            >
-              开始探索
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </Link>
-          </div>
+          <EmptyState
+            type="favorites"
+            action={
+              <Link
+                href="/skills"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-rose-500 to-pink-500 text-white font-bold rounded-xl shadow-lg shadow-rose-500/25 hover:shadow-xl hover:scale-105 active:scale-95 transition-all duration-300"
+              >
+                开始探索
+                <ArrowRight className="w-5 h-5" />
+              </Link>
+            }
+          />
         ) : (
           <>
             <div className="mb-8 flex gap-3">

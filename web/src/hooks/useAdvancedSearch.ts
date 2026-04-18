@@ -1,8 +1,24 @@
 'use client';
 
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useRef, useEffect } from 'react';
 import type { Skill } from '@/types/skill';
 import { useLocalStorage } from './useLocalStorage';
+
+function useDebounce<T>(value: T, delay: number = 150): T {
+  const [debouncedValue, setDebouncedValue] = useState<T>(value);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
+}
 
 export interface SearchHistory {
   query: string;
@@ -28,10 +44,45 @@ export interface AdvancedSearchOptions {
   };
 }
 
+class LRUCache<K, V> {
+  private cache: Map<K, V>;
+  private maxSize: number;
+
+  constructor(maxSize: number = 50) {
+    this.cache = new Map();
+    this.maxSize = maxSize;
+  }
+
+  get(key: K): V | undefined {
+    const value = this.cache.get(key);
+    if (value !== undefined) {
+      this.cache.delete(key);
+      this.cache.set(key, value);
+    }
+    return value;
+  }
+
+  set(key: K, value: V): void {
+    if (this.cache.has(key)) {
+      this.cache.delete(key);
+    } else if (this.cache.size >= this.maxSize) {
+      const firstKey = this.cache.keys().next().value;
+      if (firstKey !== undefined) {
+        this.cache.delete(firstKey);
+      }
+    }
+    this.cache.set(key, value);
+  }
+}
+
+const globalSearchCache = new LRUCache<string, Skill[]>(50);
+
 export function useAdvancedSearch(skills: Skill[]) {
-  const [query, setQuery] = useState('');
+  const [rawQuery, setQuery] = useState('');
   const [options, setOptions] = useState<AdvancedSearchOptions>({});
   const { value: searchHistory, setValue: setSearchHistory } = useLocalStorage<SearchHistory[]>('search-history', []);
+  
+  const query = useDebounce(rawQuery, 150);
 
   const suggestions = useMemo(() => {
     if (!query.trim()) {
@@ -83,6 +134,13 @@ export function useAdvancedSearch(skills: Skill[]) {
   }, [query, skills, searchHistory]);
 
   const results = useMemo(() => {
+    const cacheKey = JSON.stringify({ query, options });
+    const cached = globalSearchCache.get(cacheKey);
+    
+    if (cached) {
+      return cached;
+    }
+
     let filtered = [...skills];
 
     if (query.trim()) {
@@ -143,6 +201,8 @@ export function useAdvancedSearch(skills: Skill[]) {
         );
       }
     }
+
+    globalSearchCache.set(cacheKey, filtered);
 
     return filtered;
   }, [skills, query, options]);

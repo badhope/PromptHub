@@ -1,15 +1,12 @@
 'use client';
 
-import React, { Component, ErrorInfo, ReactNode } from 'react';
-import { motion } from 'framer-motion';
+import { Component, type ReactNode, type ErrorInfo } from 'react';
 import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
 import Link from 'next/link';
 
 interface ErrorBoundaryProps {
   children: ReactNode;
   fallback?: ReactNode;
-  onReset?: () => void;
-  componentName?: string;
 }
 
 interface ErrorBoundaryState {
@@ -18,85 +15,94 @@ interface ErrorBoundaryState {
   errorInfo: ErrorInfo | null;
 }
 
-export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
-  public state: ErrorBoundaryState = {
-    hasError: false,
-    error: null,
-    errorInfo: null,
-  };
-
-  public static getDerivedStateFromError(error: Error): ErrorBoundaryState {
-    return { hasError: true, error, errorInfo: null };
+class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  constructor(props: ErrorBoundaryProps) {
+    super(props);
+    this.state = {
+      hasError: false,
+      error: null,
+      errorInfo: null,
+    };
   }
 
-  public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    this.setState({ errorInfo });
-    console.error(`[ErrorBoundary:${this.props.componentName || 'Unknown'}]`, error, errorInfo);
+  static getDerivedStateFromError(error: Error): Partial<ErrorBoundaryState> {
+    return {
+      hasError: true,
+      error,
+    };
   }
 
-  private handleReset = () => {
-    this.setState({ hasError: false, error: null, errorInfo: null });
-    this.props.onReset?.();
+  componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
+    this.setState({
+      error,
+      errorInfo,
+    });
+    
+    if (process.env.NODE_ENV === 'development') {
+      console.error('ErrorBoundary caught an error:', error, errorInfo);
+    }
+  }
+
+  handleReload = (): void => {
+    this.setState({
+      hasError: false,
+      error: null,
+      errorInfo: null,
+    });
+    window.location.reload();
   };
 
-  public render() {
+  render(): ReactNode {
     if (this.state.hasError) {
       if (this.props.fallback) {
         return this.props.fallback;
       }
 
       return (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="min-h-[400px] flex items-center justify-center p-6"
-        >
+        <div className="min-h-[60vh] flex items-center justify-center p-6">
           <div className="max-w-md w-full text-center">
-            <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-rose-500 to-orange-500 flex items-center justify-center">
-              <AlertTriangle className="w-8 h-8 text-white" />
+            <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-red-100 to-amber-100 dark:from-red-900/30 dark:to-amber-900/30 flex items-center justify-center">
+              <AlertTriangle className="w-10 h-10 text-amber-500" />
             </div>
             
-            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-              页面出现异常
-            </h3>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">
+              遇到了一点小问题
+            </h2>
             
-            <p className="text-gray-500 dark:text-gray-400 mb-6 text-sm">
-              {this.state.error?.message || '组件渲染时遇到了问题'}
+            <p className="text-gray-500 dark:text-gray-400 mb-8 leading-relaxed">
+              页面渲染时出现了意外错误。别担心，这不会影响你的数据。
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <button
-                onClick={this.handleReset}
-                className="inline-flex items-center justify-center gap-2 px-5 py-2.5
-                  bg-gradient-to-r from-indigo-500 to-purple-500 text-white
-                  rounded-xl font-semibold text-sm hover:shadow-lg transition-all"
+                onClick={this.handleReload}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-bold rounded-xl shadow-lg shadow-indigo-500/25 hover:shadow-xl hover:scale-105 active:scale-95 transition-all duration-300"
               >
-                <RefreshCw className="w-4 h-4" />
-                重试
+                <RefreshCw className="w-5 h-5" />
+                重新加载
               </button>
               
-              <Link href="/">
-                <span className="inline-flex items-center justify-center gap-2 px-5 py-2.5
-                  bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300
-                  rounded-xl font-semibold text-sm hover:bg-gray-200 dark:hover:bg-gray-700 transition-all cursor-pointer">
-                  <Home className="w-4 h-4" />
-                  返回首页
-                </span>
+              <Link
+                href="/"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 font-bold rounded-xl border border-gray-200 dark:border-gray-700 hover:border-indigo-500/30 hover:shadow-lg transition-all duration-300"
+              >
+                <Home className="w-5 h-5" />
+                返回首页
               </Link>
             </div>
 
-            {process.env.NODE_ENV === 'development' && this.state.error?.stack && (
-              <details className="mt-6 text-left">
-                <summary className="text-xs text-gray-500 cursor-pointer mb-2">
-                  查看错误详情（开发模式）
-                </summary>
-                <pre className="text-xs bg-gray-100 dark:bg-gray-800 p-4 rounded-lg overflow-x-auto text-left text-rose-600 dark:text-rose-400">
-                  {this.state.error.stack.slice(0, 500)}
-                </pre>
-              </details>
+            {process.env.NODE_ENV === 'development' && this.state.error && (
+              <div className="mt-8 p-4 bg-gray-100 dark:bg-gray-800 rounded-xl text-left">
+                <p className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
+                  错误详情（仅开发模式）
+                </p>
+                <p className="text-sm text-red-500 font-mono">
+                  {this.state.error.message}
+                </p>
+              </div>
             )}
           </div>
-        </motion.div>
+        </div>
       );
     }
 
@@ -104,15 +110,4 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   }
 }
 
-export function withErrorBoundary<P extends object>(
-  Component: React.ComponentType<P>,
-  options?: Omit<ErrorBoundaryProps, 'children'>
-) {
-  return function WithErrorBoundary(props: P) {
-    return (
-      <ErrorBoundary {...options}>
-        <Component {...props} />
-      </ErrorBoundary>
-    );
-  };
-}
+export default ErrorBoundary;
