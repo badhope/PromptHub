@@ -18,7 +18,8 @@ interface SimpleSkillCardProps {
   onToggleFavorite?: () => void;
 }
 
-export default function SimpleSkillCard({ skill, index = 0, isFavorite = false, onToggleFavorite }: SimpleSkillCardProps) {
+export default function SimpleSkillCard({ skill, index: _index = 0, isFavorite = false, onToggleFavorite }: SimpleSkillCardProps) {
+  void _index;
   const category = getSkillCategory(skill);
   const description = getSkillDescription(skill);
   const icon = ('icon' in skill && skill.icon) ? skill.icon : getCategoryIcon(category);

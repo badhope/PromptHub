@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Copy, Check, Layers, Eye, Edit, Download, ChevronDown, ChevronRight, Code, Pencil } from 'lucide-react';
+import { Copy, Check, Layers, Eye, Download, ChevronDown, ChevronRight, Code, Pencil } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ReactMarkdown from 'react-markdown';
 import { AGENT_ARCHITECTURE_LAYERS, generateLayeredSystemPrompt } from '@/lib/agent-architecture';

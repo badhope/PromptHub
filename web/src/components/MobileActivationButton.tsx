@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Copy, CopyCheck, ExternalLink, Sparkles } from 'lucide-react';
 import { useCopyToClipboard } from 'usehooks-ts';
 import { showCopyToast, showToast } from './ToastProvider';
@@ -16,7 +16,7 @@ const vibrate = (pattern: number | number[] = 25) => {
   if (typeof navigator !== 'undefined' && navigator.vibrate) {
     try {
       navigator.vibrate(pattern);
-    } catch (e) {
+    } catch (_e) {
     }
   }
 };

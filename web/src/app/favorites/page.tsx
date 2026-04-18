@@ -7,7 +7,6 @@ import AIToolCard from '@/components/AIToolCard';
 import Breadcrumb from '@/components/Breadcrumb';
 import { useSkills } from '@/hooks/useSkills';
 import { getValidatedFavorites } from '@/lib/validation';
-import { ErrorBoundary } from '@/components/ErrorBoundary';
 
 interface AITool {
   id: string;
@@ -45,9 +44,9 @@ export default function FavoritesPage() {
   const [skillFavoriteIds, setSkillFavoriteIds] = useState<string[]>(initial.skillFavorites);
   const [toolFavoriteIds, setToolFavoriteIds] = useState<string[]>(initial.toolFavorites);
   const [aiTools, setAiTools] = useState<{ tools: AITool[] }>({ tools: [] });
-  const [mounted] = useState(initial.mounted);
+  const [_mounted] = useState(initial.mounted);
 
-  void status;
+  void _mounted;
 
   useEffect(() => {
     fetch('/ai-tools.json')

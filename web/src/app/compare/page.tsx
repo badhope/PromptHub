@@ -55,8 +55,9 @@ export default function ComparePage() {
   const { data: skills, status } = useSkills();
   const initialState = useMemo(() => getInitialState(), []);
   const [selectedIds, setSelectedIds] = useState<string[]>(initialState.selectedIds);
-  const [mounted] = useState(initialState.mounted);
+  const [_mounted] = useState(initialState.mounted);
 
+  void _mounted;
   void status;
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<string>('');

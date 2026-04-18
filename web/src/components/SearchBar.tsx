@@ -47,6 +47,8 @@ export default function SearchBar({
     resultCount
   } = useAdvancedSearch(skills);
 
+  void hasResults;
+
   useEffect(() => {
     if (onSearch) {
       onSearch(query, results);

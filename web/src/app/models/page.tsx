@@ -7,7 +7,10 @@ import { MODEL_PROVIDERS } from '@/lib/agent-architecture';
 import { useState } from 'react';
 
 export default function ModelsPage() {
-  const [selectedProvider, setSelectedProvider] = useState<string | null>(null);
+  const [_selectedProvider, _setSelectedProvider] = useState<string | null>(null);
+
+  void _selectedProvider;
+  void _setSelectedProvider;
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12">
