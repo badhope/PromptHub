@@ -53,11 +53,15 @@ function getInitialState() {
 
 export default function ComparePage() {
   const { data: skills, status } = useSkills();
-  const initialState = useMemo(() => getInitialState(), []);
-  const [selectedIds, setSelectedIds] = useState<string[]>(initialState.selectedIds);
-  const [_mounted] = useState(initialState.mounted);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [mounted, setMounted] = useState(false);
 
-  void _mounted;
+  useEffect(() => {
+    setMounted(true);
+    const initialState = getInitialState();
+    setSelectedIds(initialState.selectedIds);
+  }, []);
+
   void status;
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<string>('');

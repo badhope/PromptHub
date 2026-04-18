@@ -26,7 +26,11 @@ export function useVirtualScroll<T>(
 ): VirtualScrollResult<T> {
   const containerRef = useRef<HTMLDivElement>(null);
   const [scrollTop, setScrollTop] = useState(0);
-  const [containerHeight, setContainerHeight] = useState(typeof window !== 'undefined' ? window.innerHeight : 800);
+  const [containerHeight, setContainerHeight] = useState(800);
+
+  useEffect(() => {
+    setContainerHeight(window.innerHeight);
+  }, []);
 
   useEffect(() => {
     if (!windowScroller) return;

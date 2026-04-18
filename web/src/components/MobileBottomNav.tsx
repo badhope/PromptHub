@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { Home, Search, Heart, Settings, Cpu } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -24,7 +24,11 @@ export default function MobileBottomNav() {
   const pathname = usePathname();
   const router = useRouter();
   const { success, selection } = useHapticFeedback();
-  const [mounted] = useState(typeof window !== 'undefined');
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const activeIndex = useMemo(() => {
     const currentIndex = NAV_ITEMS.findIndex(item => 

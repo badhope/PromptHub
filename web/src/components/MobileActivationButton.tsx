@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Copy, CopyCheck, ExternalLink, Sparkles } from 'lucide-react';
 import { useCopyToClipboard } from 'usehooks-ts';
 import { showCopyToast, showToast } from './ToastProvider';
@@ -34,7 +34,11 @@ export default function MobileActivationButton({
 }: MobileActivationButtonProps) {
   const [copied, setCopied] = useState(false);
   const [, copy] = useCopyToClipboard();
-  const [isMobileDevice] = useState(() => isMobile());
+  const [isMobileDevice, setIsMobileDevice] = useState(false);
+
+  useEffect(() => {
+    setIsMobileDevice(isMobile());
+  }, []);
 
   const handleCopy = async (e: React.MouseEvent) => {
     e.preventDefault();

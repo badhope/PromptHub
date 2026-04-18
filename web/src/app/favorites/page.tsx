@@ -39,14 +39,20 @@ function getInitialFavoritesState() {
 
 export default function FavoritesPage() {
   const { data: skills, status } = useSkills();
-  const initial = getInitialFavoritesState();
   const [activeTab, setActiveTab] = useState<TabType>('skills');
-  const [skillFavoriteIds, setSkillFavoriteIds] = useState<string[]>(initial.skillFavorites);
-  const [toolFavoriteIds, setToolFavoriteIds] = useState<string[]>(initial.toolFavorites);
+  const [skillFavoriteIds, setSkillFavoriteIds] = useState<string[]>([]);
+  const [toolFavoriteIds, setToolFavoriteIds] = useState<string[]>([]);
   const [aiTools, setAiTools] = useState<{ tools: AITool[] }>({ tools: [] });
-  const [_mounted] = useState(initial.mounted);
+  const [mounted, setMounted] = useState(false);
 
-  void _mounted;
+  useEffect(() => {
+    setMounted(true);
+    const initial = getInitialFavoritesState();
+    setSkillFavoriteIds(initial.skillFavorites);
+    setToolFavoriteIds(initial.toolFavorites);
+  }, []);
+
+  void status;
 
   useEffect(() => {
     fetch('/ai-tools.json')
