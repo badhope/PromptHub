@@ -48,6 +48,10 @@ coverage/
 .npm/
 .eslintcache
 
+# deploy folder is a build artifact, users run `npm run build` to generate
+deploy/
+!deploy/.gitkeep
+
 # Backup files
 *.backup
 *.backup-*
