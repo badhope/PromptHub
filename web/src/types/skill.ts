@@ -19,6 +19,8 @@ export interface Skill {
   activation?: string;
   source?: 'skill' | 'tool';
   systemPrompt?: string;
+  prompt?: string;
+  tags?: string[];
   useCount?: number;
   rawUrl?: string | null;
   metadata: SkillMetadata;

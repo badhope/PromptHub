@@ -13,17 +13,15 @@
   "scripts": {
     "dev": "cross-env LANG=en_US.UTF-8 next dev --webpack",
     "build": "cross-env LANG=en_US.UTF-8 next build --webpack",
-    "build:standalone": "cross-env LANG=en_US.UTF-8 BUILD_STANDALONE=true next build --webpack",
-    "build:static": "cross-env LANG=en_US.UTF-8 next build --webpack",
-    "postbuild": "node -e \"const fs=require('fs');fs.existsSync('out')&&fs.copyFileSync('out/index.html','out/404.html')\"",
     "start": "cross-env LANG=en_US.UTF-8 next start",
     "start:prod": "cross-env LANG=en_US.UTF-8 NODE_ENV=production node .next/standalone/server.js",
-    "serve": "npx http-server out -p 3000 -o --proxy http://localhost:3000?",
     "lint": "cross-env LANG=en_US.UTF-8 eslint",
     "typecheck": "cross-env LANG=en_US.UTF-8 tsc --noEmit",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "deploy:local": "npm run build && npm run start:prod",
+    "deploy:docker": "docker-compose up -d --build"
   },
   "dependencies": {
     "@ducanh2912/next-pwa": "^10.2.9",

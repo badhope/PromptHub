@@ -4,16 +4,10 @@ import { useState, useRef, useEffect } from 'react';
 import { X, Send, Settings, Download, Copy, Check, Key, Trash2 } from 'lucide-react';
 import { motion, AnimatePresence, useMotionValue, useTransform, useSpring } from 'framer-motion';
 import { useHapticFeedback, useSwipe } from '@/hooks/useGestures';
+import { useLLM } from '@/hooks/useLLM';
 import html2canvas from 'html2canvas';
 
-interface Message {
-  id: string;
-  role: 'user' | 'assistant';
-  content: string;
-  timestamp: number;
-}
-
-interface ChatModalProps {
+interface Props {
   isOpen: boolean;
   onClose: () => void;
   skillName: string;
@@ -41,14 +35,12 @@ const LoadingDots = () => (
   </div>
 );
 
-interface TouchButtonProps {
+const TouchButton = ({ children, onClick, className = '', disabled = false }: {
   children: React.ReactNode;
   onClick?: () => void;
   className?: string;
   disabled?: boolean;
-}
-
-const TouchButton = ({ children, onClick, className = '', disabled = false }: TouchButtonProps) => {
+}) => {
   const { selection } = useHapticFeedback();
   
   return (
@@ -64,13 +56,11 @@ const TouchButton = ({ children, onClick, className = '', disabled = false }: To
   );
 };
 
-export default function ChatModal({ isOpen, onClose, skillName, systemPrompt, icon }: ChatModalProps) {
+export default function ChatModal({ isOpen, onClose, skillName, systemPrompt, icon }: Props) {
   const { success, error, selection } = useHapticFeedback();
-  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [apiKey, setApiKey] = useState('');
   const [showSettings, setShowSettings] = useState(false);
+  const [apiKey, setApiKey] = useState('');
   const [apiKeySaved, setApiKeySaved] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatRef = useRef<HTMLDivElement>(null);
@@ -78,6 +68,16 @@ export default function ChatModal({ isOpen, onClose, skillName, systemPrompt, ic
   const opacity = useTransform(y, [0, 200], [1, 0.5]);
   const scale = useTransform(y, [0, 200], [1, 0.95]);
   const springY = useSpring(y, { stiffness: 400, damping: 35 });
+
+  const {
+    messages,
+    isStreaming: isLoading,
+    sendMessage,
+    clearMessages,
+  } = useLLM({
+    defaultModel: 'gpt-3.5-turbo',
+    apiKeys: { openai: apiKey },
+  });
 
   const { ref: swipeRef } = useSwipe({
     threshold: 100,
@@ -98,21 +98,6 @@ export default function ChatModal({ isOpen, onClose, skillName, systemPrompt, ic
   }, []);
 
   useEffect(() => {
-    if (isOpen) {
-      y.set(0);
-      setShowSettings(false);
-      if (messages.length === 0) {
-        setMessages([{
-          id: '1',
-          role: 'assistant',
-          content: `你好！我是 ${skillName} ${icon}。有什么想和我聊的吗？\n\n💡 提示：下拉可关闭对话，点击设置可以生成截图分享！`,
-          timestamp: Date.now()
-        }]);
-      }
-    }
-  }, [isOpen, skillName, icon, messages.length, y]);
-
-  useEffect(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
@@ -120,7 +105,7 @@ export default function ChatModal({ isOpen, onClose, skillName, systemPrompt, ic
 
   const toggleSettings = () => {
     selection();
-    setShowSettings(!showSettings);
+    setShowSettings(prev => !prev);
   };
 
   const saveApiKey = () => {
@@ -139,7 +124,7 @@ export default function ChatModal({ isOpen, onClose, skillName, systemPrompt, ic
     success();
   };
 
-  const sendMessage = async () => {
+  const handleSendMessage = async () => {
     if (!input.trim() || isLoading) return;
     
     if (!apiKeySaved) {
@@ -147,171 +132,167 @@ export default function ChatModal({ isOpen, onClose, skillName, systemPrompt, ic
       return;
     }
 
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      role: 'user',
-      content: input,
-      timestamp: Date.now()
-    };
-
-    setMessages(prev => [...prev, userMessage]);
-    setInput('');
-    setIsLoading(true);
     success();
+    const currentInput = input;
+    setInput('');
 
-    try {
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${apiKey}`
-        },
-        body: JSON.stringify({
-          model: 'gpt-3.5-turbo',
-          messages: [
-            { role: 'system', content: systemPrompt },
-            ...messages.map(m => ({ role: m.role, content: m.content })),
-            { role: 'user', content: input }
-          ],
-          max_tokens: 1000
-        })
-      });
-
-      if (!response.ok) throw new Error('API Error');
-      
-      const data = await response.json();
-      const assistantMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        role: 'assistant',
-        content: data.choices[0].message.content,
-        timestamp: Date.now()
-      };
-      
-      setMessages(prev => [...prev, assistantMessage]);
-      success();
-    } catch (e) {
-      error();
-      setMessages(prev => [...prev, {
-        id: (Date.now() + 1).toString(),
-        role: 'assistant',
-        content: '😅 哎呀，API Key 好像有问题，请检查设置。也可能是网络问题~',
-        timestamp: Date.now()
-      }]);
-    } finally {
-      setIsLoading(false);
-    }
+    await sendMessage(currentInput, systemPrompt);
   };
 
   const exportScreenshot = async () => {
     if (!chatRef.current) return;
-    success();
-    
-    const canvas = await html2canvas(chatRef.current, {
-      backgroundColor: '#ffffff',
-      scale: 2
-    });
-    
-    const link = document.createElement('a');
-    link.download = `${skillName}-聊天记录-${Date.now()}.png`;
-    link.href = canvas.toDataURL();
-    link.click();
-    success();
+    try {
+      const canvas = await html2canvas(chatRef.current, {
+        backgroundColor: '#ffffff',
+        scale: 2,
+      });
+      const link = document.createElement('a');
+      link.download = `${skillName}-chat-${Date.now()}.png`;
+      link.href = canvas.toDataURL();
+      link.click();
+      success();
+    } catch {
+      error();
+    }
   };
 
-  const copyMessages = () => {
-    const text = messages.map(m => {
-      const prefix = m.role === 'user' ? '你：' : `${skillName}：`;
-      return prefix + m.content;
-    }).join('\n\n');
-    navigator.clipboard.writeText(text);
+  const copyToClipboard = async () => {
+    const text = messages
+      .map(m => `${m.role === 'user' ? '👤 用户' : '🤖 助手'}: ${m.content}`)
+      .join('\n\n');
+    await navigator.clipboard.writeText(text);
     success();
-  };
-
-  const handleClose = () => {
-    selection();
-    onClose();
-  };
-
-  const messageVariants = {
-    initial: { opacity: 0, y: 20, scale: 0.95 },
-    animate: { opacity: 1, y: 0, scale: 1 }
   };
 
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[150] flex items-end sm:items-center justify-center">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center"
+        >
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
-            onClick={handleClose}
+            onClick={onClose}
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
           />
           
           <motion.div
             ref={modalRef}
             style={{ y: springY, opacity, scale }}
-            initial={{ y: '100%', opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: '100%', opacity: 0 }}
-            transition={{ type: 'spring', damping: 28, stiffness: 350 }}
-            className="relative w-full sm:w-[90vw] sm:max-w-2xl h-[88vh] sm:h-[82vh] max-h-[850px] bg-[#f2f2f7] dark:bg-black rounded-t-[2rem] sm:rounded-[2rem] shadow-2xl flex flex-col overflow-hidden"
-            drag="y"
-            dragConstraints={{ top: 0, bottom: 0 }}
-            dragElastic={0.15}
-            onDragEnd={(_, info) => {
-              if (info.offset.y > 120) {
-                success();
-                onClose();
-              }
-            }}
+            initial={{ y: '100%', opacity: 0, scale: 0.95 }}
+            animate={{ y: 0, opacity: 1, scale: 1 }}
+            exit={{ y: '100%', opacity: 0, scale: 0.95 }}
+            transition={{ type: 'spring', damping: 30, stiffness: 400 }}
+            className="relative w-full max-w-2xl h-[85vh] sm:h-[80vh] max-h-[800px] bg-white dark:bg-gray-900 rounded-t-3xl sm:rounded-3xl shadow-2xl flex flex-col overflow-hidden"
           >
-            <div className="flex justify-center py-2.5 sm:hidden">
-              <div className="w-36 h-1.5 bg-gray-300/80 dark:bg-gray-600/80 rounded-full touch-none" />
-            </div>
-
-            <div className="flex items-center justify-between px-4 pb-2 border-b border-gray-200/50 dark:border-gray-700/50">
-              <div className="flex items-center gap-3">
-                <motion.div 
-                  whileHover={{ scale: 1.05 }}
-                  className="w-11 h-11 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center text-xl shadow-lg shadow-indigo-500/20"
-                >
-                  {icon}
-                </motion.div>
-                <div>
-                  <h3 className="font-semibold text-[17px] text-gray-900 dark:text-white tracking-tight">{skillName}</h3>
-                  <p className="text-[12px] text-gray-500 flex items-center gap-1.5">
-                    <span className="w-2 h-2 bg-green-500 rounded-full" />
-                    在线
-                  </p>
-                </div>
+            <div className="w-12 h-1.5 bg-gray-300 dark:bg-gray-600 rounded-full mx-auto mt-3 mb-2 sm:hidden" />
+            
+            <div className="px-4 sm:px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center gap-3 shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-xl">
+                {icon}
+              </div>
+              <div className="flex-1 min-w-0">
+                <h2 className="font-bold text-gray-900 dark:text-white truncate">{skillName}</h2>
+                <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                  ✅ CORS 已修复 · 后端代理模式
+                </p>
               </div>
               
-              <div className="flex items-center gap-0.5">
-                <TouchButton
-                  onClick={toggleSettings}
-                  className="w-11 h-11 rounded-2xl flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800/80"
+              <TouchButton onClick={exportScreenshot} className="p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800">
+                <Download className="w-5 h-5 text-gray-500" />
+              </TouchButton>
+              <TouchButton onClick={copyToClipboard} className="p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800">
+                <Copy className="w-5 h-5 text-gray-500" />
+              </TouchButton>
+              <TouchButton onClick={() => { clearMessages(); success(); }} className="p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800">
+                <Trash2 className="w-5 h-5 text-gray-500" />
+              </TouchButton>
+              <TouchButton onClick={toggleSettings} className="p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800">
+                <Settings className="w-5 h-5 text-gray-500" />
+              </TouchButton>
+              <TouchButton onClick={onClose} className="p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800">
+                <X className="w-5 h-5 text-gray-500" />
+              </TouchButton>
+            </div>
+
+            <div ref={chatRef} className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
+              {messages.map((message, idx) => (
+                <motion.div
+                  key={idx}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: idx * 0.05 }}
+                  className={`flex gap-3 ${message.role === 'user' ? 'flex-row-reverse' : ''}`}
                 >
-                  <Settings className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-                </TouchButton>
+                  <div className={`
+                    w-8 h-8 rounded-lg flex items-center justify-center shrink-0 text-sm
+                    ${message.role === 'user'
+                      ? 'bg-gradient-to-br from-indigo-500 to-purple-500 text-white'
+                      : 'bg-gray-100 dark:bg-gray-800'
+                    }
+                  `}>
+                    {message.role === 'user' ? '👤' : icon}
+                  </div>
+                  <div className={`
+                    flex-1 px-4 py-3 rounded-2xl max-w-[85%]
+                    ${message.role === 'user'
+                      ? 'bg-gradient-to-r from-indigo-500 to-purple-500 text-white'
+                      : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
+                    }
+                  `}>
+                    <p className="text-sm leading-relaxed whitespace-pre-wrap">
+                      {message.content || (isLoading && message.role === 'assistant' ? '' : '\u00A0')}
+                    </p>
+                  </div>
+                </motion.div>
+              ))}
+
+              {isLoading && messages.length > 0 && messages[messages.length - 1].role === 'user' && (
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="flex gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center shrink-0">
+                    {icon}
+                  </div>
+                  <div className="px-4 py-3 rounded-2xl bg-gray-100 dark:bg-gray-800">
+                    <LoadingDots />
+                  </div>
+                </motion.div>
+              )}
+              <div ref={messagesEndRef} />
+            </div>
+
+            <div className="p-4 border-t border-gray-200 dark:border-gray-700 shrink-0">
+              <div className="flex gap-3 items-end">
+                <textarea
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault();
+                      handleSendMessage();
+                    }
+                  }}
+                  placeholder={apiKeySaved ? "输入消息... (Enter 发送)" : "请先设置 API Key"}
+                  rows={1}
+                  disabled={!apiKeySaved || isLoading}
+                  className="flex-1 px-4 py-3 pr-12 rounded-2xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none text-sm disabled:opacity-50 min-h-[52px] max-h-32"
+                />
                 <TouchButton
-                  onClick={exportScreenshot}
-                  className="w-11 h-11 rounded-2xl flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800/80"
+                  onClick={handleSendMessage}
+                  disabled={!input.trim() || isLoading || !apiKeySaved}
+                  className={`
+                    p-3 rounded-xl font-medium flex items-center justify-center shrink-0
+                    ${input.trim() && !isLoading && apiKeySaved
+                      ? 'bg-gradient-to-r from-indigo-500 to-purple-500 text-white'
+                      : 'bg-gray-100 dark:bg-gray-800 text-gray-400 cursor-not-allowed'
+                    }
+                  `}
                 >
-                  <Download className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-                </TouchButton>
-                <TouchButton
-                  onClick={copyMessages}
-                  className="w-11 h-11 rounded-2xl flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800/80"
-                >
-                  <Copy className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-                </TouchButton>
-                <TouchButton
-                  onClick={handleClose}
-                  className="w-11 h-11 rounded-2xl flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800/80 sm:hidden"
-                >
-                  <X className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+                  <Send className="w-5 h-5" />
                 </TouchButton>
               </div>
             </div>
@@ -319,122 +300,57 @@ export default function ChatModal({ isOpen, onClose, skillName, systemPrompt, ic
             <AnimatePresence>
               {showSettings && (
                 <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: 'auto', opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-                  className="overflow-hidden border-b border-gray-200/50 dark:border-gray-700/50"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  className="absolute inset-0 bg-black/50 flex items-center justify-center p-4"
                 >
-                  <div className="p-4 bg-gradient-to-r from-indigo-50/80 to-purple-50/80 dark:from-indigo-900/20 dark:to-purple-900/20">
-                    <div className="flex items-center gap-2 mb-3">
-                      <Key className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
-                      <span className="font-semibold text-[15px] text-gray-800 dark:text-gray-200">OpenAI API Key 设置</span>
-                    </div>
-                    <p className="text-[12px] text-gray-500 dark:text-gray-400 mb-3">
-                      ⚠️ Key 仅保存在本地浏览器，不会上传到任何服务器
+                  <motion.div
+                    initial={{ y: 20 }}
+                    animate={{ y: 0 }}
+                    exit={{ y: 20 }}
+                    className="w-full max-w-md bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-2xl"
+                  >
+                    <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                      <Key className="w-5 h-5 text-amber-500" />
+                      OpenAI API 设置
+                    </h3>
+                    <p className="text-sm text-emerald-600 dark:text-emerald-400 mb-4">
+                      ✅ 通过后端代理调用，无 CORS 限制
                     </p>
-                    <div className="flex gap-2">
-                      <input
-                        type="password"
-                        value={apiKey}
-                        onChange={(e) => setApiKey(e.target.value)}
-                        placeholder="sk-..."
-                        className="flex-1 px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-[15px]"
-                      />
-                      {apiKeySaved ? (
-                        <TouchButton
-                          onClick={clearApiKey}
-                          className="px-4 py-3 bg-rose-500 hover:bg-rose-600 text-white rounded-xl text-[14px] font-medium flex items-center gap-1"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                          清除
-                        </TouchButton>
-                      ) : (
-                        <TouchButton
-                          onClick={saveApiKey}
-                          className="px-4 py-3 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl text-[14px] font-medium flex items-center gap-1"
-                        >
-                          <Check className="w-4 h-4" />
-                          保存
-                        </TouchButton>
-                      )}
+                    <input
+                      type="password"
+                      value={apiKey}
+                      onChange={(e) => setApiKey(e.target.value)}
+                      placeholder="sk-..."
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-mono text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 mb-4"
+                    />
+                    <div className="flex gap-3">
+                      <TouchButton
+                        onClick={clearApiKey}
+                        className="flex-1 py-3 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 font-medium"
+                      >
+                        清除
+                      </TouchButton>
+                      <TouchButton
+                        onClick={saveApiKey}
+                        className="flex-1 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-white font-medium"
+                      >
+                        保存
+                      </TouchButton>
                     </div>
-                  </div>
+                    <TouchButton
+                      onClick={() => setShowSettings(false)}
+                      className="w-full mt-3 py-2 text-gray-500 text-sm"
+                    >
+                      取消
+                    </TouchButton>
+                  </motion.div>
                 </motion.div>
               )}
             </AnimatePresence>
-
-            <div ref={chatRef} className="flex-1 overflow-y-auto p-4 space-y-3 overscroll-contain">
-              {messages.map((message, i) => (
-                <motion.div
-                  key={message.id}
-                  variants={messageVariants}
-                  initial="initial"
-                  animate="animate"
-                  transition={{ 
-                    type: 'spring', 
-                    stiffness: 350, 
-                    damping: 28,
-                    delay: Math.min(i * 0.03, 0.15)
-                  }}
-                  className={message.role === 'user' ? 'flex justify-end' : 'flex justify-start'}
-                >
-                  <div
-                    className={`max-w-[82%] px-4 py-3 ${
-                      message.role === 'user'
-                        ? 'bg-gradient-to-br from-indigo-500 to-purple-600 text-white rounded-[20px] rounded-br-[6px] shadow-sm shadow-indigo-500/20'
-                        : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-[20px] rounded-bl-[6px] shadow-sm'
-                    }`}
-                  >
-                    <p className="text-[15px] leading-relaxed whitespace-pre-wrap">
-                      {message.content}
-                    </p>
-                  </div>
-                </motion.div>
-              ))}
-              
-              {isLoading && (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-                  className="flex justify-start"
-                >
-                  <div className="bg-white dark:bg-gray-800 px-5 py-4 rounded-[20px] rounded-bl-[6px] shadow-sm">
-                    <LoadingDots />
-                  </div>
-                </motion.div>
-              )}
-              <div ref={messagesEndRef} className="h-2" />
-            </div>
-
-            <div className="p-4 border-t border-gray-200/50 dark:border-gray-700/50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm pb-safe">
-              <div className="flex gap-2.5 items-end">
-                <input
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && sendMessage()}
-                  placeholder={apiKeySaved ? "输入消息..." : "请先在设置中添加 API Key"}
-                  className="flex-1 px-4 py-3.5 bg-gray-100 dark:bg-gray-800 rounded-[20px] text-[15px] min-h-[52px] max-h-[120px]"
-                />
-                <TouchButton
-                  onClick={sendMessage}
-                  disabled={isLoading || !input.trim()}
-                  className={`w-13 h-13 rounded-[20px] flex items-center justify-center text-white shadow-sm min-w-[52px] min-h-[52px] ${
-                    isLoading || !input.trim()
-                      ? 'bg-gray-300 dark:bg-gray-700'
-                      : 'bg-gradient-to-br from-indigo-500 to-purple-600 shadow-indigo-500/20'
-                  }`}
-                >
-                  <Send className="w-5 h-5" />
-                </TouchButton>
-              </div>
-              <p className="text-[11px] text-center text-gray-400 mt-2.5">
-                ↓ 下拉可关闭 · 按 Enter 发送 · 截图可分享
-              </p>
-            </div>
           </motion.div>
-        </div>
+        </motion.div>
       )}
     </AnimatePresence>
   );

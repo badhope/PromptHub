@@ -2,7 +2,7 @@ export type { Message, LLMConfig, LLMProvider, ProviderType, ProviderConfig } fr
 export { LLMError } from './types';
 export { parseSSEStream, createReadableStream, streamToString } from './stream-utils';
 export { createOpenAICompatibleProvider, OpenAIProvider, DeepSeekProvider, AnthropicProvider } from './providers/openai-compatible';
-export { OllamaProvider, ollamaProvider } from './providers/ollama';
+export { OllamaProvider, ollamaProvider, ollamaProvider as ollama } from './providers/ollama';
 export {
   QwenProvider,
   HunyuanProvider,
@@ -44,22 +44,87 @@ export function getProvider(providerType: string, baseUrl?: string) {
   return provider;
 }
 
+async function streamViaProxy(
+  providerType: string,
+  messages: Message[],
+  config: Partial<LLMConfig> & { onChunk: (content: string) => void }
+): Promise<void> {
+  const response = await fetch('/api/llm/chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      provider: providerType,
+      messages,
+      model: config.model,
+      apiKey: config.apiKey,
+      temperature: config.temperature,
+      maxTokens: config.maxTokens,
+      baseUrl: config.baseUrl,
+    }),
+  });
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({ error: 'Unknown error' }));
+    throw new Error(error.error || error.message || `HTTP ${response.status}`);
+  }
+
+  const reader = response.body?.getReader();
+  if (!reader) throw new Error('No response stream');
+
+  const decoder = new TextDecoder('utf-8');
+  let buffer = '';
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+
+    buffer += decoder.decode(value, { stream: true });
+    const lines = buffer.split('\n');
+    buffer = lines.pop() || '';
+
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed === 'data: [DONE]') continue;
+      if (!trimmed.startsWith('data: ')) continue;
+
+      try {
+        const jsonData = trimmed.slice(6);
+        const parsed = JSON.parse(jsonData);
+        
+        const content = parsed.choices?.[0]?.delta?.content 
+          || parsed.message?.content
+          || parsed.output?.choices?.[0]?.message?.content
+          || parsed.content?.[0]?.text;
+
+        if (content) {
+          config.onChunk(content);
+        }
+      } catch {
+      }
+    }
+  }
+}
+
 export async function streamChat(
   providerType: string,
   messages: Message[],
   config: Partial<LLMConfig> & { onChunk: (content: string) => void }
 ): Promise<void> {
-  const provider = getProvider(providerType);
-  if (!provider) {
-    throw new Error(`Provider ${providerType} not found`);
-  }
-  const stream = await provider.chat(messages, config);
-  const reader = stream.getReader();
+  if (providerType === 'ollama' && !config.apiKey) {
+    const provider = getProvider(providerType);
+    if (!provider) {
+      throw new Error(`Provider ${providerType} not found`);
+    }
+    const stream = await provider.chat(messages, config);
+    const reader = stream.getReader();
 
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    config.onChunk(value);
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      config.onChunk(value);
+    }
+  } else {
+    await streamViaProxy(providerType, messages, config);
   }
 }
 

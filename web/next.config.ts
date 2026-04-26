@@ -12,9 +12,9 @@ const withPWA = withPWAInit({
 });
 
 const nextConfig: NextConfig = {
-  output: isDev ? undefined : (isStandalone ? 'standalone' : 'export'),
-  basePath: isGitHubPages && !isDev ? '' : '',
-  assetPrefix: isGitHubPages && !isDev ? '' : '',
+  output: 'standalone',
+  basePath: '',
+  assetPrefix: '',
   images: {
     unoptimized: true,
   },
@@ -27,6 +27,15 @@ const nextConfig: NextConfig = {
   },
   productionBrowserSourceMaps: false,
   cleanDistDir: true,
+  skipTrailingSlashRedirect: false,
+  distDir: '.next',
+  httpAgentOptions: {
+    keepAlive: true,
+  },
+  onDemandEntries: {
+    maxInactiveAge: 60 * 60 * 1000,
+    pagesBufferLength: 5,
+  },
 };
 
 export default withPWA(nextConfig);

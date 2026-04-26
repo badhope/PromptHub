@@ -103,13 +103,21 @@ export function useLLM(options: UseLLMOptions = {}) {
 
   const validateProviderApiKey = useCallback(async (provider: string, apiKey: string): Promise<boolean> => {
     try {
-      const llmProvider = getProvider(provider);
-      if (llmProvider && 'checkAvailable' in llmProvider && typeof (llmProvider as { checkAvailable: (key: string) => Promise<boolean> }).checkAvailable === 'function') {
-        return await (llmProvider as { checkAvailable: (key: string) => Promise<boolean> }).checkAvailable(apiKey);
+      if (provider === 'ollama') {
+        return await ollamaProvider.checkAvailable();
       }
-      return false;
+
+      const response = await fetch('/api/llm/validate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ provider, apiKey }),
+      });
+
+      if (!response.ok) return false;
+      const data = await response.json();
+      return data.valid || false;
     } catch {
-      return false;
+      return apiKey.startsWith('sk-') && apiKey.length > 40;
     }
   }, []);
 

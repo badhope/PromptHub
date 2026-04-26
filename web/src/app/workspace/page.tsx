@@ -19,6 +19,7 @@ import {
 import { useHapticFeedback } from '@/hooks/useGestures';
 import { useLLM } from '@/hooks/useLLM';
 import { getProviderForModel } from '@/lib/llm';
+import { AgentDebugPanel } from '@/components/workspace/AgentDebugPanel';
 
 interface Variable {
   name: string;
@@ -680,6 +681,8 @@ export default function WorkspacePage() {
             </motion.div>
           )}
         </AnimatePresence>
+
+        <AgentDebugPanel />
       </div>
     </div>
   );

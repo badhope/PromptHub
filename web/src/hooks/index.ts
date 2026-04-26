@@ -9,3 +9,5 @@ export { useSkills, useSkill } from './useSkills';
 export { useLiteSkillStats as useSkillStats } from './useLiteSkills';
 export { useDebouncedSearch } from './useDebouncedSearch';
 export { useContextMemory } from './useContextMemory';
+export { useLLM } from './useLLM';
+export { useAgent } from './useAgent';

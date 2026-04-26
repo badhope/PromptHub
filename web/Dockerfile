@@ -13,10 +13,9 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 ENV NODE_ENV=production
-ENV BUILD_STANDALONE=true
 ENV NEXT_TELEMETRY_DISABLED=1
 
-RUN npm run build:standalone
+RUN npm run build
 
 FROM base AS runner
 WORKDIR /app
