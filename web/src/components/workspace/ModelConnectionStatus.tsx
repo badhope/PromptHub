@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { AlertCircle, CheckCircle, Globe, ShieldAlert, Terminal, X } from 'lucide-react';
 import { ollama } from '@/lib/llm';
 
@@ -12,6 +12,7 @@ interface ModelConnectionStatusProps {
 export function ModelConnectionStatus({ selectedModel, validationStatus }: ModelConnectionStatusProps) {
   const [ollamaStatus, setOllamaStatus] = useState<'checking' | 'connected' | 'cors_error' | 'not_running' | 'https_blocked'>('checking');
   const [showTooltip, setShowTooltip] = useState(false);
+  const mountedRef = useRef(false);
   const provider = selectedModel === 'ollama' ? 'ollama' : selectedModel;
   const isCloudModel = selectedModel !== 'ollama';
   const isChecking = validationStatus[provider] === 'checking';
@@ -19,6 +20,7 @@ export function ModelConnectionStatus({ selectedModel, validationStatus }: Model
 
   useEffect(() => {
     if (selectedModel !== 'ollama') return;
+    mountedRef.current = true;
 
     const checkOllama = async () => {
       try {
@@ -26,17 +28,21 @@ export function ModelConnectionStatus({ selectedModel, validationStatus }: Model
         const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 
         if (isHttps && !isLocalhost) {
-          setOllamaStatus('https_blocked');
+          if (mountedRef.current) setOllamaStatus('https_blocked');
           return;
         }
 
         const available = await ollama.checkAvailable();
+        if (!mountedRef.current) return;
+        
         if (available) {
           setOllamaStatus('connected');
         } else {
           setOllamaStatus('not_running');
         }
       } catch (err: any) {
+        if (!mountedRef.current) return;
+        
         if (err.message?.includes('CORS') || err.name === 'TypeError') {
           setOllamaStatus('cors_error');
         } else {
@@ -47,7 +53,11 @@ export function ModelConnectionStatus({ selectedModel, validationStatus }: Model
 
     checkOllama();
     const interval = setInterval(checkOllama, 5000);
-    return () => clearInterval(interval);
+    
+    return () => {
+      mountedRef.current = false;
+      clearInterval(interval);
+    };
   }, [selectedModel]);
 
   if (isCloudModel) {

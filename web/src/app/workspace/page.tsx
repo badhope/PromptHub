@@ -49,6 +49,7 @@ const SPRING_CONFIG = { type: 'spring', damping: 25, stiffness: 200 } as const;
 
 export default function WorkspacePage() {
   const { success } = useHapticFeedback();
+  const mountedRef = useRef(false);
 
   const [selectedModel, setSelectedModel] = useState('gpt-3.5-turbo');
   const [prompt, setPrompt] = useState('');
@@ -127,6 +128,8 @@ export default function WorkspacePage() {
   }, [userInput]);
 
   useEffect(() => {
+    mountedRef.current = true;
+
     const saved = localStorage.getItem('workspace:apiKeys');
     if (saved) {
       try {
@@ -136,17 +139,24 @@ export default function WorkspacePage() {
 
     (async () => {
       const available = await checkOllamaAvailable();
+      if (!mountedRef.current) return;
+      
       setOllamaAvailable(available);
       if (available) {
         const models = await listOllamaModels();
+        if (!mountedRef.current) return;
+        
         setOllamaModels(models);
         if (models.length > 0) {
           setSelectedModel('ollama');
         }
-        success();
       }
     })();
-  }, [checkOllamaAvailable, listOllamaModels, success]);
+
+    return () => {
+      mountedRef.current = false;
+    };
+  }, [checkOllamaAvailable, listOllamaModels]);
 
   useEffect(() => {
     localStorage.setItem('workspace:apiKeys', JSON.stringify(apiKeyConfig));
