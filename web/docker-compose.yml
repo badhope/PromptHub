@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  prompthub-web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: prompthub-web
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - prompthub-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: prompthub-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - prompthub-web
+    networks:
+      - prompthub-network
+
+networks:
+  prompthub-network:
+    driver: bridge

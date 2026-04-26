@@ -9,12 +9,53 @@ export const prisma = globalForPrisma.prisma || new PrismaClient({
 
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
 
-export function skillDbToEntity(dbSkill: any): Skill {
+export interface DbSkill {
+  id: string;
+  name: string;
+  number?: string | null;
+  index?: number | null;
+  icon: string;
+  category: string;
+  description: string;
+  guide?: string;
+  scenarios?: string | null;
+  activation?: string;
+  source: string;
+  systemPrompt?: string | null;
+  useCount: number;
+  rawUrl?: string | null;
+  metadata?: string | null;
+  categorization?: string | null;
+  content?: string | null;
+  stats?: string | null;
+  thumbnails?: string | null;
+  capabilities?: string | null;
+  contentMarkdown?: string | null;
+  system_prompt?: string | null;
+}
+
+interface SkillEntity {
+  id?: string;
+  name?: string;
+  number?: string;
+  category?: string;
+  content?: { content_markdown?: string };
+  activation_command?: { content_markdown?: string };
+  systemPrompt?: string;
+  system_prompt?: string;
+  [key: string]: unknown;
+}
+
+export function skillDbToEntity(dbSkill: DbSkill): Skill {
+  const nullToUndefined = <T>(val: T | null | undefined): T | undefined => {
+    return val ?? undefined;
+  };
+
   return {
     id: dbSkill.id,
     name: dbSkill.name,
-    number: dbSkill.number,
-    index: dbSkill.index,
+    number: nullToUndefined(dbSkill.number),
+    index: nullToUndefined(dbSkill.index),
     icon: dbSkill.icon,
     category: dbSkill.category,
     description: dbSkill.description,
@@ -22,22 +63,22 @@ export function skillDbToEntity(dbSkill: any): Skill {
     scenarios: dbSkill.scenarios ? JSON.parse(dbSkill.scenarios) : [],
     activation: dbSkill.activation,
     source: dbSkill.source as 'skill' | 'tool',
-    systemPrompt: dbSkill.systemPrompt,
+    systemPrompt: nullToUndefined(dbSkill.systemPrompt),
     useCount: dbSkill.useCount,
-    rawUrl: dbSkill.rawUrl,
+    rawUrl: nullToUndefined(dbSkill.rawUrl),
     metadata: dbSkill.metadata ? JSON.parse(dbSkill.metadata) : {},
     categorization: dbSkill.categorization ? JSON.parse(dbSkill.categorization) : {},
     content: dbSkill.content ? JSON.parse(dbSkill.content) : {},
     stats: dbSkill.stats ? JSON.parse(dbSkill.stats) : { rating: 0, use_count: 0, favorite_count: 0, share_count: 0, view_count: 0, rating_count: 0 },
     thumbnails: dbSkill.thumbnails ? JSON.parse(dbSkill.thumbnails) : {},
     capabilities: dbSkill.capabilities ? JSON.parse(dbSkill.capabilities) : {},
-    system_prompt: dbSkill.systemPrompt,
+    system_prompt: nullToUndefined(dbSkill.systemPrompt),
     activation_command: dbSkill.contentMarkdown ? { content_markdown: dbSkill.contentMarkdown } : undefined,
   };
 }
 
-export function skillEntityToDb(skill: any): any {
-  const safeStringify = (val: any): string => {
+export function skillEntityToDb(skill: Partial<SkillEntity>): Record<string, unknown> {
+  const safeStringify = (val: unknown): string => {
     if (!val) return '{}';
     try {
       return JSON.stringify(val);
@@ -46,7 +87,7 @@ export function skillEntityToDb(skill: any): any {
     }
   };
 
-  const safeString = (val: any): string | null => {
+  const safeString = (val: unknown): string | null => {
     if (val === null || val === undefined) return null;
     if (typeof val === 'string') return val;
     try {
@@ -65,8 +106,8 @@ export function skillEntityToDb(skill: any): any {
   };
 
   return {
-    id: String(skill.id),
-    name: String(skill.name || ''),
+    id: String(skill.id ?? ''),
+    name: String(skill.name ?? ''),
     number: skill.number ? String(skill.number) : null,
     index: typeof skill.index === 'number' ? skill.index : null,
     icon: skill.icon ? String(skill.icon) : null,

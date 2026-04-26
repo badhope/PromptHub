@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import type { Skill } from '@/types/skill';
-import { skillDbToEntity } from '@/lib/db';
+import { skillDbToEntity, type DbSkill } from '@/lib/db';
 
 interface UseDatabaseSkillsOptions {
   enabled?: boolean;
@@ -28,7 +28,7 @@ export function useDatabaseSkills(
   const [skills, setSkills] = useState<Skill[]>(skillsCache || []);
   const [error, setError] = useState<Error | null>(null);
 
-  const fetchSkills = async () => {
+  const fetchSkills = useCallback(async () => {
     if (!enabled) {
       setStatus('success');
       setSkills([]);
@@ -42,7 +42,7 @@ export function useDatabaseSkills(
       if (!res.ok) throw new Error('Failed to fetch skills');
       
       const data = await res.json();
-      const converted = data.map((dbSkill: any) => skillDbToEntity(dbSkill));
+      const converted = data.map((dbSkill: DbSkill) => skillDbToEntity(dbSkill));
       
       skillsCache = converted;
       setSkills(converted);
@@ -53,13 +53,13 @@ export function useDatabaseSkills(
       setError(e as Error);
       console.error('useDatabaseSkills error:', e);
     }
-  };
+  }, [enabled]);
 
   useEffect(() => {
     if (!skillsCache) {
       fetchSkills();
     }
-  }, [enabled]);
+  }, [fetchSkills]);
 
   const getSkillById = (id: string): Skill | undefined => {
     return skills.find(s => s.id === id);

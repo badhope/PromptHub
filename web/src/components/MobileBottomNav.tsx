@@ -85,7 +85,7 @@ export default function MobileBottomNav() {
       <div className="absolute inset-0 bg-gradient-to-t from-black/6 to-transparent pointer-events-none -top-3 h-6" />
       
       <div className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-t border-gray-200/60 dark:border-gray-700/60 shadow-[0_-1px_40px_rgba(0,0,0,0.08)]">
-        <div className="flex items-center justify-around relative h-12">
+        <div className="flex items-center justify-around relative h-16">
           {NAV_ITEMS.map((item, index) => {
             const isActive = activeIndex === index;
             return (
@@ -97,7 +97,7 @@ export default function MobileBottomNav() {
                 className={`
                   relative flex flex-col items-center justify-center
                   transition-all duration-400 ease-out
-                  min-w-[48px] min-h-[49px]
+                  min-w-[56px] min-h-[56px] px-2
                 `}
               >
                 <AnimatePresence mode="wait">

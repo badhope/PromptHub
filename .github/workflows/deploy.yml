@@ -35,6 +35,8 @@ jobs:
       - name: Build
         working-directory: ./web
         run: npm run build
+        env:
+          GITHUB_ACTIONS: 'true'
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

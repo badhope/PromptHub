@@ -127,6 +127,11 @@ const MouseFollower = () => {
     const springY = useSpring(mouseY, { stiffness: 150, damping: 20 });
     const [isTouchDevice, setIsTouchDevice] = useState(false);
 
+    const orb1X = useTransform(springX, (x) => x - 250);
+    const orb1Y = useTransform(springY, (y) => y - 250);
+    const orb2X = useTransform(springX, (x) => x - 150 + 100);
+    const orb2Y = useTransform(springY, (y) => y - 150 + 100);
+
     useEffect(() => {
       const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
       setIsTouchDevice(isTouch);
@@ -147,17 +152,11 @@ const MouseFollower = () => {
       <>
         <motion.div
           className="hidden lg:block fixed w-[500px] h-[500px] bg-gradient-to-r from-indigo-500/15 via-purple-500/10 to-pink-500/15 rounded-full pointer-events-none z-0 blur-3xl"
-          style={{
-            x: useTransform(springX, (x) => x - 250),
-            y: useTransform(springY, (y) => y - 250),
-          }}
+          style={{ x: orb1X, y: orb1Y }}
         />
         <motion.div
           className="hidden lg:block fixed w-[300px] h-[300px] bg-gradient-to-r from-amber-500/10 to-emerald-500/10 rounded-full pointer-events-none z-0 blur-3xl"
-          style={{
-            x: useTransform(springX, (x) => x - 150 + 100),
-            y: useTransform(springY, (y) => y - 150 + 100),
-          }}
+          style={{ x: orb2X, y: orb2Y }}
         />
       </>
     );

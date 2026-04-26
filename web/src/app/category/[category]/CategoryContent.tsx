@@ -11,8 +11,8 @@ export default function CategoryContent({ params }: { params: Promise<{ category
   const { category } = use(params);
   const searchParams = useSearchParams();
   const subcategoryParam = searchParams.get('sub');
-  const { data: skills, status } = useSkills();
-  const summaries = skills || [];
+  const { data: skills } = useSkills();
+  const summaries = useMemo(() => skills || [], [skills]);
   
   const categoryInfo = MULTI_LEVEL_CATEGORY_SYSTEM[category];
   const allCategorySkills = useMemo(() => 

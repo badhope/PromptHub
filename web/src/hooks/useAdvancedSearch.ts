@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useMemo, useRef, useEffect } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import type { Skill } from '@/types/skill';
 import { useLocalStorage } from './useLocalStorage';
 

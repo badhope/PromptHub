@@ -182,7 +182,7 @@ export default function SearchBar({
           onKeyDown={handleKeyDown}
           onFocus={() => setShowSuggestions(true)}
           placeholder={placeholder}
-          className="flex-1 bg-transparent border-none outline-none text-[15px] text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 ml-3"
+          className="flex-1 bg-transparent border-none outline-none text-[15px] text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 ml-4"
           aria-label="搜索技能"
           aria-autocomplete="list"
           aria-controls="search-suggestions"

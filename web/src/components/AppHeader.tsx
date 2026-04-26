@@ -4,9 +4,10 @@ import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, Moon, Sun, Monitor } from 'lucide-react';
+import { ChevronLeft, Moon, Sun, Monitor, Play } from 'lucide-react';
 import { usePreferences } from '@/hooks/usePreferences';
 import { useHapticFeedback } from '@/hooks/useGestures';
+import GlobalNavMenu from './GlobalNavMenu';
 
 const AppHeader = () => {
   const pathname = usePathname();
@@ -124,15 +125,17 @@ const AppHeader = () => {
           </div>
 
           <div className="flex items-center gap-2">
-            {!isSkills && (
-              <Link
-                href="/skills"
-                onClick={() => selection()}
-                className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-sm font-bold shadow-lg shadow-indigo-500/20 hover:shadow-xl hover:shadow-indigo-500/30 transition-all hover:scale-105 active:scale-95"
-              >
-                🔍 探索技能
-              </Link>
-            )}
+            <Link
+              href="/workspace"
+              onClick={() => selection()}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-sm font-bold shadow-lg shadow-emerald-500/20 hover:shadow-xl hover:shadow-emerald-500/30 transition-all hover:scale-105 active:scale-95"
+            >
+              <Play className="w-4 h-4 fill-current" />
+              <span className="hidden sm:inline">工作台</span>
+              <span className="sm:hidden px-1.5 py-0.5 text-[10px] font-bold bg-white/20 rounded-full">
+                NEW
+              </span>
+            </Link>
 
             <motion.button
               whileHover={{ scale: 1.05 }}
@@ -142,12 +145,9 @@ const AppHeader = () => {
               title={mounted ? `当前主题: ${currentTheme}` : '主题切换'}
             >
               {mounted && getThemeIcon()}
-              {mounted && (
-                <span className="hidden sm:inline text-sm font-medium text-gray-600 dark:text-gray-300">
-                  {currentTheme === 'light' ? '浅色' : currentTheme === 'dark' ? '深色' : '跟随'}
-                </span>
-              )}
             </motion.button>
+
+            <GlobalNavMenu />
           </div>
         </div>
       </div>

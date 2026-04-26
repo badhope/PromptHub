@@ -233,20 +233,20 @@ export default function SkillsHubPage() {
           className="mb-6"
         >
           <div className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
             <input
               ref={searchInputRef}
               type="text"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               placeholder={`搜索 ${allSkills.length} 个智能体和工具...`}
-              className="w-full pl-12 pr-12 py-4 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-2xl text-lg
+              className="w-full pl-14 pr-16 py-4 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-2xl text-lg
                 focus:outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all"
             />
             {searchInput && (
               <button
                 onClick={clearSearch}
-                className="absolute right-4 top-1/2 -translate-y-1/2 p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                className="absolute right-5 top-1/2 -translate-y-1/2 p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
               >
                 <X className="w-5 h-5 text-gray-400 hover:text-gray-600" />
               </button>
@@ -260,73 +260,77 @@ export default function SkillsHubPage() {
           transition={{ delay: 0.15 }}
           className="mb-6"
         >
-          <div className="flex flex-wrap gap-3">
-            <button
-              onClick={() => { setShowFavorites(!showFavorites); setItemType('all'); setSelectedCategory('all'); }}
-              className={`flex items-center gap-2 px-5 py-3 rounded-xl font-bold transition-all ${
-                showFavorites
-                  ? 'bg-gradient-to-r from-rose-500 to-pink-500 text-white shadow-lg shadow-rose-500/25 scale-105'
-                  : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:border-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/20'
-              }`}
-            >
-              <Heart className={`w-4 h-4 ${showFavorites ? 'fill-white' : ''}`} />
-              我的收藏
-              <span className={`text-sm ${showFavorites ? 'text-white/80' : 'text-gray-400'}`}>
-                {favorites.length}
-              </span>
-            </button>
-
-            <button
-              onClick={() => { setItemType(itemType === 'agent' ? 'all' : 'agent'); setShowFavorites(false); }}
-              className={`flex items-center gap-2 px-5 py-3 rounded-xl font-bold transition-all ${
-                itemType === 'agent'
-                  ? 'bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-lg shadow-indigo-500/25 scale-105'
-                  : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:border-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-900/20'
-              }`}
-            >
-              <Sparkles className="w-4 h-4" />
-              🧠 Agent 智能体
-              <span className={`text-sm ${itemType === 'agent' ? 'text-white/80' : 'text-gray-400'}`}>
-                {agentCount}
-              </span>
-            </button>
-
-            <button
-              onClick={() => { setItemType(itemType === 'tool' ? 'all' : 'tool'); setShowFavorites(false); }}
-              className={`flex items-center gap-2 px-5 py-3 rounded-xl font-bold transition-all ${
-                itemType === 'tool'
-                  ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/25 scale-105'
-                  : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:border-amber-500 hover:bg-amber-50 dark:hover:bg-amber-900/20'
-              }`}
-            >
-              <Wrench className="w-4 h-4" />
-              🔧 专业工具
-              <span className={`text-sm ${itemType === 'tool' ? 'text-white/80' : 'text-gray-400'}`}>
-                {toolCount}
-              </span>
-            </button>
-
-            <button
-              onClick={() => setShowFilters(!showFilters)}
-              className={`lg:hidden flex items-center gap-2 px-5 py-3 rounded-xl font-bold transition-all ml-auto ${
-                showFilters
-                  ? 'bg-gray-900 dark:bg-gray-700 text-white'
-                  : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700'
-              }`}
-            >
-              <Filter className="w-4 h-4" />
-              筛选
-            </button>
-
-            {hasActiveFilters && (
+          <div className="flex flex-wrap gap-3 items-center">
+            <div className="flex flex-wrap gap-3">
               <button
-                onClick={clearAllFilters}
-                className="flex items-center gap-2 px-4 py-3 bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors font-semibold text-sm ml-auto"
+                onClick={() => { setShowFavorites(!showFavorites); setItemType('all'); setSelectedCategory('all'); }}
+                className={`flex items-center gap-2 px-5 py-3 rounded-xl font-bold transition-all ${
+                  showFavorites
+                    ? 'bg-gradient-to-r from-rose-500 to-pink-500 text-white shadow-lg shadow-rose-500/25 scale-105'
+                    : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:border-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/20'
+                }`}
               >
-                <RefreshCw className="w-4 h-4" />
-                重置筛选
+                <Heart className={`w-4 h-4 ${showFavorites ? 'fill-white' : ''}`} />
+                我的收藏
+                <span className={`text-sm ${showFavorites ? 'text-white/80' : 'text-gray-400'}`}>
+                  {favorites.length}
+                </span>
               </button>
-            )}
+
+              <button
+                onClick={() => { setItemType(itemType === 'agent' ? 'all' : 'agent'); setShowFavorites(false); }}
+                className={`flex items-center gap-2 px-5 py-3 rounded-xl font-bold transition-all ${
+                  itemType === 'agent'
+                    ? 'bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-lg shadow-indigo-500/25 scale-105'
+                    : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:border-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-900/20'
+                }`}
+              >
+                <Sparkles className="w-4 h-4" />
+                🧠 Agent 智能体
+                <span className={`text-sm ${itemType === 'agent' ? 'text-white/80' : 'text-gray-400'}`}>
+                  {agentCount}
+                </span>
+              </button>
+
+              <button
+                onClick={() => { setItemType(itemType === 'tool' ? 'all' : 'tool'); setShowFavorites(false); }}
+                className={`flex items-center gap-2 px-5 py-3 rounded-xl font-bold transition-all ${
+                  itemType === 'tool'
+                    ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/25 scale-105'
+                    : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:border-amber-500 hover:bg-amber-50 dark:hover:bg-amber-900/20'
+                }`}
+              >
+                <Wrench className="w-4 h-4" />
+                🔧 专业工具
+                <span className={`text-sm ${itemType === 'tool' ? 'text-white/80' : 'text-gray-400'}`}>
+                  {toolCount}
+                </span>
+              </button>
+            </div>
+
+            <div className="flex items-center gap-3 ml-auto">
+              <button
+                onClick={() => setShowFilters(!showFilters)}
+                className={`lg:hidden flex items-center gap-2 px-5 py-3 rounded-xl font-bold transition-all ${
+                  showFilters
+                    ? 'bg-gray-900 dark:bg-gray-700 text-white'
+                    : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700'
+                }`}
+              >
+                <Filter className="w-4 h-4" />
+                筛选
+              </button>
+
+              {hasActiveFilters && (
+                <button
+                  onClick={clearAllFilters}
+                  className="flex items-center gap-2 px-4 py-3 bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors font-semibold text-sm"
+                >
+                  <RefreshCw className="w-4 h-4" />
+                  重置筛选
+                </button>
+              )}
+            </div>
           </div>
         </motion.div>
 
@@ -432,15 +436,15 @@ export default function SkillsHubPage() {
                   </span>
                 )}
               </div>
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-2">
                 {SORT_OPTIONS.map(opt => (
                   <button
                     key={opt.id}
                     onClick={() => setSortBy(opt.id)}
-                    className={`px-3 py-1.5 rounded-lg text-sm transition-all ${
+                    className={`px-3.5 py-1.5 rounded-lg text-sm transition-all ${
                       sortBy === opt.id
                         ? 'bg-gray-900 dark:bg-gray-700 text-white font-medium'
-                        : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
+                        : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
                     }`}
                   >
                     {opt.label}
