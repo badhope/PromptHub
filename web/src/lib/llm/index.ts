@@ -32,7 +32,7 @@ export function getProvider(providerType: string, baseUrl?: string) {
 
   let provider;
   if (providerType === 'ollama') {
-    provider = new OllamaProvider(baseUrl);
+    provider = new OllamaProvider();
   } else {
     provider = createChineseCloudProvider(providerType);
     if (!provider) {

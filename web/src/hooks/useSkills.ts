@@ -1,120 +1,104 @@
-import { useState, useEffect, useCallback, useSyncExternalStore } from 'react';
+import { useState, useEffect } from 'react';
 import type { Skill } from '@/types/skill';
-import { getSkillByIdSync, invalidateAllData, loadUnifiedSkillsData } from '@/lib/unified-data-loader';
+import { getSkillsSync, ensureDataLoaded, loadUnifiedSkillsData } from '@/lib/unified-data-loader';
 
-type DataStatus = 'idle' | 'loading' | 'success' | 'error';
+type DataStatus = 'loading' | 'ready' | 'error';
 
-interface SkillsState {
-  status: DataStatus;
-  data: Skill[];
-  error: Error | null;
-}
-
-interface SkillState {
-  status: DataStatus;
-  data: Skill | null;
-  error: Error | null;
-}
-
-let globalState: SkillsState = {
-  status: 'idle',
-  data: [],
-  error: null,
-};
-
-const subscribers = new Set<() => void>();
-
-function notify() {
-  subscribers.forEach(cb => cb());
-}
-
-function setState(partial: Partial<SkillsState>) {
-  globalState = { ...globalState, ...partial };
-  notify();
-}
-
-async function ensureDataLoaded() {
-  if (globalState.data.length === 0 && globalState.status !== 'loading') {
-    setState({ status: 'loading' });
-    try {
-      invalidateAllData();
-      const unifiedData = await loadUnifiedSkillsData();
-      setState({ status: 'success', data: unifiedData.skills, error: null });
-      return unifiedData.skills;
-    } catch (e) {
-      console.error('数据加载失败:', e);
-      setState({ status: 'error', error: e as Error });
-      return [];
-    }
-  }
-  return globalState.data;
-}
-
-const SERVER_STATE: SkillsState = {
-  status: 'loading',
-  data: [],
-  error: null,
-};
-
+/**
+ * 加载所有技能列表的 React Hook
+ * 
+ * @remarks
+ * 自动在组件挂载时初始化数据，支持刷新功能。
+ * 使用简单的 useState + useEffect 模式实现，避免过度优化。
+ * 
+ * @example
+ * ```tsx
+ * function AppList() {
+ *   const { skills, isLoading, error } = useSkills();
+ *   
+ *   if (isLoading) return <Loading />;
+ *   if (error) return <Error message={error.message} />;
+ *   
+ *   return skills.map(skill => <AppCard key={skill.id} skill={skill} />);
+ * }
+ * ```
+ * 
+ * @returns 包含技能数据、加载状态、错误信息的对象
+ */
 export function useSkills() {
-  const state = useSyncExternalStore(
-    cb => {
-      subscribers.add(cb);
-      return () => subscribers.delete(cb);
-    },
-    () => globalState,
-    () => SERVER_STATE
-  );
+  const [status, setStatus] = useState<DataStatus>('loading');
+  const [skills, setSkills] = useState<Skill[]>([]);
+  const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    if (state.status === 'idle') {
-      ensureDataLoaded();
-    }
-  }, [state.status]);
-
-  const refresh = useCallback(() => {
-    setState({ status: 'loading' });
-    setTimeout(async () => {
-      invalidateAllData();
-      const unifiedData = await loadUnifiedSkillsData();
-      setState({ status: 'success', data: unifiedData.skills, error: null });
-    }, 0);
+    const init = async () => {
+      try {
+        await ensureDataLoaded();
+        setSkills(getSkillsSync());
+        setStatus('ready');
+      } catch (err) {
+        setError(err instanceof Error ? err : new Error('Failed to load skills'));
+        setStatus('error');
+      }
+    };
+    init();
   }, []);
 
+  /**
+   * 强制重新加载所有数据
+   */
+  const refresh = async () => {
+    setStatus('loading');
+    await loadUnifiedSkillsData();
+    setSkills(getSkillsSync());
+    setStatus('ready');
+  };
+
   return {
-    ...state,
-    skills: state.data,
+    skills,
+    status,
+    error,
     refresh,
+    data: skills,
+    isLoading: status === 'loading',
   };
 }
 
+/**
+ * 根据 ID 加载单个技能的 React Hook
+ * 
+ * @param id - 技能 ID，可选（未提供时返回 undefined）
+ * 
+ * @example
+ * ```tsx
+ * function SkillDetail({ id }) {
+ *   const { skill, isLoading } = useSkill(id);
+ *   
+ *   if (isLoading) return <Loading />;
+ *   if (!skill) return <NotFound />;
+ *   
+ *   return <h1>{skill.name}</h1>;
+ * }
+ * ```
+ * 
+ * @returns 单个技能数据和加载状态
+ */
 export function useSkill(id: string | undefined) {
-  const [state, setState] = useState<SkillState>({
-    status: 'idle',
-    data: null,
-    error: null,
-  });
+  const [skill, setSkill] = useState<Skill | undefined>();
+  const [status, setStatus] = useState<DataStatus>('loading');
 
   useEffect(() => {
-    if (!id) return;
-
-    async function loadSkill() {
-      setState({ status: 'loading', data: null, error: null });
-      try {
-        const skills = await ensureDataLoaded();
-        const skill = skills.find(s => s.id === id) || (id ? getSkillByIdSync(id) : null);
-        if (skill) {
-          setState({ status: 'success', data: skill, error: null });
-        } else {
-          setState({ status: 'error', data: null, error: new Error('Skill not found') });
-        }
-      } catch (e) {
-        setState({ status: 'error', data: null, error: e as Error });
+    ensureDataLoaded().then(() => {
+      if (id) {
+        setSkill(getSkillsSync().find(s => s.id === id));
       }
-    }
-
-    loadSkill();
+      setStatus('ready');
+    });
   }, [id]);
 
-  return state;
+  return {
+    skill,
+    status,
+    isLoading: status === 'loading',
+  };
 }

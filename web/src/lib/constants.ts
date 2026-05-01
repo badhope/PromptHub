@@ -1,10 +1,13 @@
 export const APP_CONFIG = {
-  name: 'PromptHub',
-  version: '2.0.0',
-  description: 'AI Prompt 精选平台',
-  url: 'https://badhope.github.io/mobile-skills',
-  github: 'https://github.com/badhope/mobile-skills',
-  author: 'PromptHub Team',
+  name: 'Skillora',
+  brandName: '灵境',
+  tagline: 'AI 应用商店',
+  version: '3.0.0',
+  description: 'Skillora - AI 应用商店，连接全球 AI 智能体',
+  url: 'https://skillora.com',
+  github: 'https://github.com/skillora-ai',
+  author: 'Skillora Team',
+  marketplace: true,
 } as const;
 
 export const STORAGE_KEYS = {

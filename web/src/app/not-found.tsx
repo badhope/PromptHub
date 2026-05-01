@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Home, ArrowLeft, RefreshCw } from 'lucide-react';
 import { useHapticFeedback } from '@/hooks/useGestures';
-import Button from '@/components/Button';
+import Button from '@/shared/components/Button';
 
 export default function NotFound() {
   const { success } = useHapticFeedback();

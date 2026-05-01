@@ -82,7 +82,6 @@ export function measurePerformance(name: string, fn: () => void): void {
   const startTime = performance.now();
   fn();
   const endTime = performance.now();
-  console.log(`[Performance] ${name}: ${(endTime - startTime).toFixed(2)}ms`);
 }
 
 export async function measurePerformanceAsync<T>(
@@ -96,7 +95,6 @@ export async function measurePerformanceAsync<T>(
   const startTime = performance.now();
   const result = await fn();
   const endTime = performance.now();
-  console.log(`[Performance] ${name}: ${(endTime - startTime).toFixed(2)}ms`);
   return result;
 }
 

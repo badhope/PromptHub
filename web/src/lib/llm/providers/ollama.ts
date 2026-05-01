@@ -16,18 +16,56 @@ export class OllamaProvider implements LLMProvider {
   name = 'ollama';
   models: string[] = [];
   streamable = true;
-  baseUrl: string;
+  useProxy: boolean;
 
-  constructor(baseUrl: string = 'http://localhost:11434/api') {
-    this.baseUrl = baseUrl;
+  constructor() {
+    this.useProxy = typeof window !== 'undefined' && window.location.protocol === 'https:';
+  }
+
+  getBaseUrl(): string {
+    if (this.useProxy) {
+      return '';
+    }
+    return 'http://localhost:11434/api';
+  }
+
+  async proxyRequest(endpoint: string, method: string = 'GET', data?: any, timeoutMs?: number): Promise<Response> {
+    const controller = timeoutMs ? new AbortController() : undefined;
+    const timeoutId = controller && timeoutMs 
+      ? setTimeout(() => controller.abort(), timeoutMs) 
+      : undefined;
+
+    try {
+      if (this.useProxy) {
+        const proxyUrl = '/api/ollama/proxy';
+        if (method === 'GET') {
+          return fetch(`${proxyUrl}?endpoint=${encodeURIComponent(`/api${endpoint}`)}`, { 
+            method: 'GET',
+            signal: controller?.signal,
+          });
+        }
+        return fetch(proxyUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ endpoint: `/api${endpoint}`, data, stream: data?.stream }),
+          signal: controller?.signal,
+        });
+      }
+
+      return fetch(`http://localhost:11434/api${endpoint}`, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: data ? JSON.stringify(data) : undefined,
+        signal: controller?.signal,
+      });
+    } finally {
+      if (timeoutId) clearTimeout(timeoutId);
+    }
   }
 
   async checkAvailable(): Promise<boolean> {
     try {
-      const response = await fetch(`${this.baseUrl}/tags`, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-      });
+      const response = await this.proxyRequest('/tags', 'GET', undefined, 3000);
       return response.ok;
     } catch {
       return false;
@@ -36,10 +74,7 @@ export class OllamaProvider implements LLMProvider {
 
   async listModels(): Promise<string[]> {
     try {
-      const response = await fetch(`${this.baseUrl}/tags`, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-      });
+      const response = await this.proxyRequest('/tags', 'GET', undefined, 3000);
       
       if (!response.ok) return [];
       
@@ -58,18 +93,14 @@ export class OllamaProvider implements LLMProvider {
     }
 
     return createReadableStream(async (controller) => {
-      const response = await fetch(`${this.baseUrl}/chat`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: config.model || 'llama3',
-          messages: messages.map(m => ({ role: m.role, content: m.content })),
-          stream: true,
-          options: {
-            temperature: config.temperature || 0.7,
-            num_predict: config.maxTokens || 4096,
-          },
-        }),
+      const response = await this.proxyRequest('/chat', 'POST', {
+        model: config.model || 'llama3',
+        messages: messages.map(m => ({ role: m.role, content: m.content })),
+        stream: true,
+        options: {
+          temperature: config.temperature || 0.7,
+          num_predict: config.maxTokens || 4096,
+        },
       });
 
       if (!response.ok) {

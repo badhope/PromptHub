@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Copy, CopyCheck } from 'lucide-react';
 import { useCopyToClipboard } from 'usehooks-ts';
 import Balancer from 'react-wrap-balancer';
-import { showCopyToast } from './ToastProvider';
+import { showCopyToast } from '@/shared/components/ToastProvider';
 
 interface ActivationCommandProps {
   command: string;

@@ -6,7 +6,7 @@ import { useParams } from 'next/navigation';
 import { ArrowLeft, Copy, Check, Heart, MessageCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import ReactMarkdown from 'react-markdown';
-import { showCopyToast, showFavoriteToast } from '@/components/ToastProvider';
+import { showCopyToast, showFavoriteToast } from '@/shared/components/ToastProvider';
 import ChatModal from '@/components/ChatModal';
 import { getSkillByIdSync, invalidateAllData } from '@/lib/unified-data-loader';
 import { getSkillCategory, getSkillDescription, getSkillTags, getSkillSystemPrompt, getSkillUseCount } from '@/types/skill';
@@ -37,12 +37,10 @@ export default function ToolClient() {
 
   useEffect(() => {
     setMounted(true);
-    console.log('🔧 ToolClient 开始查找:', params.id);
     invalidateAllData();
     
     const found = getSkillByIdSync(params.id as string);
     if (found) {
-      console.log('✅ ToolClient 同步找到数据:', found.name);
       setSkill({
         id: found.id,
         name: found.name,
@@ -57,11 +55,9 @@ export default function ToolClient() {
         rawUrl: ((found as any)?.content)?.raw_url as string | undefined
       });
     } else {
-      console.error('❌ ToolClient 同步查找失败，重试:', params.id);
       invalidateAllData();
       const retry = getSkillByIdSync(params.id as string);
       if (retry) {
-        console.log('🔄 重试成功:', retry.name);
         setSkill({
           id: retry.id,
           name: retry.name,

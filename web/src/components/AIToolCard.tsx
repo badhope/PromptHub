@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { showCopyToast, showFavoriteToast } from './ToastProvider';
+import { showCopyToast, showFavoriteToast } from '@/shared/components/ToastProvider';
 
 interface AIToolCardProps {
   tool: {
@@ -32,7 +32,7 @@ export default function AIToolCard({ tool, index, isFavorite, onToggleFavorite }
       showCopyToast(tool.name);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      console.error('复制失败:', err);
+
     }
   };
 

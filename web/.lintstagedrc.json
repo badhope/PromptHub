@@ -1,0 +1,3 @@
+{
+  "src/**/*.{ts,tsx}": ["npm run typecheck", "npm run lint -- --fix"]
+}

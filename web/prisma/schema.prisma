@@ -1,75 +1,464 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["jsonProtocol"]
+  previewFeatures = ["jsonProtocol", "fullTextSearch"]
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-model Skill {
-  id               String   @id @unique
-  name             String
-  number           String?
-  index            Int?     @map("skill_index")
-  icon             String?
-  category         String?
-  description      String?
-  guide            String?
-  scenarios        String?
-  activation       String?
-  source           String?  @default("skill")
-  systemPrompt     String?  @map("system_prompt")
-  useCount         Int?     @default(0) @map("use_count")
-  rawUrl           String?  @map("raw_url")
+enum ListingType {
+  AGENT
+  PROMPT
+  TOOL
+  WORKFLOW
+  TEMPLATE
+}
 
-  metadata         String?
-  categorization   String?
-  content          String?
-  stats            String?
-  thumbnails       String?
-  capabilities     String?
+enum PricingModel {
+  FREE
+  ONE_TIME
+  SUBSCRIPTION
+  PAY_PER_USE
+  FREEMIUM
+}
 
-  contentMarkdown  String?  @map("content_markdown")
+enum ListingStatus {
+  DRAFT
+  PENDING_REVIEW
+  APPROVED
+  REJECTED
+  SUSPENDED
+  ARCHIVED
+}
 
-  createdAt        DateTime @default(now()) @map("created_at")
-  updatedAt        DateTime @updatedAt @map("updated_at")
+enum ModerationAction {
+  APPROVE
+  REJECT
+  SUSPEND
+  WARN
+}
 
-  @@map("skills")
+enum SubscriptionTier {
+  FREE
+  BASIC
+  PRO
+  TEAM
+  ENTERPRISE
+}
+
+enum TransactionStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+  CANCELLED
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  createdAt     DateTime  @default(now()) @map("created_at")
+  id             String    @id @default(cuid())
+  name           String?
+  email          String?   @unique
+  emailVerified  DateTime? @map("email_verified")
+  image          String?
+  passwordHash   String?   @map("password_hash")
+  role           String    @default("user")
+  bio            String?
+  website        String?
+  socialLinks    Json?     @map("social_links")
+  preferences    Json?
+  developerMode  Boolean   @default(false) @map("developer_mode")
 
-  favorites     UserFavorite[]
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+
+  accounts       Account[]
+  sessions       Session[]
+  reviews        Review[]
+  favorites      UserFavorite[]
+  purchases      Purchase[]
+  subscriptions  UserSubscription[]
+  usageStats     UsageStat[]
+  developer      Developer?
+
   @@map("users")
+}
+
+model Account {
+  id                String   @id @default(cuid())
+  userId            String   @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String   @map("provider_account_id")
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  createdAt         DateTime @default(now()) @map("created_at")
+
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id")
+  expires      DateTime
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+model Developer {
+  id            String    @id @default(cuid())
+  userId        String    @unique @map("user_id")
+  displayName   String    @map("display_name")
+  slug          String    @unique
+  bio           String?
+  avatar        String?
+  website       String?
+  twitter       String?
+  github        String?
+  verified      Boolean   @default(false)
+  commissionRate Float    @default(0.7) @map("commission_rate")
+  totalEarnings Decimal   @default(0) @map("total_earnings") @db.Decimal(12, 2)
+  balance       Decimal   @default(0) @db.Decimal(12, 2)
+
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listings      Listing[]
+  payouts       Payout[]
+
+  @@map("developers")
+}
+
+model Category {
+  id          String     @id @default(cuid())
+  slug        String     @unique
+  name        Json
+  description Json?
+  icon        String?
+  gradient    String?
+  color       String?
+  featured    Boolean    @default(false)
+  parentId    String?    @map("parent_id")
+  order       Int        @default(0)
+
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
+
+  parent      Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
+  children    Category[] @relation("CategoryHierarchy")
+  listings    Listing[]
+  subcategories Subcategory[]
+
+  @@map("categories")
+}
+
+model Subcategory {
+  id          String   @id @default(cuid())
+  categoryId  String   @map("category_id")
+  slug        String
+  name        Json
+  icon        String?
+  description Json?
+  order       Int      @default(0)
+
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  category    Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  listings    Listing[]
+
+  @@unique([categoryId, slug])
+  @@map("subcategories")
+}
+
+model Tag {
+  id          String    @id @default(cuid())
+  name        String    @unique
+  description String?
+  featured    Boolean   @default(false)
+  usageCount  Int       @default(0) @map("usage_count")
+
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  listings    ListingTag[]
+
+  @@map("tags")
+}
+
+model Listing {
+  id               String         @id @default(cuid())
+  slug             String         @unique
+  name             String
+  type             ListingType
+  shortDescription String?        @map("short_description")
+  description      String?
+  icon             String?
+  screenshots      Json?
+  featuredImage    String?        @map("featured_image")
+  demoUrl          String?        @map("demo_url")
+  documentationUrl String?        @map("documentation_url")
+
+  systemPrompt     String?        @map("system_prompt")
+  variables        Json?
+  capabilities     Json?
+  activationRules  Json?          @map("activation_rules")
+  mcpTools         Json?          @map("mcp_tools")
+
+  pricingModel     PricingModel   @default(FREE) @map("pricing_model")
+  price            Decimal        @default(0) @db.Decimal(10, 2)
+  salePrice        Decimal?       @map("sale_price") @db.Decimal(10, 2)
+
+  status           ListingStatus  @default(DRAFT)
+  published        Boolean        @default(false)
+  featured         Boolean        @default(false)
+  verified         Boolean        @default(false)
+
+  categoryId       String?        @map("category_id")
+  subcategoryId    String?        @map("subcategory_id")
+  developerId      String?        @map("developer_id")
+
+  downloadCount    Int            @default(0) @map("download_count")
+  viewCount        Int            @default(0) @map("view_count")
+  useCount         Int            @default(0) @map("use_count")
+  favoriteCount    Int            @default(0) @map("favorite_count")
+  reviewCount      Int            @default(0) @map("review_count")
+  ratingAverage    Float          @default(0) @map("rating_average")
+
+  version          String         @default("1.0.0")
+  changelog        String?
+  compatibility    Json?
+  requirements     Json?
+
+  createdAt        DateTime       @default(now()) @map("created_at")
+  updatedAt        DateTime       @updatedAt @map("updated_at")
+  publishedAt      DateTime?      @map("published_at")
+  lastReviewedAt   DateTime?      @map("last_reviewed_at")
+
+  category         Category?      @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  subcategory      Subcategory?   @relation(fields: [subcategoryId], references: [id], onDelete: SetNull)
+  developer        Developer?     @relation(fields: [developerId], references: [id], onDelete: SetNull)
+  tags             ListingTag[]
+  reviews          Review[]
+  favorites        UserFavorite[]
+  purchases        Purchase[]
+  versions         ListingVersion[]
+  usageStats       UsageStat[]
+  moderationLogs   ModerationLog[]
+
+  @@index([type, status])
+  @@index([status, published])
+  @@index([ratingAverage, useCount])
+  @@index([createdAt])
+  @@map("listings")
+}
+
+model ListingVersion {
+  id          String   @id @default(cuid())
+  listingId   String   @map("listing_id")
+  version     String
+  changelog   String?
+  releaseNotes String? @map("release_notes")
+  snapshot    Json
+
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  listing     Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  @@unique([listingId, version])
+  @@map("listing_versions")
+}
+
+model ListingTag {
+  id        String   @id @default(cuid())
+  listingId String   @map("listing_id")
+  tagId     String   @map("tag_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  listing   Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  tag       Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@unique([listingId, tagId])
+  @@map("listing_tags")
+}
+
+model Review {
+  id          String   @id @default(cuid())
+  listingId   String   @map("listing_id")
+  userId      String   @map("user_id")
+  rating      Int
+  title       String?
+  content     String?
+  helpful     Int      @default(0)
+  notHelpful  Int      @default(0) @map("not_helpful")
+  reported    Boolean  @default(false)
+
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  listing     Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([listingId, userId])
+  @@map("reviews")
 }
 
 model UserFavorite {
   id        String   @id @default(cuid())
-  userId    String
-  skillId   String
+  userId    String   @map("user_id")
+  listingId String   @map("listing_id")
+
   createdAt DateTime @default(now()) @map("created_at")
 
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listing   Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, skillId])
+  @@unique([userId, listingId])
   @@map("user_favorites")
 }
 
-model Analytics {
-  id        String   @id @default(cuid())
-  skillId   String
-  eventType String   @map("event_type")
-  ip        String?
-  userAgent String?  @map("user_agent")
-  createdAt DateTime @default(now()) @map("created_at")
+model UsageStat {
+  id            String   @id @default(cuid())
+  listingId     String   @map("listing_id")
+  userId        String?  @map("user_id")
+  eventType     String   @map("event_type")
+  ip            String?
+  userAgent     String?  @map("user_agent")
+  country       String?
+  city          String?
+  deviceType    String?  @map("device_type")
+  duration      Int?
 
-  @@map("analytics")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  listing       Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  user          User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@map("usage_stats")
+}
+
+model Purchase {
+  id                 String             @id @default(cuid())
+  listingId          String             @map("listing_id")
+  userId             String             @map("user_id")
+  amount             Decimal            @db.Decimal(10, 2)
+  currency           String             @default("USD")
+  status             TransactionStatus  @default(PENDING)
+  paymentMethod      String?            @map("payment_method")
+  transactionId      String?            @unique @map("transaction_id")
+  receiptUrl         String?            @map("receipt_url")
+
+  createdAt          DateTime           @default(now()) @map("created_at")
+  completedAt        DateTime?          @map("completed_at")
+
+  listing            Listing            @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  user               User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("purchases")
+}
+
+model SubscriptionPlan {
+  id               String          @id @default(cuid())
+  tier             SubscriptionTier @unique
+  name             String
+  description      String?
+  priceMonthly     Decimal         @map("price_monthly") @db.Decimal(10, 2)
+  priceYearly      Decimal         @map("price_yearly") @db.Decimal(10, 2)
+  features         Json?
+  maxListings      Int             @default(10) @map("max_listings")
+  maxApiCalls      Int             @default(1000) @map("max_api_calls")
+  prioritySupport  Boolean         @default(false) @map("priority_support")
+  customBranding   Boolean         @default(false) @map("custom_branding")
+  analyticsAccess  Boolean         @default(false) @map("analytics_access")
+
+  createdAt        DateTime        @default(now()) @map("created_at")
+  updatedAt        DateTime        @updatedAt @map("updated_at")
+
+  subscriptions    UserSubscription[]
+
+  @@map("subscription_plans")
+}
+
+model UserSubscription {
+  id            String            @id @default(cuid())
+  userId        String            @map("user_id")
+  planId        String            @map("plan_id")
+  status        TransactionStatus @default(PENDING)
+  currentPeriodStart DateTime      @map("current_period_start")
+  currentPeriodEnd   DateTime      @map("current_period_end")
+  cancelAtPeriodEnd Boolean        @default(false) @map("cancel_at_period_end")
+  cancelledAt   DateTime?         @map("cancelled_at")
+
+  stripeSubscriptionId String?    @unique @map("stripe_subscription_id")
+  stripeCustomerId     String?    @map("stripe_customer_id")
+
+  createdAt     DateTime          @default(now()) @map("created_at")
+  updatedAt     DateTime          @updatedAt @map("updated_at")
+
+  user          User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plan          SubscriptionPlan  @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  @@map("user_subscriptions")
+}
+
+model Payout {
+  id              String            @id @default(cuid())
+  developerId     String            @map("developer_id")
+  amount          Decimal           @db.Decimal(12, 2)
+  currency        String            @default("USD")
+  status          TransactionStatus @default(PENDING)
+  method          String?
+  transactionId   String?           @map("transaction_id")
+  payoutDate      DateTime?         @map("payout_date")
+
+  createdAt       DateTime          @default(now()) @map("created_at")
+  updatedAt       DateTime          @updatedAt @map("updated_at")
+
+  developer       Developer         @relation(fields: [developerId], references: [id], onDelete: Cascade)
+
+  @@map("payouts")
+}
+
+model ModerationLog {
+  id             String             @id @default(cuid())
+  listingId      String             @map("listing_id")
+  moderatorId    String             @map("moderator_id")
+  action         ModerationAction
+  reason         String?
+  previousStatus ListingStatus      @map("previous_status")
+  newStatus      ListingStatus      @map("new_status")
+
+  createdAt      DateTime           @default(now()) @map("created_at")
+
+  listing        Listing            @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  @@map("moderation_logs")
 }
 
 model SearchLog {
@@ -77,7 +466,41 @@ model SearchLog {
   query     String
   results   Int?
   hasResult Boolean  @default(true)
+  filters   Json?
+  userId    String?  @map("user_id")
   createdAt DateTime @default(now()) @map("created_at")
 
   @@map("search_logs")
+}
+
+model Feature {
+  id          String   @id @default(cuid())
+  listingId   String   @map("listing_id")
+  title       String
+  description String?
+  ctaText     String?  @map("cta_text")
+  ctaLink     String?  @map("cta_link")
+  order       Int      @default(0)
+  active      Boolean  @default(true)
+
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("featured_listings")
+}
+
+model Collection {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  name        String
+  description String?
+  featured    Boolean   @default(false)
+  curated     Boolean   @default(false)
+  author      String?
+  items       Json?
+
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@map("collections")
 }

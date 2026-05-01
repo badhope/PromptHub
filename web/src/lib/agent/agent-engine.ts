@@ -6,7 +6,7 @@ export type AgentStatus = 'idle' | 'routing' | 'thinking' | 'tool_calling' | 'ex
 
 export interface AgentStep {
   id: number;
-  type: 'routing' | 'thought' | 'action' | 'observation' | 'answer' | 'skill_activated';
+  type: 'routing' | 'thinking' | 'tool_calling' | 'observation' | 'reflection' | 'answer' | 'skill_activated';
   content: string;
   timestamp: number;
   tool?: string;
@@ -110,7 +110,7 @@ export class AgentEngine {
   }
 
   buildSystemPrompt(userPrompt: string): string {
-    let basePrompt = `
+    const basePrompt = `
 你是一个自主智能体（Agent），能够自动识别意图、匹配专业 Skill、使用 MCP 工具来解决复杂任务。
 
 ## 核心执行规范
@@ -165,7 +165,7 @@ ${userPrompt}
     });
 
     for (const step of this.steps) {
-      if (step.type === 'thought' || step.type === 'action' || step.type === 'answer') {
+      if (step.type === 'thinking' || step.type === 'tool_calling' || step.type === 'answer') {
         messages.push({
           role: 'assistant',
           content: step.content,
@@ -192,7 +192,7 @@ ${userPrompt}
   async *run(
     userPrompt: string,
     allSkills: Skill[],
-    sendMessage: (messages: any[], config: any) => Promise<void>
+    sendMessage: (messages: any[], config: any) => Promise<string>
   ): AsyncGenerator<AgentStep, void, unknown> {
     if (this.config.enableSkillRouting) {
       await this.routeIntent(userPrompt, allSkills);
@@ -206,24 +206,21 @@ ${userPrompt}
     while (this.iteration < this.config.maxIterations) {
       this.iteration++;
       
-      let fullResponse = '';
-      
-      await sendMessage(
+      this.addStep('thinking', '正在思考中...');
+
+      const fullResponse = await sendMessage(
         this.buildConversation(),
         {
           model: this.config.model,
           apiKey: this.config.apiKey,
           temperature: 0.3,
-          onChunk: (chunk: string) => {
-            fullResponse += chunk;
-          },
         }
       );
 
       const mcpMatch = mcpBridge.parseMCPRequest(fullResponse);
       
       if (mcpMatch && this.config.enableMCP) {
-        this.addStep('action', fullResponse, mcpMatch.tool);
+        this.addStep('tool_calling', fullResponse, mcpMatch.tool);
         this.setStatus('tool_calling');
 
         const observation = await this.executeToolCall(mcpMatch.tool, mcpMatch.parameters);
@@ -239,7 +236,7 @@ ${userPrompt}
         break;
       }
 
-      this.addStep('thought', fullResponse);
+      this.addStep('thinking', fullResponse);
 
       if (this.iteration >= this.config.maxIterations) {
         this.addStep('answer', `达到最大迭代次数 (${this.config.maxIterations})，停止执行。\n\n${fullResponse}`);

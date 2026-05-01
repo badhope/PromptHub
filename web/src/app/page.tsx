@@ -144,7 +144,7 @@ const MouseFollower = () => {
       };
       window.addEventListener('mousemove', handleMouseMove);
       return () => window.removeEventListener('mousemove', handleMouseMove);
-    }, [mouseX, mouseY]);
+    }, []);
 
     if (isTouchDevice) return null;
 
@@ -220,29 +220,29 @@ const MouseFollower = () => {
   };
 
   export default function HomePage() {
-  const { displayText, isComplete } = useTypewriter('PromptHub');
+  const { displayText, isComplete } = useTypewriter('Skillora');
   const { success } = useHapticFeedback();
 
   const features = [
     {
       icon: <Brain className="w-7 h-7 text-indigo-500" />,
-      title: '专业级 Prompt',
-      desc: '五层架构标准，经过大量场景验证的高质量提示词',
+      title: 'AI 智能体商店',
+      desc: '精选 400+ 专业级 AI 应用，覆盖全场景需求',
     },
     {
       icon: <Zap className="w-7 h-7 text-amber-500" />,
-      title: '一键复制即用',
-      desc: '精选387+个专业提示词，复制粘贴直接使用',
+      title: '一键导出使用',
+      desc: '支持 Markdown 导出，直接导入豆包/ Claude 等平台',
     },
     {
       icon: <Shield className="w-7 h-7 text-emerald-500" />,
-      title: '质量有保障',
-      desc: '每个 Prompt 经过精心打磨，输出效果稳定',
+      title: '开发者生态',
+      desc: '成为创作者发布你的应用，获得 70% 收益分成',
     },
     {
       icon: <Rocket className="w-7 h-7 text-rose-500" />,
-      title: '持续更新',
-      desc: '每周新增高质量提示词，紧跟AI发展潮流',
+      title: '持续增长',
+      desc: '每周新增高质量应用，紧跟 AI 技术前沿',
     },
   ];
 
@@ -278,7 +278,7 @@ const MouseFollower = () => {
             >
               <Sparkles className="w-4 h-4 text-indigo-500" />
               <span className="text-sm font-bold text-indigo-600 dark:text-indigo-400">
-                387 个专业提示词已上线
+                400+ 智能体已入驻
               </span>
             </motion.div>
 
@@ -302,9 +302,9 @@ const MouseFollower = () => {
               transition={{ delay: 1.5, duration: 0.5 }}
               className="text-lg sm:text-xl text-gray-500 dark:text-gray-400 max-w-2xl mx-auto mb-8 sm:mb-10 leading-relaxed"
             >
-              专业的 AI 提示词精选库，让你的 ChatGPT、Claude、文心一言
+              中国首个 AI 应用商店，汇聚全球优质智能体
               <br className="hidden sm:block" />
-              立刻变身行业专家，效率提升 10 倍
+              一键导出到豆包、Claude、GPT，让 AI 真正为你所用
             </motion.p>
 
             <motion.div
@@ -320,7 +320,7 @@ const MouseFollower = () => {
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-2xl blur-xl opacity-40 animate-pulse" />
                 <Link
-                  href="/skills"
+                  href="/explore"
                   onClick={() => success()}
                   className="relative group w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white font-bold text-lg rounded-2xl shadow-xl shadow-indigo-500/30 overflow-hidden"
                 >
@@ -346,25 +346,25 @@ const MouseFollower = () => {
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 mb-16 sm:mb-20">
             <TiltCard>
-              <StatCard value={387} label="精选提示词" icon="🧠" color="bg-indigo-100 dark:bg-indigo-500/20" />
+              <StatCard value={400} label="AI 智能体" icon="🤖" color="bg-indigo-100 dark:bg-indigo-500/20" />
             </TiltCard>
             <TiltCard>
-              <StatCard value={128} label="角色 Prompt" icon="✨" color="bg-purple-100 dark:bg-purple-500/20" />
+              <StatCard value={50} label="场景合集" icon="✨" color="bg-purple-100 dark:bg-purple-500/20" />
             </TiltCard>
             <TiltCard>
-              <StatCard value={189} label="专业工具" icon="🔧" color="bg-amber-100 dark:bg-amber-500/20" />
+              <StatCard value={120} label="MCP 工具" icon="🔧" color="bg-amber-100 dark:bg-amber-500/20" />
             </TiltCard>
             <TiltCard>
-              <StatCard value={20} label="专业分类" icon="📂" color="bg-emerald-100 dark:bg-emerald-500/20" />
+              <StatCard value={8} label="专业分类" icon="📂" color="bg-emerald-100 dark:bg-emerald-500/20" />
             </TiltCard>
           </div>
 
           <div className="text-center mb-10">
             <h2 className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white mb-3">
-              为什么选择 PromptHub？
+              为什么选择 Skillora？
             </h2>
             <p className="text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">
-              我们不做数量堆砌，只产出高质量、经过验证的专业提示词
+              中国首个 AI 应用商店，创作者与用户的连接桥梁
             </p>
           </div>
 

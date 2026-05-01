@@ -1,68 +1,113 @@
 'use client';
 
-import { useState, useCallback, useMemo } from 'react';
+import { useSyncExternalStore } from 'react';
 
-function getInitialFavorites(): string[] {
+interface FavoriteState {
+  favorites: string[];
+  downloads: string[];
+}
+
+const STORAGE_KEY = 'skillora_user_data';
+
+function loadStorage(): FavoriteState {
   if (typeof window === 'undefined') {
-    return [];
+    return { favorites: [], downloads: [] };
   }
   try {
-    const stored = localStorage.getItem('favorites');
-    if (stored) {
-      const parsed = JSON.parse(stored);
-      return Array.isArray(parsed) ? parsed : [];
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      return JSON.parse(raw);
     }
-  } catch (error) {
-    console.warn('Failed to parse favorites from localStorage:', error);
+  } catch (e) {
+    console.error('存储读取失败:', e);
   }
-  return [];
+  return { favorites: [], downloads: [] };
+}
+
+function saveStorage(data: Partial<FavoriteState>) {
+  if (typeof window === 'undefined') return;
+  try {
+    const existing = loadStorage();
+    const merged = { ...existing, ...data };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
+    window.dispatchEvent(new StorageEvent('storage', { key: STORAGE_KEY }));
+  } catch (e) {
+    console.error('存储写入失败:', e);
+  }
+}
+
+let store: FavoriteState = { favorites: [], downloads: [] };
+const subscribers = new Set<() => void>();
+let initialized = false;
+
+function initializeStore() {
+  if (typeof window !== 'undefined' && !initialized) {
+    initialized = true;
+    store = loadStorage();
+    
+    window.addEventListener('storage', (e) => {
+      if (e.key === STORAGE_KEY || e.key === null) {
+        store = loadStorage();
+        subscribers.forEach(cb => cb());
+      }
+    });
+  }
+}
+
+function notify() {
+  subscribers.forEach(cb => cb());
+}
+
+function subscribe(callback: () => void) {
+  initializeStore();
+  subscribers.add(callback);
+  return () => subscribers.delete(callback);
+}
+
+function getSnapshot() {
+  initializeStore();
+  return store;
+}
+
+function getServerSnapshot(): FavoriteState {
+  return { favorites: [], downloads: [] };
 }
 
 export function useFavorites() {
-  const [favorites, setFavorites] = useState<string[]>(() => getInitialFavorites());
+  const state = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
-  const toggleFavorite = useCallback((skillId: string) => {
-    setFavorites(prev => {
-      const newFavorites = prev.includes(skillId)
-        ? prev.filter(id => id !== skillId)
-        : [...prev, skillId];
-      
-      try {
-        localStorage.setItem('favorites', JSON.stringify(newFavorites));
-      } catch (error) {
-        console.warn('Failed to save favorites to localStorage:', error);
-      }
-      return newFavorites;
-    });
-  }, []);
+  const toggleFavorite = (skillId: string) => {
+    const newFavorites = state.favorites.includes(skillId)
+      ? state.favorites.filter(id => id !== skillId)
+      : [...state.favorites, skillId];
+    
+    store = { ...store, favorites: newFavorites };
+    saveStorage({ favorites: newFavorites });
+    notify();
+  };
 
-  const isFavorite = useCallback((skillId: string) => {
-    return favorites.includes(skillId);
-  }, [favorites]);
-
-  const favoritesSet = useMemo(() => new Set(favorites), [favorites]);
-
-  const isFavoriteOptimized = useCallback((skillId: string) => {
-    return favoritesSet.has(skillId);
-  }, [favoritesSet]);
-
-  const clearFavorites = useCallback(() => {
-    setFavorites([]);
-    try {
-      localStorage.removeItem('favorites');
-    } catch (error) {
-      console.warn('Failed to clear favorites from localStorage:', error);
+  const addDownload = (skillId: string) => {
+    if (!state.downloads.includes(skillId)) {
+      const newDownloads = [...state.downloads, skillId];
+      store = { ...store, downloads: newDownloads };
+      saveStorage({ downloads: newDownloads });
+      notify();
     }
-  }, []);
+  };
 
-  const favoritesCount = favorites.length;
+  const isFavorite = (skillId: string) => state.favorites.includes(skillId);
+  const hasDownloaded = (skillId: string) => state.downloads.includes(skillId);
+  const favoriteCount = state.favorites.length;
+  const downloadCount = state.downloads.length;
 
-  return { 
-    favorites, 
-    toggleFavorite, 
-    isFavorite, 
-    isFavoriteOptimized,
-    clearFavorites,
-    favoritesCount
+  return {
+    favorites: state.favorites,
+    downloads: state.downloads,
+    toggleFavorite,
+    addDownload,
+    isFavorite,
+    hasDownloaded,
+    favoriteCount,
+    downloadCount,
   };
 }

@@ -26,9 +26,6 @@ export function runDataHealthCheck(skills: Skill[]): DataHealthReport {
     return report;
   }
 
-  console.log('\n🔍 开发环境数据健康检查开始...');
-  console.log('='.repeat(80));
-
   skills.forEach((skill, index) => {
     const skillId = skill.id || `index-${index}`;
     const skillName = skill.name || `Unknown-${index}`;
@@ -78,22 +75,6 @@ export function runDataHealthCheck(skills: Skill[]): DataHealthReport {
       report.summary.warnings++;
     }
   });
-
-  console.log(`📊 健康检查完成：`);
-  console.log(`   总计检查：${report.totalSkills} 个技能`);
-  console.log(`   ❌ 错误：${report.summary.errors} 个`);
-  console.log(`   ⚠️ 警告：${report.summary.warnings} 个`);
-
-  if (report.issues.length > 0) {
-    console.log('\n📋 问题详情：');
-    report.issues.forEach(issue => {
-      const icon = issue.severity === 'error' ? '❌' : '⚠️';
-      console.log(`   ${icon} [${issue.skillName}] ${issue.message}`);
-    });
-  }
-
-  console.log('='.repeat(80));
-  console.log('💡 提示：以上仅开发环境告警，不影响生产环境\n');
 
   return report;
 }

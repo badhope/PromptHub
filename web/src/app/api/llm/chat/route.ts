@@ -110,11 +110,17 @@ export async function POST(request: NextRequest) {
       };
     }
 
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 120000);
+
     const response = await fetch(requestUrl, {
       method: 'POST',
       headers,
       body: JSON.stringify(requestBody),
+      signal: controller.signal,
     });
+
+    clearTimeout(timeout);
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -140,6 +146,12 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('LLM Proxy Error:', error);
+    if (error instanceof Error && error.name === 'AbortError') {
+      return NextResponse.json(
+        { error: '请求超时，请稍后重试', details: 'LLM API 响应时间超过 120 秒' },
+        { status: 504 }
+      );
+    }
     return NextResponse.json(
       { error: 'Internal server error', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }

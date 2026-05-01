@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Copy, CopyCheck, ExternalLink, Sparkles } from 'lucide-react';
 import { useCopyToClipboard } from 'usehooks-ts';
-import { showCopyToast, showToast } from './ToastProvider';
+import { showCopyToast, showToast } from '@/shared/components/ToastProvider';
 
 interface MobileActivationButtonProps {
   command: string;

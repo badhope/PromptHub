@@ -145,19 +145,21 @@ export function usePerformanceMonitor(options: PerformanceMonitorProps = {}) {
 
   useEffect(() => {
     if (logToConsole && metrics.firstContentfulPaint !== null) {
-      console.group('📊 Performance Metrics');
-      console.log(`FCP: ${metrics.firstContentfulPaint?.toFixed(2)}ms`);
-      console.log(`LCP: ${metrics.largestContentfulPaint?.toFixed(2)}ms`);
-      console.log(`FID: ${metrics.firstInputDelay?.toFixed(2)}ms`);
-      console.log(`CLS: ${metrics.cumulativeLayoutShift?.toFixed(4)}`);
-      console.log(`TTFB: ${metrics.timeToFirstByte?.toFixed(2)}ms`);
-      console.log(`DCL: ${metrics.domContentLoaded?.toFixed(2)}ms`);
-      console.log(`Load: ${metrics.loadComplete?.toFixed(2)}ms`);
-      if (metrics.memoryUsage) {
-        console.log(`Memory: ${metrics.memoryUsage?.toFixed(2)}MB`);
+      if (process.env.NODE_ENV === 'development') {
+        console.group('📊 Performance Metrics');
+        console.log(`FCP: ${metrics.firstContentfulPaint?.toFixed(2)}ms`);
+        console.log(`LCP: ${metrics.largestContentfulPaint?.toFixed(2)}ms`);
+        console.log(`FID: ${metrics.firstInputDelay?.toFixed(2)}ms`);
+        console.log(`CLS: ${metrics.cumulativeLayoutShift?.toFixed(4)}`);
+        console.log(`TTFB: ${metrics.timeToFirstByte?.toFixed(2)}ms`);
+        console.log(`DCL: ${metrics.domContentLoaded?.toFixed(2)}ms`);
+        console.log(`Load: ${metrics.loadComplete?.toFixed(2)}ms`);
+        if (metrics.memoryUsage) {
+          console.log(`Memory: ${metrics.memoryUsage?.toFixed(2)}MB`);
+        }
+        console.log(`Connection: ${metrics.connectionType}`);
+        console.groupEnd();
       }
-      console.log(`Connection: ${metrics.connectionType}`);
-      console.groupEnd();
     }
   }, [metrics, logToConsole]);
 

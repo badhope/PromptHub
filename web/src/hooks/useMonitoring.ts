@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import type { PerformanceMetrics } from '@/types/skill';
 
 interface ErrorInfo {
@@ -74,13 +74,7 @@ export function usePerformanceMonitor() {
   const reportMetrics = useCallback(() => {
     const metrics = getMetrics();
     
-    console.group('📊 Performance Metrics');
-    console.log('FCP (First Contentful Paint):', metrics.fcp?.toFixed(2), 'ms');
-    console.log('LCP (Largest Contentful Paint):', metrics.lcp?.toFixed(2), 'ms');
-    console.log('FID (First Input Delay):', metrics.fid?.toFixed(2), 'ms');
-    console.log('CLS (Cumulative Layout Shift):', metrics.cls?.toFixed(4));
-    console.log('TTFB (Time to First Byte):', metrics.ttfb?.toFixed(2), 'ms');
-    console.groupEnd();
+
 
     return metrics;
   }, [getMetrics]);
@@ -164,13 +158,6 @@ export function useErrorTracking() {
   const reportErrors = useCallback(() => {
     const errors = getErrors();
     
-    console.group('🐛 Error Tracking Report');
-    console.log('Total errors:', errors.length);
-    errors.forEach((error, index) => {
-      console.log(`Error ${index + 1}:`, error);
-    });
-    console.groupEnd();
-
     return errors;
   }, [getErrors]);
 
@@ -201,10 +188,8 @@ export function useNetworkStatus() {
   return {
     isOnline: online,
     isOffline: !online
-  };
+};
 }
-
-import { useState } from 'react';
 
 function getDeviceInfo() {
   if (typeof window === 'undefined') {

@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { AgentEngine, AgentStep, AgentStatus } from '@/lib/agent/agent-engine';
-import { streamChat } from '@/lib/llm';
+import { streamChat, getProviderForModel } from '@/lib/llm';
 import type { Message, LLMConfig } from '@/lib/llm';
 import type { Skill } from '@/types/skill';
 
@@ -55,15 +55,29 @@ export function useAgent(options: UseAgentOptions = {}) {
     const skillsToUse = inputSkills || options.skills || [];
 
     try {
+      const model = options.model || 'ollama';
+      const provider = model === 'ollama' ? 'ollama' : getProviderForModel(model);
+      const apiKey = options.apiKey;
+
       const generator = agent.run(
         userPrompt,
         skillsToUse,
-        async (messages, config) => {
+        async (messages: any[], config: any) => {
+          let fullResponse = '';
           await streamChat(
-            options.model || 'gpt-3.5-turbo',
+            provider,
             messages as Message[],
-            config as LLMConfig & { onChunk: (content: string) => void }
+            {
+              model,
+              apiKey,
+              temperature: 0.3,
+              onChunk: (chunk: string) => {
+                fullResponse += chunk;
+                config.onChunk?.(chunk);
+              },
+            } as LLMConfig & { onChunk: (content: string) => void }
           );
+          return fullResponse;
         }
       );
 
@@ -82,7 +96,7 @@ export function useAgent(options: UseAgentOptions = {}) {
     } finally {
       runningRef.current = false;
     }
-  }, [getAgent, options.model, options.skills]);
+  }, [getAgent, options.model, options.apiKey, options.skills]);
 
   const stop = useCallback(() => {
     runningRef.current = false;

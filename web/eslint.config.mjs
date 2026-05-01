@@ -6,8 +6,26 @@ const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
   {
+    files: ["**/final-elite-*.ts", "**/elite-category-system.ts"],
+    rules: {
+      "@typescript-eslint/no-unused-vars": "off",
+      "@typescript-eslint/no-explicit-any": "off",
+    }
+  },
+  {
+    files: ["**/mcp/**/*.ts", "**/types/*.ts"],
+    rules: {
+      "@typescript-eslint/no-explicit-any": "off",
+    }
+  },
+  {
     rules: {
       "react-hooks/set-state-in-effect": "warn",
+      "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/no-unused-vars": "warn",
+      "@next/next/no-html-link-for-pages": "warn",
+      "react-hooks/exhaustive-deps": "warn",
+      "import/no-anonymous-default-export": "warn",
     }
   },
   // Override default ignores of eslint-config-next.

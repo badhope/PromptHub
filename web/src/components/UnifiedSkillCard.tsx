@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Heart, Copy, Check, Sparkles, Wrench, ArrowUpRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { Skill } from '@/types/skill';
-import { showCopyToast, showFavoriteToast } from '@/components/ToastProvider';
+import { showCopyToast, showFavoriteToast } from '@/shared/components/ToastProvider';
 import { useHapticFeedback } from '@/hooks/useGestures';
 
 interface UnifiedSkillCardProps {

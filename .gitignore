@@ -1,90 +1,49 @@
 # Dependencies
 node_modules/
+.pnp
+.pnp.js
 
-# Build outputs
-dist/
-build/
+# Next.js
 .next/
 out/
-.turbo/
+build/
 
-# Environment files
+# Production
+dist/
+
+# Environment variables
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
 
+# Vercel
+.vercel
+
+# Debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
 # IDE
 .idea/
 .vscode/
 *.swp
 *.swo
+*~
 
 # OS
 .DS_Store
 Thumbs.db
 
-# Logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
 # Cache
 .cache/
-*.tsbuildinfo
-
-# Temporary files
-*.tmp
-*.temp
-.temp/
-.tmp/
-
-# Test coverage
-coverage/
-
-# Debug
-.npm/
 .eslintcache
 
-# deploy folder is a build artifact, users run `npm run build` to generate
-deploy/
-!deploy/.gitkeep
+# TypeScript
+*.tsbuildinfo
 
-# Backup files
-*.backup
-*.backup-*
-web/src/skills-data.json.backup*
-web/package.json.new
-
-# Data files (generated)
-data/*.json
-!data/.gitkeep
-
-# Scripts (development only)
-scripts/*.js
-
-# Skills directory (if not needed in repo)
-skills/
-
-# Templates
-templates/
-
-# Review system
-web/review-system/
-
-# Test files
-web/src/**/__tests__/
-web/jest.config.ts
-web/jest.setup.ts
-
-# Public skills directory
-web/public/skills/
-
-# Lite data
-web/src/skills-data-lite.json
-web/src/skills-index.json
-
-# Development tools
-web/scripts/
+# PWA
+public/sw.js
+public/workbox-*.js

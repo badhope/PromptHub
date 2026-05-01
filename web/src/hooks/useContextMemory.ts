@@ -30,6 +30,7 @@ interface ContextMemoryState {
 const STORAGE_KEY = 'mobile-skills-context-memory';
 const MAX_CONVERSATIONS = 50;
 const MAX_MESSAGES_PER_CONVERSATION = 200;
+const MAX_STORAGE_SIZE = 4 * 1024 * 1024;
 
 function getInitialState(): ContextMemoryState {
   if (typeof window === 'undefined') {
@@ -66,12 +67,36 @@ export function useContextMemory() {
 
   const saveToStorage = useCallback((newState: ContextMemoryState) => {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      const data = JSON.stringify({
         conversations: newState.conversations,
         activeConversationId: newState.activeConversationId,
-      }));
+      });
+      
+      if (data.length > MAX_STORAGE_SIZE) {
+        console.warn('Context memory exceeds storage limit, trimming oldest conversations');
+        const trimmed = {
+          conversations: newState.conversations.slice(0, Math.floor(newState.conversations.length / 2)),
+          activeConversationId: newState.activeConversationId,
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(trimmed));
+      } else {
+        localStorage.setItem(STORAGE_KEY, data);
+      }
     } catch (error) {
-      console.error('Error saving context memory:', error);
+      if (error instanceof Error && error.name === 'QuotaExceededError') {
+        console.error('localStorage quota exceeded, clearing old conversations');
+        const trimmed = {
+          conversations: newState.conversations.slice(0, 10),
+          activeConversationId: newState.activeConversationId,
+        };
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(trimmed));
+        } catch (e) {
+          console.error('Failed to save even trimmed data:', e);
+        }
+      } else {
+        console.error('Error saving context memory:', error);
+      }
     }
   }, []);
 

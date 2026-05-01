@@ -1,12 +1,12 @@
 import type { MetadataRoute } from 'next'
-import { getSkillsData } from '@/lib/skills-data-server'
+import { generateFinalEliteSkills } from '@/lib/final-elite-skills'
 
 export const dynamic = 'force-static'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://badhope.github.io/mobile-skills'
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://skillora.app'
   
-  const { skills, categories } = getSkillsData()
+  const skills = generateFinalEliteSkills()
 
   const staticPages = [
     {
@@ -16,62 +16,37 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1.0,
     },
     {
-      url: `${baseUrl}/skills/`,
+      url: `${baseUrl}/explore/`,
       lastModified: new Date(),
-      changeFrequency: 'weekly' as const,
+      changeFrequency: 'daily' as const,
       priority: 0.9,
     },
     {
-      url: `${baseUrl}/search/`,
+      url: `${baseUrl}/rankings/`,
       lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
+      changeFrequency: 'weekly' as const,
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/favorites/`,
+      url: `${baseUrl}/collections/`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/dashboard/`,
       lastModified: new Date(),
       changeFrequency: 'monthly' as const,
       priority: 0.7,
     },
-    {
-      url: `${baseUrl}/compare/`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/guide/`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.6,
-    },
-    {
-      url: `${baseUrl}/about/`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.6,
-    },
-    {
-      url: `${baseUrl}/settings/`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.5,
-    }
   ]
 
-  const categoryPages = Object.keys(categories || {}).map(category => ({
-    url: `${baseUrl}/category/${category}`,
+  const skillPages = skills.map(skill => ({
+    url: `${baseUrl}/skills/${skill.id}/`,
     lastModified: new Date(),
     changeFrequency: 'weekly' as const,
-    priority: 0.8
+    priority: 0.7,
   }))
 
-  const skillPages = (skills || []).map((skill) => ({
-    url: `${baseUrl}/skills/${skill.id}/`,
-    lastModified: new Date(skill.metadata?.updated_at || Date.now()),
-    changeFrequency: 'weekly' as const,
-    priority: 0.7
-  }))
-
-  return [...staticPages, ...categoryPages, ...skillPages]
+  return [...staticPages, ...skillPages]
 }

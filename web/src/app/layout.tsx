@@ -1,15 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
-import AppHeader from "@/components/AppHeader";
-import Footer from "@/components/Footer";
-import BackToTop from "@/components/BackToTop";
-import FloatingAd from "@/components/FloatingAd";
-import MobileBottomNav from "@/components/MobileBottomNav";
-import ActivityBarrage from "@/components/ActivityBarrage";
-import SEOStructuredData from "@/components/SEOStructuredData";
-import { I18nProvider } from "@/components/I18nProvider";
-import ToastProvider from "@/components/ToastProvider";
-import ErrorBoundary from "@/components/ErrorBoundary";
+import ClientProviders from "./ClientProviders";
 import { APP_CONFIG } from "@/lib/constants";
 
 export const viewport: Viewport = {
@@ -24,27 +15,27 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: {
-    default: `${APP_CONFIG.name} - AI 提示词聚合平台`,
-    template: `%s | ${APP_CONFIG.name}`
+    default: `${APP_CONFIG.name} · ${APP_CONFIG.brandName} - AI 应用商店`,
+    template: `%s | ${APP_CONFIG.name} ${APP_CONFIG.brandName}`
   },
-  description: `${APP_CONFIG.description}，精选 387+ 高质量 AI 提示词和智能体，一键复制即用。`,
-  keywords: ["AI", "Prompt", "提示词", "AI Prompt", "ChatGPT", "人工智能", "Prompt Engineering", "提示词工程师"],
+  description: `${APP_CONFIG.description}，探索全球精选 AI 智能体、Agent、工具。一键导出，适用于豆包、ChatGPT、Kimi、Claude。`,
+  keywords: ["AI", "Agent", "智能体", "AI App Store", "Skillora", "灵境", "ChatGPT", "豆包", "Kimi", "Claude", "Prompt", "提示词", "AI 应用商店"],
   authors: [{ name: APP_CONFIG.author }],
   creator: APP_CONFIG.author,
   publisher: APP_CONFIG.name,
   metadataBase: new URL(APP_CONFIG.url),
   openGraph: {
-    title: `${APP_CONFIG.name} - AI 提示词聚合平台`,
-    description: `${APP_CONFIG.description}，精选高质量 AI 提示词`,
+    title: `${APP_CONFIG.name} · ${APP_CONFIG.brandName} - AI 应用商店`,
+    description: `${APP_CONFIG.description}，探索全球精选 AI 智能体`,
     type: "website",
     locale: "zh_CN",
-    siteName: APP_CONFIG.name,
+    siteName: `${APP_CONFIG.name} ${APP_CONFIG.brandName}`,
     url: APP_CONFIG.url,
   },
   twitter: {
     card: "summary_large_image",
-    title: `${APP_CONFIG.name} - AI 提示词聚合平台`,
-    description: `${APP_CONFIG.description}，精选高质量 AI 提示词`,
+    title: `${APP_CONFIG.name} · ${APP_CONFIG.brandName} - AI 应用商店`,
+    description: `${APP_CONFIG.description}，探索全球精选 AI 智能体`,
   },
   robots: {
     index: true,
@@ -78,20 +69,7 @@ export default function RootLayout({
         <link rel="manifest" href="/manifest.json" />
       </head>
       <body className="min-h-full flex flex-col bg-gray-50 dark:bg-gray-900 transition-colors duration-300 font-sans">
-        <SEOStructuredData />
-        <I18nProvider>
-          <ToastProvider>
-            <ErrorBoundary>
-              <AppHeader />
-              <main className="flex-1 pb-20 sm:pb-0">{children}</main>
-              <Footer />
-              <BackToTop />
-              <FloatingAd />
-              <MobileBottomNav />
-              <ActivityBarrage />
-            </ErrorBoundary>
-          </ToastProvider>
-        </I18nProvider>
+        <ClientProviders>{children}</ClientProviders>
       </body>
     </html>
   );

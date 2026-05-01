@@ -15,10 +15,34 @@ export function useLLM(options: UseLLMOptions = {}) {
   const [error, setError] = useState<string | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
   const messagesRef = useRef<Message[]>([]);
+  const initializedRef = useRef(false);
 
   const defaultModel = options.defaultModel || 'gpt-3.5';
 
   useEffect(() => {
+    try {
+      const saved = localStorage.getItem('workspace:chatHistory');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setMessages(parsed);
+        }
+      }
+    } catch {}
+    initializedRef.current = true;
+    
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+        abortControllerRef.current = null;
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (initializedRef.current) {
+      localStorage.setItem('workspace:chatHistory', JSON.stringify(messages));
+    }
     messagesRef.current = messages;
   }, [messages]);
 
@@ -75,6 +99,16 @@ export function useLLM(options: UseLLMOptions = {}) {
   const clearMessages = useCallback(() => {
     setMessages([]);
     setError(null);
+    localStorage.removeItem('workspace:chatHistory');
+  }, []);
+
+  const deleteMessage = useCallback((index: number) => {
+    setMessages(prev => {
+      const next = [...prev];
+      next.splice(index, 1);
+      localStorage.setItem('workspace:chatHistory', JSON.stringify(next));
+      return next;
+    });
   }, []);
 
   const stopStreaming = useCallback(() => {
@@ -123,10 +157,12 @@ export function useLLM(options: UseLLMOptions = {}) {
 
   return {
     messages,
+    setMessages,
     isStreaming,
     error,
     sendMessage,
     clearMessages,
+    deleteMessage,
     stopStreaming,
     checkOllamaAvailable,
     listOllamaModels,
